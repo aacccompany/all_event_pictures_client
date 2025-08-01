@@ -16,15 +16,15 @@ const App = () => {
   return (
     <div>
       <Nav/>
-      {/* <SearchBar /> */}
+      <SearchBar />
       <div className="">
         
-        {/* <Home /> */}
+        <Home />
         {/* <Event/> */}
         {/* <Register /> */}
         {/* <Photographerinfo/> */}
         {/* <Cart/> */}
-        <PicLoad/>
+        {/* <PicLoad/> */}
       </div>
     </div>
   )

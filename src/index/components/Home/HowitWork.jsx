@@ -85,7 +85,7 @@ const HowItWorks = () => {
 
                 {/* Grid container for the cards */}
                 {/* It's a 1-col grid on mobile, 2-col on tablets, and 4-col on desktops */}
-                <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+                <div className="mt-12 grid gap-8 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
                     {steps.map((step, index) => (
                         <Card key={index} className="text-center transition-transform transform hover:scale-105 hover:shadow-lg">
                             <CardHeader className="flex flex-col items-center">
