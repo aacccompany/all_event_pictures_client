@@ -10,6 +10,7 @@ import Register from './index/Register'
 import Login from './index/Login'
 import Photographerinfo from './index/Photographerinfo'
 import EventAll from './index/components/Event/EventAll'
+import PicLoad from './index/components/Download/PicLoad'
 
 const App = () => {
   return (
@@ -22,7 +23,8 @@ const App = () => {
         {/* <Event/> */}
         {/* <Register /> */}
         {/* <Photographerinfo/> */}
-        <Cart/>
+        {/* <Cart/> */}
+        <PicLoad/>
       </div>
     </div>
   )

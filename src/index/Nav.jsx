@@ -78,7 +78,7 @@ const Nav = () => {
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center gap-4">
                         <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-blue-700 hover:text-white">Home</a>
-                        <div className="relative" ref={eventMenuRef}>
+                        {/* <div className="relative" ref={eventMenuRef}>
                             <button onClick={() => setIsEventMenuOpen(!isEventMenuOpen)} className="px-3 py-2 rounded-md text-sm font-medium text-gray-700  hover:bg-blue-700 hover:text-white flex items-center">
                                 Event
                             </button>
@@ -91,7 +91,8 @@ const Nav = () => {
                                     </div>
                                 </div>
                             )}
-                        </div>
+                        </div> */}
+                        <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-blue-700 hover:text-white">Event</a>
                         <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-blue-700 hover:text-white">Download</a>
                     </div>
 
