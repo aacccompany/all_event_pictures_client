@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ShoppingCart, Camera, Menu, X, UserRound } from "lucide-react";
+// 🔹 STEP 1: Import NavLink from react-router-dom
 import { NavLink, Link } from "react-router-dom";
 
 // 🔹 NavLink Config
@@ -9,7 +10,7 @@ const navLinks = [
   { name: "Download", path: "/download" },
 ];
 
-// 🔸 Login Dialog Component (No changes)
+// 🔸 Login Dialog Component (No changes needed here)
 const DialogLogin = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
@@ -64,6 +65,7 @@ const DialogLogin = ({ isOpen, onClose }) => {
             <a href="#" className="text-sm text-blue-500 hover:text-blue-600">
               Forgot your password?
             </a>
+            {/* Using regular Link here as it's a secondary action */}
             <Link
               to={"/register"}
               className="text-sm text-blue-500 hover:text-blue-600"
@@ -117,15 +119,13 @@ const Nav = () => {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-4">
             {navLinks.map((link) => (
+              // 🔹 STEP 2: Replace Link with NavLink and use a function for className
               <NavLink
                 key={link.path}
                 to={link.path}
-                // 🔹 UPDATED: Active style is now an underline
                 className={({ isActive }) =>
-                  `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive
-                      ? "text-blue-700 underline underline-offset-4"
-                      : "text-gray-700 hover:text-blue-700"
+                  `px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 hover:text-white ${
+                    isActive ? "bg-blue-700 text-white" : "text-gray-700"
                   }`
                 }
               >
@@ -181,16 +181,14 @@ const Nav = () => {
           </button>
           <div className="grid gap-4 pt-8">
             {navLinks.map((link) => (
+               // 🔹 STEP 3: Apply the same logic to the mobile menu
               <NavLink
                 key={link.path}
                 to={link.path}
                 onClick={toggleMobileMenu}
-                // 🔹 UPDATED: Active style is now an underline
                 className={({ isActive }) =>
-                  `text-lg font-semibold block py-2 transition-colors hover:text-blue-700 ${
-                    isActive
-                      ? "text-blue-700 underline underline-offset-4"
-                      : "text-gray-800"
+                  `text-lg font-semibold block py-2 hover:text-blue-700 ${
+                    isActive ? "text-blue-700" : "text-gray-800"
                   }`
                 }
               >
