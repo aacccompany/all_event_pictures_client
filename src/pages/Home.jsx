@@ -1,8 +1,8 @@
 
 import React from 'react'
-import HowitWork from './components/Home/HowitWork';
-import SearchBar from './components/Home/SearchBar';
-import EventAct from './components/Home/EventAct';
+import HowitWork from '../components/Home/HowitWork';
+import SearchBar from '../components/Home/SearchBar';
+import EventAct from '../components/Home/EventAct';
 
 
 const Home = () => {

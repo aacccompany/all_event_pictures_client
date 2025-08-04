@@ -1,8 +1,8 @@
-import Cart from "@/index/Cart";
-import PicLoad from "@/index/components/Download/PicLoad";
-import Event from "@/index/Event";
-import Home from "@/index/Home";
-import Register from "@/index/Register";
+import Cart from "@/pages/Cart";
+import Download from "@/pages/Download";
+import Event from "@/pages/Event";
+import Home from "@/pages/Home";
+import Register from "@/pages/Register";
 import Layout from "@/layouts/Layout";
 import { BrowserRouter, Routes, Route } from "react-router";
 
@@ -14,7 +14,7 @@ const AppRoutes = () => {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/events" element={<Event />} />
-          <Route path="/download" element={<PicLoad />} />
+          <Route path="/download" element={<Download />} />
           <Route path="/register" element={<Register />} />
           <Route path="/cart" element={<Cart />} />
         </Route>

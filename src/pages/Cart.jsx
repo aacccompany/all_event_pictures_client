@@ -1,5 +1,5 @@
 import React from 'react'
-import CartPay from './components/Cart/CartPay'
+import CartPay from '@/components/Cart/CartPay'
 
 const Cart = () => {
   return (

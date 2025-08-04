@@ -1,5 +1,5 @@
 import React from 'react'
-import PicLoad from './components/Download/PicLoad'
+import PicLoad from '@/components/Download/PicLoad'
 
 const Download = () => {
   return (

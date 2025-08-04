@@ -1,5 +1,5 @@
 import React from 'react'
-import EventAll from './components/Event/EventAll'
+import EventAll from '@/components/Event/EventAll'
 
 const Event = () => {
   return (
