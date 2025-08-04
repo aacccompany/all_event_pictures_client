@@ -118,3 +118,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components{
+  .container{
+    @apply px-8 mx-auto
+  }
+}
+
+
+@layer base {
+  :root {
+    --radius: 0.5rem
+  }
+}
