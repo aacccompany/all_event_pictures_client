@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ShoppingCart, Camera, Menu, X, UserRound } from "lucide-react";
-import { Link } from "react-router";
+import { NavLink, Link } from "react-router-dom";
 
 // 🔹 NavLink Config
 const navLinks = [
@@ -9,7 +9,7 @@ const navLinks = [
   { name: "Download", path: "/download" },
 ];
 
-// 🔸 Login Dialog Component
+// 🔸 Login Dialog Component (No changes)
 const DialogLogin = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
@@ -65,7 +65,7 @@ const DialogLogin = ({ isOpen, onClose }) => {
               Forgot your password?
             </a>
             <Link
-              to={"register"}
+              to={"/register"}
               className="text-sm text-blue-500 hover:text-blue-600"
             >
               Don't have an account?
@@ -109,29 +109,38 @@ const Nav = () => {
       <nav className="bg-white shadow-sm sticky top-0 z-40">
         <div className="flex items-center justify-between w-full mx-auto h-20 px-4 sm:px-6 lg:px-8">
           {/* Logo */}
-          <Link to={"/"} className="flex items-center gap-2 flex-shrink-0">
+          <NavLink to={"/"} className="flex items-center gap-2 flex-shrink-0">
             <Camera className="w-8 h-8 text-blue-700" />
             <span className="font-bold text-lg text-gray-800">EVENTPIC</span>
-          </Link>
+          </NavLink>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-4">
             {navLinks.map((link) => (
-              <Link key={link.path} to={link.path}>
-                <a className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-blue-700 hover:text-white">
-                  {link.name}
-                </a>
-              </Link>
+              <NavLink
+                key={link.path}
+                to={link.path}
+                // 🔹 UPDATED: Active style is now an underline
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive
+                      ? "text-blue-700 underline underline-offset-4"
+                      : "text-gray-700 hover:text-blue-700"
+                  }`
+                }
+              >
+                {link.name}
+              </NavLink>
             ))}
           </div>
 
           {/* Right - Desktop Actions */}
           <div className="hidden md:flex items-center gap-2">
-            <Link to={"/cart"}>
+            <NavLink to={"/cart"}>
               <button className="p-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100">
                 <ShoppingCart className="w-5 h-5" />
               </button>
-            </Link>
+            </NavLink>
             <button
               onClick={() => setIsLoginOpen(true)}
               className="px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-md hover:bg-blue-800"
@@ -172,14 +181,21 @@ const Nav = () => {
           </button>
           <div className="grid gap-4 pt-8">
             {navLinks.map((link) => (
-              <Link key={link.path} to={link.path}>
-                <a
-                  onClick={toggleMobileMenu}
-                  className="text-lg font-semibold text-gray-800 hover:text-blue-700"
-                >
-                  {link.name}
-                </a>
-              </Link>
+              <NavLink
+                key={link.path}
+                to={link.path}
+                onClick={toggleMobileMenu}
+                // 🔹 UPDATED: Active style is now an underline
+                className={({ isActive }) =>
+                  `text-lg font-semibold block py-2 transition-colors hover:text-blue-700 ${
+                    isActive
+                      ? "text-blue-700 underline underline-offset-4"
+                      : "text-gray-800"
+                  }`
+                }
+              >
+                {link.name}
+              </NavLink>
             ))}
             <div className="pt-6 border-t mt-4">
               <button
