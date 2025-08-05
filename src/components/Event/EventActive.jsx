@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin } from "lucide-react";
-import { get_events } from "@/api/event";
+import { get_active_events } from "@/api/event";
 
 const EventAll = () => {
   const [events, setEvents] = useState([]);
@@ -20,7 +20,7 @@ const EventAll = () => {
 
   const handleGetEvents = async () => {
     try {
-      const res = await get_events();
+      const res = await get_active_events();
       setEvents(res.data);
     } catch (err) {
       setMagError(err.response?.data?.detail || "Event fail");
@@ -55,7 +55,7 @@ const EventAll = () => {
                   <img
                     src={event.image_cover}
                     alt={event.title}
-                    className="w-full h-full object-cover"
+                    className="w-full object-cover"
                   />
                 </div>
                 <CardHeader>
@@ -72,7 +72,7 @@ const EventAll = () => {
                   </div>
                 </CardHeader>
                 <CardFooter>
-                  <Button>View Photos</Button>
+                  <Button className="w-full bg-blue-700 hover:bg-blue-800">View Photos</Button>
                 </CardFooter>
               </Card>
             </div>

@@ -7,3 +7,7 @@ export const get_events = async () => {
 export const get_event = async (id) => {
     return await axios.get(`http://localhost:8081/api/v1/event/${id}`)
 }
+
+export const get_active_events = async() => {
+    return await axios.get(`http://localhost:8081/api/v1/active-events`)
+}
