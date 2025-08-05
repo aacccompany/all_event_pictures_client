@@ -103,8 +103,4 @@ const HowItWorks = () => {
 
 
 // Main App component to render the HowItWorks section
-export default function App() {
-    return (
-        <HowItWorks />
-    )
-}
+export default HowItWorks
