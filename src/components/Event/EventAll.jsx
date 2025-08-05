@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardDescription,
@@ -8,47 +8,29 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin } from "lucide-react";
+import { get_events } from "@/api/event";
 
 const EventAll = () => {
-  const events = [
-    {
-      title: "Summer Marathon 2025",
-      date: "July 15, 2025",
-      location: "Central Park, New York",
-      imageUrl: "https://placehold.co/600x400/3498db/ffffff?text=Marathon",
-    },
-    {
-      title: "Winter Arts Festival",
-      date: "December 20, 2024",
-      location: "Millennium Park, Chicago",
-      imageUrl: "https://placehold.co/600x400/e74c3c/ffffff?text=Art+Festival",
-    },
-    {
-      title: "Spring Tech Summit",
-      date: "March 10, 2025",
-      location: "Convention Center, Austin",
-      imageUrl: "https://placehold.co/600x400/2ecc71/ffffff?text=Tech+Summit",
-    },
-    {
-      title: "Autumn Food Fair",
-      date: "October 5, 2024",
-      location: "Pike Place Market, Seattle",
-      imageUrl: "https://placehold.co/600x400/f39c12/ffffff?text=Food+Fair",
-    },
-    {
-      title: "International Film Fest",
-      date: "November 12, 2024",
-      location: "TIFF Bell Lightbox, Toronto",
-      imageUrl: "https://placehold.co/600x400/9b59b6/ffffff?text=Film+Fest",
-    },
-    {
-      title: "New Year's Gala",
-      date: "December 31, 2024",
-      location: "Sydney Opera House, Sydney",
-      imageUrl: "https://placehold.co/600x400/1abc9c/ffffff?text=Gala",
-    },
-  ];
+  const [events, setEvents] = useState([]);
+  const [msgError, setMagError] = useState("")
 
+  useEffect(() => {
+    handleGetEvents();
+  }, []);
+
+  const handleGetEvents = async () => {
+    try {
+      const res = await get_events();
+      setEvents(res.data);
+    } catch (err) {
+      setMagError(err.response?.data?.detail || "Event fail")
+      console.log(err)
+    }
+  };
+
+  console.log(msgError)
+
+  console.log(events);
   return (
     <section className="bg-gray-100 py-16 sm:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -69,14 +51,10 @@ const EventAll = () => {
             >
               <div className="aspect-w-16 aspect-h-9">
                 <img
-                  src={event.imageUrl}
+                  src={event.image_cover}
                   alt={event.title}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src =
-                      "https://placehold.co/600x400/cccccc/ffffff?text=Image+Missing";
-                  }}
+                  
                 />
               </div>
               <CardHeader>
@@ -98,9 +76,50 @@ const EventAll = () => {
             </Card>
           ))}
         </div>
+        
       </div>
+      <h1>{msgError}</h1>
     </section>
   );
 };
 
 export default EventAll;
+
+// const events = [
+//   {
+//     title: "Summer Marathon 2025",
+//     date: "July 15, 2025",
+//     location: "Central Park, New York",
+//     imageUrl: "https://placehold.co/600x400/3498db/ffffff?text=Marathon",
+//   },
+//   {
+//     title: "Winter Arts Festival",
+//     date: "December 20, 2024",
+//     location: "Millennium Park, Chicago",
+//     imageUrl: "https://placehold.co/600x400/e74c3c/ffffff?text=Art+Festival",
+//   },
+//   {
+//     title: "Spring Tech Summit",
+//     date: "March 10, 2025",
+//     location: "Convention Center, Austin",
+//     imageUrl: "https://placehold.co/600x400/2ecc71/ffffff?text=Tech+Summit",
+//   },
+//   {
+//     title: "Autumn Food Fair",
+//     date: "October 5, 2024",
+//     location: "Pike Place Market, Seattle",
+//     imageUrl: "https://placehold.co/600x400/f39c12/ffffff?text=Food+Fair",
+//   },
+//   {
+//     title: "International Film Fest",
+//     date: "November 12, 2024",
+//     location: "TIFF Bell Lightbox, Toronto",
+//     imageUrl: "https://placehold.co/600x400/9b59b6/ffffff?text=Film+Fest",
+//   },
+//   {
+//     title: "New Year's Gala",
+//     date: "December 31, 2024",
+//     location: "Sydney Opera House, Sydney",
+//     imageUrl: "https://placehold.co/600x400/1abc9c/ffffff?text=Gala",
+//   },
+// ];
