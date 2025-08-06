@@ -23,7 +23,6 @@ const EventAct = () => {
     if (!res.success) setMsgError(res.message);
   };
 
-  console.log(msgError);
 
   return (
     <section className="bg-gray-50 py-12 sm:py-16 lg:py-10">

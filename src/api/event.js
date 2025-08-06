@@ -12,6 +12,6 @@ export const get_active_events = async() => {
     return await axios.get(`http://localhost:8081/api/v1/active-events`)
 }
 
-export const search_events = async(text) => {
-    return await axios.get(`http://localhost:8081/api/v1/search-events?title=${text}`)
+export const search_events = async(title) => {
+    return await axios.get(`http://localhost:8081/api/v1/search-events?title=${title}`)
 }
