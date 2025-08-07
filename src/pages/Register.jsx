@@ -1,10 +1,10 @@
 import React from 'react'
-import RegisCard from '@/components/Register/RegisCard'
+import RegisterContainer from '@/components/Register/RegisterContainer'
 
 const Register = () => {
   return (
     <div>
-        <RegisCard/>
+       <RegisterContainer/>
     </div>
   )
 }

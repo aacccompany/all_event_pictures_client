@@ -1,5 +1,6 @@
 import React from "react";
 import AppRoutes from "./routes/AppRoutes";
+import { Toaster } from "sonner";
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       {/* <Register /> */}
       {/* <Cart/> */}
       <AppRoutes />
+      <Toaster position="top-center" expand={false} richColors />
       {/* <Photographerinfo/> */}
     </div>
   );
