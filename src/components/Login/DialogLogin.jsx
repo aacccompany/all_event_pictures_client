@@ -12,8 +12,6 @@ const DialogLogin = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  console.log(onClose);
-
   return (
     <div
       className="fixed inset-0 bg-white/30 backdrop-blur-lg z-50 flex justify-center items-center"

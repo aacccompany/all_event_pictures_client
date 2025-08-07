@@ -21,12 +21,12 @@ const RegisterContainer = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
     try {
-        if (!form.password || !form.confirmPassword || !form.email) return alert("สันขวาน")
-        if (form.password != form.confirmPassword) return alert("รหัสผ่านไม่ตรง")
+        if (!form.password || !form.confirmPassword || !form.email) return toast.warning('Register Fail!')
+        if (form.password != form.confirmPassword) return toast.warning('Password invalid')
         await authRegister(form)
         toast.success('Registration successfuly')
     } catch (error) { 
-        const msgError = error.response?.data?.detail || "Register Faill" 
+        const msgError = error.response?.data?.detail || "Register Fail!" 
         toast.warning(msgError)
         console.log(error)
     }

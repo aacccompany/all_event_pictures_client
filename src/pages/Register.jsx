@@ -1,5 +1,5 @@
 import React from 'react'
-import RegisterContainer from '@/components/Register/RegisterContainer'
+import RegisterContainer from '@/components/Register/Register'
 
 const Register = () => {
   return (
