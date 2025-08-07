@@ -3,11 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { useSearchParams } from "react-router";
 import { useDebouncedCallback } from "use-debounce";
-import useEventStore from "@/stores/event-store";
 
 const SearchBar = () => {
   const [titleParam, setTitleParam] = useSearchParams();
-  const actionFilters = useEventStore((state) => state.actionFilters)
 
   const updateSearch = useDebouncedCallback((value) => {
     const params = new URLSearchParams(titleParam);
@@ -23,11 +21,6 @@ const SearchBar = () => {
     updateSearch(e.target.value);
   };
 
-  const title = titleParam.get("title");
-
-  useEffect(() => {
-    if (title) actionFilters(title);
-  }, [title]);
 
   return (
     <div className="flex justify-center items-center p-8 sm:p-16 md:p-24 bg-blue-700">
@@ -54,7 +47,6 @@ const SearchBar = () => {
             placeholder="Search by event name...."
             type="text"
             aria-label="title"
-            defaultValue={title}
           />
         </div>
       </div>
