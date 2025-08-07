@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ShoppingCart, Camera, Menu, X, UserRound } from "lucide-react";
 import { Link } from "react-router";
-import DialogLogin from "@/components/Login/Login";
+import DialogLogin from "@/components/Login/DialogLogin";
 
 // 🔹 NavLink Config
 const navLinks = [
@@ -46,9 +46,9 @@ const Nav = () => {
           <div className="hidden md:flex items-center gap-4">
             {navLinks.map((link) => (
               <Link key={link.path} to={link.path}>
-                <a className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-blue-700 hover:text-white">
+                <span className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-blue-700 hover:text-white">
                   {link.name}
-                </a>
+                </span>
               </Link>
             ))}
           </div>
@@ -101,12 +101,12 @@ const Nav = () => {
           <div className="grid gap-4 pt-8">
             {navLinks.map((link) => (
               <Link key={link.path} to={link.path}>
-                <a
+                <span
                   onClick={toggleMobileMenu}
                   className="text-lg font-semibold text-gray-800 hover:text-blue-700"
                 >
                   {link.name}
-                </a>
+                </span>
               </Link>
             ))}
             <div className="pt-6 border-t mt-4">
