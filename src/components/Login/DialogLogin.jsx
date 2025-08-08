@@ -1,15 +1,43 @@
 import { Link } from "react-router";
 import { X, UserRound } from "lucide-react";
 import { useNavigate } from "react-router";
+import { useState } from "react";
+import { toast } from "sonner";
+import { authLogin } from "@/api/auth";
 
 const DialogLogin = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
 
   if (!isOpen) return null;
 
   const handleRedirect = () => {
     navigate("/register");
     onClose();
+  };
+
+  const handleOnChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+    console.log(e.target.name, e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const res = await authLogin(form)
+      toast.success("Login successfuly")
+      console.log(res.data)
+    } catch (error) {
+      const msgError = error.response?.data?.detail || "Login fail"
+      toast.warning(msgError)
+      console.log(error)
+    }
   };
 
   return (
@@ -31,45 +59,51 @@ const DialogLogin = ({ isOpen, onClose }) => {
             <X size={24} />
           </button>
         </div>
-        <div className="grid gap-4 py-4 mt-4">
-          <div className="space-y-1">
-            <label
-              htmlFor="email"
-              className="text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              placeholder="user@email.com"
-              className="w-full p-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
+        <form onSubmit={handleSubmit}>
+          <div className="grid gap-4 py-4 mt-4">
+            <div className="space-y-1">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
+              <input
+                className="w-full p-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                id="email"
+                name="email"
+                placeholder="user@email.com"
+                onChange={handleOnChange}
+              />
+            </div>
+            <div className="space-y-1">
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <input
+                className="w-full p-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                id="password"
+                type="password"
+                name="password"
+                placeholder="Enter Your Password"
+                onChange={handleOnChange}
+              />
+            </div>
+            <div className="text-sm text-blue-500 hover:text-blue-600 cursor-pointer">
+              <div className="mb-3">Forgot your password?</div>
+              <div onClick={handleRedirect}>Don't have an account?</div>
+            </div>
           </div>
-          <div className="space-y-1">
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Enter Your Password"
-              className="w-full p-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          <div className="text-sm text-blue-500 hover:text-blue-600 cursor-pointer">
-            <div className="mb-3">Forgot your password?</div>
-            <div onClick={handleRedirect}>Don't have an account?</div>
-          </div>
-        </div>
-        <button
-          type="submit"
-          className="w-full mt-2 p-3 rounded-md text-sm text-white bg-blue-700 hover:bg-blue-800"
-        >
-          Log in
-        </button>
+          <button
+            type="submit"
+            className="w-full mt-2 p-3 rounded-md text-sm text-white bg-blue-700 hover:bg-blue-800"
+          >
+            Log in
+          </button>
+        </form>
       </div>
     </div>
   );
