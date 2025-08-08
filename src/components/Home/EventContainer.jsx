@@ -5,6 +5,7 @@ import HowItWorks from "./HowitWork";
 import SearchBar from "./SearchBar";
 import EventLists from "./EventLists";
 
+
 const EventContainer = () => {
   const actionFilters = useEventStore((state) => state.actionFilters);
   const actionGetEvents = useEventStore((state) => state.actionsGetEvents);
