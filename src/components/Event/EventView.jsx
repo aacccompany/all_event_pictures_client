@@ -57,7 +57,7 @@ const EventView = () => {
                     </div>
                     <div className="mt-5">
                         <p className="text-gray-700 leading-relaxed max-w-3xl">
-                            Join thousands of runners in the beautiful city of Chiang Mai for our annual marathon event. Experience the scenic routes through historic temples and vibrant local communities.
+                            Join thousands of runners in the beautiful city.
                         </p>
                     </div>
                     <div className="mt-5 text-sm text-gray-500">
