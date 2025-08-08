@@ -6,6 +6,7 @@ import Register from "@/pages/Register";
 import Layout from "@/layouts/Layout";
 import ViewEvent from "@/pages/ViewEvent";
 import { BrowserRouter, Routes, Route } from "react-router";
+import Notfound from "@/pages/Notfound";
 
 const AppRoutes = () => {
   return (
@@ -19,6 +20,7 @@ const AppRoutes = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/view-event" element={<ViewEvent />} />
+          <Route path="*" element={<Notfound />} />
         </Route>
       </Routes>
     </BrowserRouter>

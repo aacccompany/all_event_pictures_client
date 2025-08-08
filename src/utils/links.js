@@ -5,5 +5,7 @@ export const publicLinks = [
 ];
 
 export const privateLinks = [
+  { href: "/user/profile", label: "My Profile" },
+  { href: "/user/dashboard", label: "Dashboard" },
   { href: "/", label: "Logout" },
 ];
