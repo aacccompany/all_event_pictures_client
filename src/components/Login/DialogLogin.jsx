@@ -4,8 +4,10 @@ import { useNavigate } from "react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { authLogin } from "@/api/auth";
+import useAuthStore from "@/stores/auth-store";
 
 const DialogLogin = ({ isOpen, onClose }) => {
+  const actionLogin = useAuthStore((state) => state.actionLogin);
   const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
@@ -24,19 +26,19 @@ const DialogLogin = ({ isOpen, onClose }) => {
       ...form,
       [e.target.name]: e.target.value,
     });
-    console.log(e.target.name, e.target.value);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const authSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const res = await authLogin(form)
-      toast.success("Login successfuly")
-      console.log(res.data)
+      await actionLogin(form);
+      toast.success("Login successfully");
+      navigate("/");
+      onClose();
     } catch (error) {
-      const msgError = error.response?.data?.detail || "Login fail"
-      toast.warning(msgError)
-      console.log(error)
+      const msgError = error.response?.data?.detail || "Login failed";
+      toast.warning(msgError);
+      console.error(error);
     }
   };
 
@@ -59,7 +61,8 @@ const DialogLogin = ({ isOpen, onClose }) => {
             <X size={24} />
           </button>
         </div>
-        <form onSubmit={handleSubmit}>
+
+        <form onSubmit={authSubmit}>
           <div className="grid gap-4 py-4 mt-4">
             <div className="space-y-1">
               <label
@@ -73,6 +76,7 @@ const DialogLogin = ({ isOpen, onClose }) => {
                 id="email"
                 name="email"
                 placeholder="user@email.com"
+                autoFocus
                 onChange={handleOnChange}
               />
             </div>

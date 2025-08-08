@@ -2,16 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { ShoppingCart, Camera, Menu, X, UserRound } from "lucide-react";
 import { Link } from "react-router";
 import DialogLogin from "@/components/Login/DialogLogin";
-
-// 🔹 NavLink Config
-const navLinks = [
-  { name: "Home", path: "/" },
-  { name: "Events", path: "/events" },
-  { name: "Download", path: "/download" },
-];
+import { publicLinks } from "@/utils/links";
 
 
-// 🔹 Main Nav Component
 const Nav = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -44,7 +37,7 @@ const Nav = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-4">
-            {navLinks.map((link) => (
+            {publicLinks.map((link) => (
               <Link key={link.path} to={link.path}>
                 <span className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-blue-700 hover:text-white">
                   {link.name}
@@ -99,7 +92,7 @@ const Nav = () => {
             <X size={24} />
           </button>
           <div className="grid gap-4 pt-8">
-            {navLinks.map((link) => (
+            {publicLinks.map((link) => (
               <Link key={link.path} to={link.path}>
                 <span
                   onClick={toggleMobileMenu}
