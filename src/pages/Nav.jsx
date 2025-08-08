@@ -1,14 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ShoppingCart, Camera, Menu, X, UserRound } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Link } from "react-router";
 import DialogLogin from "@/components/Login/DialogLogin";
-import { publicLinks } from "@/utils/links";
-
+import { privateLinks, publicLinks } from "@/utils/links";
+import useAuthStore from "@/stores/auth-store";
+import { Button } from "@/components/ui/button";
 
 const Nav = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const eventMenuRef = useRef(null);
+  const token = useAuthStore((state) => state.token);
+  const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -47,19 +58,44 @@ const Nav = () => {
           </div>
 
           {/* Right - Desktop Actions */}
-          <div className="hidden md:flex items-center gap-2">
-            <Link to={"/cart"}>
-              <button className="p-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100">
-                <ShoppingCart className="w-5 h-5" />
+          {token ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="bg-blue-700 hover:bg-blue-800">
+                  <Menu />
+                  Menu
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="py-2 m-2">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {privateLinks.map((item, index) => {
+                  return (
+                    <Link to={item.href} key={index}>
+                      <DropdownMenuItem className="cursor-pointer">
+                        {item.label}
+                      </DropdownMenuItem>
+                    </Link>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className="hidden md:flex items-center gap-2">
+              <Link to={"/cart"}>
+                <button className="p-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100">
+                  <ShoppingCart className="w-5 h-5" />
+                </button>
+              </Link>
+
+              <button
+                onClick={() => setIsLoginOpen(true)}
+                className="px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-md hover:bg-blue-800"
+              >
+                Login
               </button>
-            </Link>
-            <button
-              onClick={() => setIsLoginOpen(true)}
-              className="px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-md hover:bg-blue-800"
-            >
-              Login
-            </button>
-          </div>
+            </div>
+          )}
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">

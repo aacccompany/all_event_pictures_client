@@ -3,3 +3,7 @@ export const publicLinks = [
   { name: "Events", path: "/events" },
   { name: "Download", path: "/download" },
 ];
+
+export const privateLinks = [
+  { href: "/", label: "Logout" },
+];

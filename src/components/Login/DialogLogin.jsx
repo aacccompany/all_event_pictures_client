@@ -1,9 +1,7 @@
-import { Link } from "react-router";
 import { X, UserRound } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { authLogin } from "@/api/auth";
 import useAuthStore from "@/stores/auth-store";
 
 const DialogLogin = ({ isOpen, onClose }) => {
