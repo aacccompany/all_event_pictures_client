@@ -4,12 +4,12 @@ import Event from "@/pages/Event";
 import Home from "@/pages/Home";
 import Register from "@/pages/Register";
 import Layout from "@/layouts/Layout";
-import ViewEvent from "@/pages/ViewEvent";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Notfound from "@/pages/Notfound";
 import ProtectRouteUser from "./ProtectRouteUser";
 import Photographerinfo from "@/pages/Photographerinfo";
 import ProtectRouteAdmin from "./ProtectRouteAdmin";
+import EventView from "@/pages/EventView";
 
 const AppRoutes = () => {
   return (
@@ -22,8 +22,8 @@ const AppRoutes = () => {
           <Route path="/download" element={<Download />} />
           <Route path="/register" element={<Register />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/view-event" element={<ViewEvent />} />
-          <Route path="*" element={<Notfound />} />
+          <Route path="/event-detail/:id" element={<EventView />} />
+          <Route path="/events/event-detail/:id" element={<EventView />} />
         </Route>
 
         {/* Private User */}

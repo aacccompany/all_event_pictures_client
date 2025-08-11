@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin } from "lucide-react";
+import { Link } from "react-router";
 
 const EventCard = ({ event }) => {
   return (
@@ -32,8 +33,8 @@ const EventCard = ({ event }) => {
         </div>
       </CardHeader>
       <CardFooter>
-        <Button className="w-full bg-blue-700 hover:bg-blue-800">
-          View Photos
+        <Button asChild className="w-full bg-blue-700 hover:bg-blue-800">
+          <Link to={`event-detail/${event.id}`}>View Photos</Link>
         </Button>
       </CardFooter>
     </Card>

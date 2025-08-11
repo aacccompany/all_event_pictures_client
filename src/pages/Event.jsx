@@ -1,10 +1,11 @@
 import React from 'react'
-import EventAll from '@/components/Event/EventActive'
+import EventActive from '@/components/Event/EventActive'
+import EventLists from '@/components/Home/EventLists'
 
 const Event = () => {
   return (
     <div>
-        <EventAll/>
+        <EventLists/>
     </div>
   )
 }

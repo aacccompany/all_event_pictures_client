@@ -36,6 +36,10 @@ const Nav = () => {
 
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
 
+  console.log("user",user)
+  console.log("token",token)
+
+
   return (
     <>
       <nav className="bg-white shadow-sm sticky top-0 z-40">
