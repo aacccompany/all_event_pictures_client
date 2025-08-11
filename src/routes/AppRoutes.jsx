@@ -9,7 +9,8 @@ import Notfound from "@/pages/Notfound";
 import ProtectRouteUser from "./ProtectRouteUser";
 import Photographerinfo from "@/pages/Photographerinfo";
 import ProtectRouteAdmin from "./ProtectRouteAdmin";
-import EventView from "@/pages/EventView";
+import DashBoardContainer from "@/components/Dashboard/DashBoardContainer";
+import EventCreateContainer from "@/components/Event/EventCreateContainer";
 
 const AppRoutes = () => {
   return (
@@ -27,8 +28,15 @@ const AppRoutes = () => {
         </Route>
 
         {/* Private User */}
-        <Route path="user" element={<ProtectRouteUser element={<Layout />} />}>
+        {/* <Route path="user" element={<PrtectRouteUser element={<Layout />} />}>
           <Route path="photographForm" element={<Photographerinfo />} />
+          <Route path="dashboard" element={<DashBoardContainer />} />
+        </Route> */}
+
+          <Route path="user" element={<Layout />}>
+          <Route path="photographForm" element={<Photographerinfo />} />
+          <Route path="dashboard" element={<DashBoardContainer />} />
+          <Route path="create-event" element={<EventCreateContainer />} />
         </Route>
 
         {/* Private admin */}

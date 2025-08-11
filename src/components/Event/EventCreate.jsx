@@ -18,7 +18,7 @@ const EventCreate = () => {
     <Dialog>
       <form>
         <DialogTrigger asChild>
-          <Button className="bg-blue-700 hover:bg-blue-800 text-white" variant="outline">Create Event</Button>
+          <Button className="bg-blue-700 hover:bg-blue-800 hover:text-white text-white" variant="outline">Create Event</Button>
         </DialogTrigger>
        
         <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
