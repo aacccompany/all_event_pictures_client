@@ -7,12 +7,15 @@ import Layout from "@/layouts/Layout";
 import ViewEvent from "@/pages/ViewEvent";
 import { BrowserRouter, Routes, Route } from "react-router";
 import Notfound from "@/pages/Notfound";
+import ProtectRouteUser from "./ProtectRouteUser";
+import Photographerinfo from "@/pages/Photographerinfo";
+import ProtectRouteAdmin from "./ProtectRouteAdmin";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* User Public */}
+        {/*  Public User*/}
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/events" element={<Event />} />
@@ -22,6 +25,22 @@ const AppRoutes = () => {
           <Route path="/view-event" element={<ViewEvent />} />
           <Route path="*" element={<Notfound />} />
         </Route>
+
+        {/* Private User */}
+        <Route path="user" element={<ProtectRouteAdmin element={<Layout />} />}>
+          <Route path="photographForm" element={<Photographerinfo />} />
+        </Route>
+
+        {/* Private admin */}
+        {/* <Route path="admin" element={<ProtectRouteUser element={<Layout />} />}>
+          <Route path="photographForm" element={<Photographerinfo />} />
+        </Route> */}
+
+         {/* Private super-admin */}
+        {/* <Route path="super-admin" element={<ProtectRouteUser element={<Layout />} />}>
+          <Route path="photographForm" element={<Photographerinfo />} />
+        </Route> */}
+        <Route path="*" element={<Notfound />} />
       </Routes>
     </BrowserRouter>
   );
