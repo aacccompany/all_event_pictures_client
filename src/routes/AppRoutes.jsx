@@ -27,7 +27,7 @@ const AppRoutes = () => {
         </Route>
 
         {/* Private User */}
-        <Route path="user" element={<ProtectRouteAdmin element={<Layout />} />}>
+        <Route path="user" element={<ProtectRouteUser element={<Layout />} />}>
           <Route path="photographForm" element={<Photographerinfo />} />
         </Route>
 
