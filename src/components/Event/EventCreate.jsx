@@ -1,5 +1,5 @@
-import React from 'react'
-import { Button } from "@/components/ui/button"
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -9,72 +9,110 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import useAuthStore from "@/stores/auth-store";
+import { create_event } from "@/api/event";
 
 const EventCreate = () => {
+  const token = useAuthStore((state) => state.token);
+  const [data, setData] = useState({});
+
+  const handleOnChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(data);
+    try {
+      await create_event(token, data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Dialog>
-      <form>
-        <DialogTrigger asChild>
-          <Button className="bg-blue-700 hover:bg-blue-800 hover:text-white text-white" variant="outline">Create Event</Button>
-        </DialogTrigger>
-       
-        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            
-            <DialogTitle>Create New Event</DialogTitle>
-          </DialogHeader>
+      <DialogTrigger asChild>
+        <Button
+          className="bg-blue-700 hover:bg-blue-800 hover:text-white text-white"
+          variant="outline"
+        >
+          Create Event
+        </Button>
+      </DialogTrigger>
 
-          
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Create New Event</DialogTitle>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 py-4">
-            
             {/* Event Name */}
             <div className="md:col-span-2 space-y-2">
               <Label htmlFor="eventname">Event Name</Label>
-              <Input id="eventname" name="name" placeholder="Khon Kaen Run 2025" />
+              <Input
+                id="title"
+                name="title"
+                placeholder="Khon Kaen Run 2025"
+                onChange={handleOnChange}
+              />
             </div>
 
             {/* Location */}
             <div className="space-y-2">
               <Label htmlFor="location">Location</Label>
-              {/* แก้ id ให้ตรงกับ htmlFor และเพิ่ม placeholder */}
-              <Input id="location" name="location" type="text" placeholder="ริมบึงแก่นนคร" />
-            </div>
-
-            {/* Organizer Name */}
-            <div className="space-y-2">
-              <Label htmlFor="organizer">Organizer Name</Label>
-              <Input id="organizer" name="organizer" type="text" placeholder="John Doe Organizer" />
+              <Input
+                id="location"
+                name="location"
+                type="text"
+                placeholder="ริมบึงแก่นนคร"
+                onChange={handleOnChange}
+              />
             </div>
 
             {/* Date */}
             <div className="space-y-2">
               <Label htmlFor="date">Date</Label>
-              <Input id="date" name="date" type="date" />
+              <Input
+                id="date"
+                name="date"
+                type="date"
+                onChange={handleOnChange}
+              />
             </div>
 
-            {/* Time */}
-            <div className="space-y-2">
-              <Label htmlFor="time">Time</Label>
-              <Input id="time" name="time" type="time" />
-            </div>
-
-            {/* Categories */}
+            {/* location */}
             <div className="md:col-span-2 space-y-2">
-              <Label htmlFor="categories">Categories</Label>
-              <Input id="categories" name="categories" type="text" placeholder="Sport, Marathon, Meeting, Exibition" />
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                name="description"
+                type="text"
+                placeholder="lorem ipsum"
+                onChange={handleOnChange}
+              />
             </div>
 
             {/* Cover Image */}
-            <div className="md:col-span-2 space-y-2">
-              <Label htmlFor="cover">Cover image</Label>
-              <Input id="cover" type="file" className="file:text-foreground" />
-            </div>
+            {/* <div className="md:col-span-2 space-y-2">
+              <Label htmlFor="image_cover">Cover image</Label>
+              <Input
+                id="image_cover"
+                name="image_cover"
+                type="file"
+                className="file:text-foreground"
+                onChange={handleOnChange}
+              />
+            </div> */}
           </div>
-          
-          {/*Footer Responsive */}
           <DialogFooter className="flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:space-x-2">
             <DialogClose asChild>
               <Button type="button" variant="outline">
@@ -85,10 +123,12 @@ const EventCreate = () => {
               Save
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </form>
-    </Dialog>
-  )
-}
+        </form>
 
-export default EventCreate
+        {/*Footer Responsive */}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default EventCreate;

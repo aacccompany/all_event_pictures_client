@@ -15,3 +15,11 @@ export const get_active_events = async() => {
 export const search_events = async(title) => {
     return await axios.get(`http://localhost:8081/api/v1/search-events?title=${title}`)
 }
+
+export const create_event = async(token,data) => {
+    return await axios.post(`http://localhost:8081/api/v1/event`, data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}

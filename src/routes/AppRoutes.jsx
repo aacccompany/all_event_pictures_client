@@ -11,6 +11,7 @@ import Photographerinfo from "@/pages/Photographerinfo";
 import ProtectRouteAdmin from "./ProtectRouteAdmin";
 import DashBoardContainer from "@/components/Dashboard/DashBoardContainer";
 import EventCreateContainer from "@/components/Event/EventCreateContainer";
+import EventView from "@/pages/EventView";
 
 const AppRoutes = () => {
   return (
@@ -28,16 +29,17 @@ const AppRoutes = () => {
         </Route>
 
         {/* Private User */}
-        {/* <Route path="user" element={<PrtectRouteUser element={<Layout />} />}>
-          <Route path="photographForm" element={<Photographerinfo />} />
-          <Route path="dashboard" element={<DashBoardContainer />} />
-        </Route> */}
-
-          <Route path="user" element={<Layout />}>
+        <Route path="user" element={<ProtectRouteUser element={<Layout />} />}>
           <Route path="photographForm" element={<Photographerinfo />} />
           <Route path="dashboard" element={<DashBoardContainer />} />
           <Route path="create-event" element={<EventCreateContainer />} />
         </Route>
+{/* 
+          <Route path="user" element={<Layout />}>
+          <Route path="photographForm" element={<Photographerinfo />} />
+          <Route path="dashboard" element={<DashBoardContainer />} />
+          <Route path="create-event" element={<EventCreateContainer />} />
+        </Route> */}
 
         {/* Private admin */}
         {/* <Route path="admin" element={<ProtectRouteUser element={<Layout />} />}>
