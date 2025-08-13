@@ -3,8 +3,8 @@ import EventEmpty from "./EventEmpty";
 import EventCard from "./EventCard";
 
 const EventLists = () => {
-  const events = useEventStore((state) => state.events);
-  if (events.length === 0) return <EventEmpty />;
+  const activeEvents = useEventStore((state) => state.activeEvents);
+  if (activeEvents.length === 0) return <EventEmpty />;
 
   return (
     <section className="bg-gray-50 py-12 sm:py-16 lg:py-10">
@@ -13,7 +13,7 @@ const EventLists = () => {
           Active Events
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {events.map((item, index) => {
+          {activeEvents.map((item, index) => {
             return <EventCard key={index} event={item} />;
           })}
         </div>

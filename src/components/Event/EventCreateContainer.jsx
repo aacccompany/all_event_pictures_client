@@ -1,43 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import EventCreate from "./EventCreate";
 import EventTable from "./EventTable";
-
-const eventsData = [
-  {
-    id: 1,
-    name: "KK Run 2025",
-    date: "2025-12-15",
-    status: "Active",
-    revenue: "112,000 THB",
-    photographers: "Phutanet Dek Nerd",
-  },
-  {
-    id: 2,
-    name: "KK Night Run",
-    date: "2025-11-09",
-    status: "Closed",
-    revenue: "86,400 THB",
-    photographers: "Flixshot Creation",
-  },
-  {
-    id: 3,
-    name: "KK Long Run",
-    date: "2025-11-09",
-    status: "Closed",
-    revenue: "90,000THB",
-    photographers: "Flixshot Creation",
-  },
-  {
-    id: 3,
-    name: "KK Mini Marathon",
-    date: "2025-11-09",
-    status: "Active",
-    revenue: "200,000 THB",
-    photographers: "Phutanet Dek Dum",
-  },
-];
+import useEventStore from "@/stores/event-store";
 
 const EventCreateContainer = () => {
+  const actionGetEvents = useEventStore((state) => state.actionsGetEvents);
+
+  useEffect(() => {
+    actionGetEvents();
+  }, []);
+  
   return (
     <div className="bg-gray-50 min-h-screen p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
@@ -49,7 +21,7 @@ const EventCreateContainer = () => {
               Manage your organized events
             </p>
           </div>
-          <EventCreate />
+          <EventCreate actionGetEvents={actionGetEvents}/>
         </header>
         <EventTable />
       </div>

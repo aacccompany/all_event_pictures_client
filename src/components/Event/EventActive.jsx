@@ -11,8 +11,8 @@ import { Calendar, MapPin } from "lucide-react";
 import useEventStore from "@/stores/event-store";
 
 const EventActive = () => {
-  const actionsGetEvents = useEventStore((state) => state.actionsGetEvents);
-  const events = useEventStore((state) => state.events);
+  const actionsGetActiveEvents = useEventStore((state) => state.actionsGetActiveEvents);
+  const activeEvents = useEventStore((state) => state.activeEvents);
   const [msgError, setMsgError] = useState("");
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const EventActive = () => {
   }, []);
 
   const fetchEvents = async () => {
-    const res = await actionsGetEvents();
+    const res = await actionsGetActiveEvents();
     if (!res.success) setMsgError(res.message);
   };
 
@@ -43,7 +43,7 @@ const EventActive = () => {
                     {msgError}
                   </h1>
                 ) : (
-                  events.map((event, index) => (
+                  activeEvents.map((event, index) => (
                     <Card
                       key={index}
                       className="px-5 transition-transform transform hover:-translate-y-2 hover:shadow-2xl"

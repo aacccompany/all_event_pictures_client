@@ -29,8 +29,8 @@ const AppRoutes = () => {
         </Route>
 
         {/* Private User */}
-        {/* <Route path="user" element={<ProtectRouteUser element={<Layout />} />}> */}
-        <Route path="user" element={<Layout/>}>
+        <Route path="user" element={<ProtectRouteUser element={<Layout />} />}>
+        {/* <Route path="user" element={<Layout/>}> */}
           <Route path="photographForm" element={<Photographerinfo />} />
           <Route path="dashboard" element={<DashBoardContainer />} />
           <Route path="create-event" element={<EventCreateContainer />} />

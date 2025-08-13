@@ -17,11 +17,14 @@ import useAuthStore from "@/stores/auth-store";
 import { create_event } from "@/api/event";
 import UploadImageCover from "./UploadImageCover";
 import { upload_image_cover } from "@/api/uploadimage";
+import { Loader2 } from 'lucide-react';
 
-const EventCreate = () => {
+const EventCreate = ({actionGetEvents}) => {
   const token = useAuthStore((state) => state.token);
   const [data, setData] = useState({});
-  const [imageFile, setImageFile] = useState(null)
+  const [imageFile, setImageFile] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleOnChange = (e) => {
     setData({
@@ -31,33 +34,37 @@ const EventCreate = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    let imageData = {};
-    if (imageFile) {
-      const formData = new FormData();
-      formData.append("image_cover", imageFile);
-      const res = await upload_image_cover(token, formData);
-      console.log(res.data)
-      imageData = {
-        image_cover: res.data.secure_url,
-        public_id: res.data.public_id,
-      };
+    e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      let imageData = {};
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append("image_cover", imageFile);
+        const res = await upload_image_cover(token, formData);
+        console.log(res.data);
+        imageData = {
+          image_cover: res.data.secure_url,
+          public_id: res.data.public_id,
+        };
+      }
+
+      await create_event(token, {
+        ...data,
+        ...imageData,
+      });
+      await actionGetEvents()
+      setOpenDialog(false);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    await create_event(token, {
-      ...data,
-      ...imageData,
-    });
-    console.log(data, imageData)
-  } catch (error) {
-    console.log(error);
-  }
-};
-
+  };
 
   return (
-    <Dialog>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
         <Button
           className="bg-blue-700 hover:bg-blue-800 hover:text-white text-white"
@@ -131,13 +138,18 @@ const EventCreate = () => {
                 Discard
               </Button>
             </DialogClose>
-            <Button className="bg-blue-700 hover:bg-blue-800" type="submit">
-              Save
-            </Button>
+            {isSubmitting ? (
+              <Button type="button" disabled className="gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Please wait... 
+              </Button>
+            ) : (
+              <Button className="bg-blue-700 hover:bg-blue-800" type="submit">
+                Save
+              </Button>
+            )}
           </DialogFooter>
         </form>
-
-        {/*Footer Responsive */}
       </DialogContent>
     </Dialog>
   );

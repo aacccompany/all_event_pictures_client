@@ -1,11 +1,21 @@
-import { get_active_events, search_events } from "@/api/event";
+import { get_active_events, get_events, search_events } from "@/api/event";
 import { create } from "zustand";
 
 const eventStore = (set) => ({
+  activeEvents: [],
   events: [],
-  actionsGetEvents: async () => {
+  actionsGetActiveEvents: async () => {
     try {
       const res = await get_active_events();
+      set({ activeEvents: res.data });
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
+  actionsGetEvents: async () => {
+    try {
+      const res = await get_events();
       set({ events: res.data });
     } catch (error) {
       console.log(error)
@@ -15,8 +25,7 @@ const eventStore = (set) => ({
   actionFilters: async(title = "") => {
     try {
       const res = await search_events(title)
-      console.log(res.data)
-      set({events: res.data})
+      set({activeEvents: res.data})
     } catch (error) {
       console.log(error)
     }

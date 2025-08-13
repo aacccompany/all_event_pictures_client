@@ -8,7 +8,7 @@ import EventLists from "./EventLists";
 
 const EventContainer = () => {
   const actionFilters = useEventStore((state) => state.actionFilters);
-  const actionGetEvents = useEventStore((state) => state.actionsGetEvents);
+  const actionsGetActiveEvents = useEventStore((state) => state.actionsGetActiveEvents);
   const [titleParam, _] = useSearchParams();
 
   const title = titleParam.get("title");
@@ -17,7 +17,7 @@ const EventContainer = () => {
      if ((title)) {
       actionFilters(title)
      } else if (!title) {
-      actionGetEvents()
+      actionsGetActiveEvents()
      }
     }, [title]);  
 

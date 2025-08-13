@@ -1,42 +1,12 @@
+import useEventStore from "@/stores/event-store";
 import { Button } from "../ui/button";
 import DialogUpdate from "./DialogUpdate";
-
-const eventsData = [
-  {
-    id: 1,
-    name: "KK Run 2025",
-    date: "2025-12-15",
-    status: "Active",
-    revenue: "112,000 THB",
-    photographers: "Phutanet Dek Nerd",
-  },
-  {
-    id: 2,
-    name: "KK Night Run",
-    date: "2025-11-09",
-    status: "Closed",
-    revenue: "86,400 THB",
-    photographers: "Flixshot Creation",
-  },
-  {
-    id: 3,
-    name: "KK Long Run",
-    date: "2025-11-09",
-    status: "Closed",
-    revenue: "90,000THB",
-    photographers: "Flixshot Creation",
-  },
-  {
-    id: 3,
-    name: "KK Mini Marathon",
-    date: "2025-11-09",
-    status: "Active",
-    revenue: "200,000 THB",
-    photographers: "Phutanet Dek Dum",
-  },
-];
+import { useEffect } from "react";
 
 const EventTable = () => {
+  const events = useEventStore((state) => state.events);
+  
+
   return (
     <div>
       {/* White Card for Show Event list */}
@@ -72,13 +42,13 @@ const EventTable = () => {
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  Revenue
+                  Location
                 </th>
                 <th
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  Photographers
+                  Organizer
                 </th>
                 <th
                   scope="col"
@@ -90,13 +60,13 @@ const EventTable = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {/* Loop eventsData */}
-              {eventsData.map((event, index) => (
+              {events.map((event, index) => (
                 <tr
                   key={index}
                   className="hover:bg-gray-50 transition-colors duration-150"
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {event.name}
+                    {event.title}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {event.date}
@@ -105,31 +75,31 @@ const EventTable = () => {
                     {/*Status Condition*/}
                     <span
                       className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
-                                                ${event.status === "Active"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-500"
+                        ${
+                          event.active === true
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-500"
                         }`}
                     >
-                      {event.status}
+                      {event.active ? "Active" : "Close"}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
-                    {event.revenue}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    {event.location}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {event.photographers}
+                    {event.created_by?.email}
                   </td>
 
                   {/* Action Button */}
                   <td>
                     <div className="flex">
-                      <DialogUpdate/>
+                      <DialogUpdate />
                       <Button className="ml-4 bg-red-600 text-white hover:bg-red-900 transition-colors duration-150 cursor-pointer">
                         Delete
                       </Button>
                     </div>
                   </td>
-
                 </tr>
               ))}
             </tbody>
