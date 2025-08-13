@@ -36,8 +36,8 @@ const Nav = () => {
 
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
 
-  console.log("user",user)
-  console.log("token",token)
+  // console.log("user",user)
+  // console.log("token",token)
 
 
   return (

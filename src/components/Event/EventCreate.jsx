@@ -15,10 +15,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useAuthStore from "@/stores/auth-store";
 import { create_event } from "@/api/event";
+import UploadImageCover from "./UploadImageCover";
+import { upload_image_cover } from "@/api/uploadimage";
 
 const EventCreate = () => {
   const token = useAuthStore((state) => state.token);
   const [data, setData] = useState({});
+  const [imageFile, setImageFile] = useState(null)
 
   const handleOnChange = (e) => {
     setData({
@@ -28,14 +31,30 @@ const EventCreate = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log(data);
-    try {
-      await create_event(token, data);
-    } catch (error) {
-      console.log(error);
+  e.preventDefault();
+  try {
+    let imageData = {};
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("image_cover", imageFile);
+      const res = await upload_image_cover(token, formData);
+      console.log(res.data)
+      imageData = {
+        image_cover: res.data.secure_url,
+        public_id: res.data.public_id,
+      };
     }
-  };
+
+    await create_event(token, {
+      ...data,
+      ...imageData,
+    });
+    console.log(data, imageData)
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 
   return (
     <Dialog>
@@ -102,16 +121,9 @@ const EventCreate = () => {
             </div>
 
             {/* Cover Image */}
-            {/* <div className="md:col-span-2 space-y-2">
-              <Label htmlFor="image_cover">Cover image</Label>
-              <Input
-                id="image_cover"
-                name="image_cover"
-                type="file"
-                className="file:text-foreground"
-                onChange={handleOnChange}
-              />
-            </div> */}
+            <div className="md:col-span-2 space-y-2">
+              <UploadImageCover setImageFile={setImageFile} />
+            </div>
           </div>
           <DialogFooter className="flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:space-x-2">
             <DialogClose asChild>
