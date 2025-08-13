@@ -1,3 +1,6 @@
+import { Button } from "../ui/button";
+import DialogUpdate from "./DialogUpdate";
+
 const eventsData = [
   {
     id: 1,
@@ -102,11 +105,10 @@ const EventTable = () => {
                     {/*Status Condition*/}
                     <span
                       className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
-                                                ${
-                                                  event.status === "Active"
-                                                    ? "bg-green-100 text-green-800"
-                                                    : "bg-red-100 text-red-500"
-                                                }`}
+                                                ${event.status === "Active"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-500"
+                        }`}
                     >
                       {event.status}
                     </span>
@@ -117,6 +119,17 @@ const EventTable = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {event.photographers}
                   </td>
+
+                  {/* Action Button */}
+                  <td>
+                    <div className="flex">
+                      <DialogUpdate/>
+                      <Button className="ml-4 bg-red-600 text-white hover:bg-red-900 transition-colors duration-150 cursor-pointer">
+                        Delete
+                      </Button>
+                    </div>
+                  </td>
+
                 </tr>
               ))}
             </tbody>
