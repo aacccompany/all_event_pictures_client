@@ -1,7 +1,5 @@
 import useEventStore from "@/stores/event-store";
-import { Button } from "../ui/button";
 import DialogUpdate from "./DialogUpdate";
-import { toast } from "sonner";
 import EventDelete from "./EventDelete";
 
 const EventTable = () => {

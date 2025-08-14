@@ -1,6 +1,4 @@
-import {
-  Upload,
-} from "lucide-react";
+import { Upload,} from "lucide-react";
 const SearchFace = () => {
   return (
     <div>

@@ -4,8 +4,7 @@ import { useSearchParams } from "react-router";
 import HowItWorks from "./HowitWork";
 import SearchBar from "./SearchBar";
 import EventLists from "./EventLists";
-import { Dialog } from "@radix-ui/react-dialog";
-import DialogUpdate from "../Event/DialogUpdate";
+
 
 
 const EventContainer = () => {
