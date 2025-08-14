@@ -23,3 +23,11 @@ export const create_event = async(token,data) => {
         }
     })
 }
+
+export const remove_event = async(token, id) => {
+    return await axios.get(`http://localhost:8081/api/v1/event/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
