@@ -4,14 +4,13 @@ import { toast } from "sonner";
 const EventDelete = () => {
   const handleDeleteClick = () => {
     toast.error("Are you sure you want to delete this event?", {
-      duration: Infinity, // ✅ ค้างจนกว่าจะกด
+      duration: Infinity, 
       action: (
         <div className="flex gap-2">
           <Button
             size="sm"
             className="bg-green-600 hover:bg-green-700 text-white"
             onClick={() => {
-              console.log("OK clicked"); // เรียกฟังก์ชันลบจริงตรงนี้
               toast.dismiss();
             }}
           >
