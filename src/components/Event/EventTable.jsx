@@ -1,11 +1,11 @@
 import useEventStore from "@/stores/event-store";
 import { Button } from "../ui/button";
 import DialogUpdate from "./DialogUpdate";
-import { useEffect } from "react";
+import { toast } from "sonner";
+import EventDelete from "./EventDelete";
 
 const EventTable = () => {
   const events = useEventStore((state) => state.events);
-  
 
   return (
     <div>
@@ -95,9 +95,7 @@ const EventTable = () => {
                   <td>
                     <div className="flex">
                       <DialogUpdate />
-                      <Button className="ml-4 bg-red-600 text-white hover:bg-red-900 transition-colors duration-150 cursor-pointer">
-                        Delete
-                      </Button>
+                      <EventDelete />
                     </div>
                   </td>
                 </tr>
