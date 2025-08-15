@@ -149,18 +149,6 @@ const DialogUpdate = ({ actionGetEvents, id }) => {
               />
             </div>
 
-            {/* Date */}
-            <div className="space-y-2">
-              <Label htmlFor="date">Date</Label>
-              <Input
-                id="date"
-                name="date"
-                type="date"
-                value={data.date}
-                onChange={handleOnChange}
-              />
-            </div>
-
             <div className="space-y-2">
               <Label htmlFor="status">Status</Label>
               <Select
