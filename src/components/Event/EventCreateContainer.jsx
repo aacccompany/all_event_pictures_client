@@ -16,9 +16,9 @@ const EventCreateContainer = () => {
         {/*Header */}
         <header className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Events</h1>
+            <h1 className="text-3xl font-bold text-gray-900">My Events</h1>
             <p className="mt-1 text-sm text-gray-600">
-              Manage Your Events
+              Manage your organized events
             </p>
           </div>
           <EventCreate actionGetEvents={actionGetEvents}/>
