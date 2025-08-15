@@ -25,7 +25,15 @@ export const create_event = async(token,data) => {
 }
 
 export const remove_event = async(token, id) => {
-    return await axios.get(`http://localhost:8081/api/v1/event/${id}`, {
+    return await axios.delete(`http://localhost:8081/api/v1/event/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export const update_event = async(token, id, data) => {
+    return await axios.patch(`http://localhost:8081/api/v1/event/${id}`, data, {
         headers: {
             Authorization: `Bearer ${token}`
         }

@@ -1,24 +1,28 @@
 import { remove_event } from "@/api/event";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
-import { useParams } from "react-router";
+import useAuthStore from "@/stores/auth-store";
+import useEventStore from "@/stores/event-store";
+import { useEffect } from "react";
 
-const EventDelete = () => {
-  const { id } = useParams();
+const EventDelete = ({ id, title, actionGetEvents }) => {
+  const token = useAuthStore((state) => state.token);
 
   const handleRemove = async () => {
     try {
-      const res = await remove_event(id);
-      console.log(res.data);
-      toast.success("Event deleted successfully");
+      await remove_event(token, id);
+      toast.success(`Event "${title}" deleted successfully`);
+      await actionGetEvents()
     } catch (error) {
       console.log(error);
-      toast.error("Failed to delete event");
+      const msgError = error.response?.data?.detail || "Failed to delete event";
+      toast.error(msgError);
     }
   };
 
+
   const handleDeleteClick = () => {
-    toast.error("Are you sure you want to delete this event?", {
+    toast.error(`Are you sure you want to delete "${title}"`, {
       duration: Infinity,
       action: (
         <div className="flex gap-2">
@@ -36,7 +40,6 @@ const EventDelete = () => {
             size="sm"
             variant="destructive"
             onClick={() => {
-              console.log("Cancel clicked");
               toast.dismiss();
             }}
           >

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,21 +10,43 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useAuthStore from "@/stores/auth-store";
-import { create_event } from "@/api/event";
+import { create_event, get_event, update_event } from "@/api/event";
 import UploadImageCover from "./UploadImageCover";
 import { upload_image_cover } from "@/api/uploadimage";
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
 
-const EventCreate = ({actionGetEvents}) => {
+const DialogUpdate = ({ actionGetEvents, id }) => {
   const token = useAuthStore((state) => state.token);
   const [data, setData] = useState({});
+  const [originalData, setOriginalData] = useState({});
   const [imageFile, setImageFile] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (openDialog) handleGetEvent(id);
+  }, [openDialog, id]);
+
+  const handleGetEvent = async () => {
+    try {
+      const res = await get_event(id);
+      setData(res.data);
+      setOriginalData(res.data); // เก็บค่าเดิม
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleOnChange = (e) => {
     setData({
@@ -43,18 +65,19 @@ const EventCreate = ({actionGetEvents}) => {
         const formData = new FormData();
         formData.append("image_cover", imageFile);
         const res = await upload_image_cover(token, formData);
-        console.log(res.data);
         imageData = {
           image_cover: res.data.secure_url,
           public_id: res.data.public_id,
         };
       }
 
-      await create_event(token, {
+      await update_event(token, id, {
         ...data,
         ...imageData,
       });
-      await actionGetEvents()
+
+      setOriginalData({ ...data, ...imageData }); // อัปเดตค่าเดิมเป็นล่าสุด
+      await actionGetEvents();
       setOpenDialog(false);
     } catch (error) {
       console.log(error);
@@ -63,14 +86,22 @@ const EventCreate = ({actionGetEvents}) => {
     }
   };
 
+  const handleDialogChange = (open) => {
+    if (!open) {
+      setData(originalData); // ถ้าปิดโดยไม่ Save ให้ revert กลับ
+      setImageFile(null);
+    }
+    setOpenDialog(open);
+  };
+
   return (
-    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+    <Dialog open={openDialog} onOpenChange={handleDialogChange}>
       <DialogTrigger asChild>
         <Button
           className="bg-purple-700 hover:bg-purple-900 hover:text-white text-white"
           variant="outline"
         >
-          Edit 
+          Edit
         </Button>
       </DialogTrigger>
 
@@ -88,6 +119,7 @@ const EventCreate = ({actionGetEvents}) => {
                 id="title"
                 name="title"
                 placeholder="Khon Kaen Run 2025"
+                value={data.title}
                 onChange={handleOnChange}
               />
             </div>
@@ -100,6 +132,7 @@ const EventCreate = ({actionGetEvents}) => {
                 name="location"
                 type="text"
                 placeholder="ริมบึงแก่นนคร"
+                value={data.location}
                 onChange={handleOnChange}
               />
             </div>
@@ -111,11 +144,46 @@ const EventCreate = ({actionGetEvents}) => {
                 id="date"
                 name="date"
                 type="date"
+                value={data.date}
                 onChange={handleOnChange}
               />
             </div>
 
-            {/* location */}
+            {/* Date */}
+            <div className="space-y-2">
+              <Label htmlFor="date">Date</Label>
+              <Input
+                id="date"
+                name="date"
+                type="date"
+                value={data.date}
+                onChange={handleOnChange}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="status">Status</Label>
+              <Select
+                name="active"
+                value={String(data.active)}
+                onValueChange={(val) =>
+                  setData({
+                    ...data,
+                    active: val === "true",
+                  })
+                }
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="true">Active</SelectItem>
+                  <SelectItem value="false">Close</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* description */}
             <div className="md:col-span-2 space-y-2">
               <Label htmlFor="description">Description</Label>
               <Textarea
@@ -123,6 +191,7 @@ const EventCreate = ({actionGetEvents}) => {
                 name="description"
                 type="text"
                 placeholder="lorem ipsum"
+                value={data.description}
                 onChange={handleOnChange}
               />
             </div>
@@ -141,7 +210,7 @@ const EventCreate = ({actionGetEvents}) => {
             {isSubmitting ? (
               <Button type="button" disabled className="gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Please wait... 
+                Please wait...
               </Button>
             ) : (
               <Button className="bg-blue-700 hover:bg-blue-800" type="submit">
@@ -155,4 +224,4 @@ const EventCreate = ({actionGetEvents}) => {
   );
 };
 
-export default EventCreate;
+export default DialogUpdate;

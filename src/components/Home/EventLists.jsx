@@ -1,10 +1,18 @@
 import useEventStore from "@/stores/event-store";
 import EventEmpty from "./EventEmpty";
 import EventCard from "./EventCard";
+import { useEffect } from "react";
 
 const EventLists = () => {
+  const actionsGetActiveEvents = useEventStore(
+    (state) => state.actionsGetActiveEvents
+  );
+  useEffect(() => {
+    actionsGetActiveEvents();
+  }, []);
   const activeEvents = useEventStore((state) => state.activeEvents);
   if (activeEvents.length === 0) return <EventEmpty />;
+
 
   return (
     <section className="bg-gray-50 py-12 sm:py-16 lg:py-10">

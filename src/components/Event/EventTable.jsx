@@ -1,9 +1,15 @@
 import useEventStore from "@/stores/event-store";
 import DialogUpdate from "./DialogUpdate";
 import EventDelete from "./EventDelete";
+import { useEffect } from "react";
 
 const EventTable = () => {
+  const actionGetEvents = useEventStore((state) => state.actionsGetEvents);
   const events = useEventStore((state) => state.events);
+
+  useEffect(() => {
+    actionGetEvents();
+  }, []);
 
   return (
     <div>
@@ -92,8 +98,8 @@ const EventTable = () => {
                   {/* Action Button */}
                   <td>
                     <div className="flex">
-                      <DialogUpdate />
-                      <EventDelete />
+                      <DialogUpdate id={event.id} actionGetEvents={actionGetEvents}/>
+                      <EventDelete id={event.id} title={event.title} actionGetEvents={actionGetEvents}/>
                     </div>
                   </td>
                 </tr>
