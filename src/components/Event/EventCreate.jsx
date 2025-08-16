@@ -18,9 +18,12 @@ import { create_event } from "@/api/event";
 import UploadImageCover from "./UploadImageCover";
 import { upload_image_cover } from "@/api/uploadimage";
 import { Loader2 } from 'lucide-react';
+import useEventStore from "@/stores/event-store";
 
-const EventCreate = ({actionGetEvents}) => {
+const EventCreate = () => {
   const token = useAuthStore((state) => state.token);
+  const actionGetEvents = useEventStore((state) => state.actionsGetEvents)
+  const actionGetMyEvents = useEventStore((state) => state.actionGetMyEvents)
   const [data, setData] = useState({});
   const [imageFile, setImageFile] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -43,7 +46,6 @@ const EventCreate = ({actionGetEvents}) => {
         const formData = new FormData();
         formData.append("image_cover", imageFile);
         const res = await upload_image_cover(token, formData);
-        console.log(res.data);
         imageData = {
           image_cover: res.data.secure_url,
           public_id: res.data.public_id,
@@ -55,6 +57,7 @@ const EventCreate = ({actionGetEvents}) => {
         ...imageData,
       });
       await actionGetEvents()
+      await actionGetMyEvents(token)
       setOpenDialog(false);
     } catch (error) {
       console.log(error);

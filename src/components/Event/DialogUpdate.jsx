@@ -25,9 +25,12 @@ import { create_event, get_event, update_event } from "@/api/event";
 import UploadImageCover from "./UploadImageCover";
 import { upload_image_cover } from "@/api/uploadimage";
 import { Loader2 } from "lucide-react";
+import useEventStore from "@/stores/event-store";
 
-const DialogUpdate = ({ actionGetEvents, id }) => {
+const DialogUpdate = ({id }) => {
   const token = useAuthStore((state) => state.token);
+  const actionsGetEvents = useEventStore((state) => state.actionsGetEvents)
+  const actionGetMyEvents = useEventStore((state) => state.actionGetMyEvents)
   const [data, setData] = useState({});
   const [originalData, setOriginalData] = useState({});
   const [imageFile, setImageFile] = useState(null);
@@ -77,7 +80,8 @@ const DialogUpdate = ({ actionGetEvents, id }) => {
       });
 
       setOriginalData({ ...data, ...imageData }); // อัปเดตค่าเดิมเป็นล่าสุด
-      await actionGetEvents();
+      await actionsGetEvents();
+      await actionGetMyEvents(token)
       setOpenDialog(false);
     } catch (error) {
       console.log(error);

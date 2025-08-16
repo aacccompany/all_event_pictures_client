@@ -5,7 +5,9 @@ import useAuthStore from "@/stores/auth-store";
 import useEventStore from "@/stores/event-store";
 import { useEffect } from "react";
 
-const EventDelete = ({ id, title, actionGetEvents }) => {
+const EventDelete = ({ id, title }) => {
+  const actionGetEvents = useEventStore((state) => state.actionsGetEvents)
+  const actionGetMyEvents = useEventStore((state) => state.actionGetMyEvents)
   const token = useAuthStore((state) => state.token);
 
   const handleRemove = async () => {
@@ -13,6 +15,7 @@ const EventDelete = ({ id, title, actionGetEvents }) => {
       await remove_event(token, id);
       toast.success(`Event "${title}" deleted successfully`);
       await actionGetEvents()
+      await actionGetMyEvents(token)
     } catch (error) {
       console.log(error);
       const msgError = error.response?.data?.detail || "Failed to delete event";
