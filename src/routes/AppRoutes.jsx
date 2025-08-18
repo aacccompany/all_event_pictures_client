@@ -29,30 +29,27 @@ const AppRoutes = () => {
           <Route path="/events/event-detail/:id" element={<EventView />} />
         </Route>
 
-        {/* Private User */}
+         {/* Private User */}
+        <Route path="user" element={<ProtectRouteUser element={<Layout />} />}>
+          <Route path="dashboard" element={<DashBoardContainer />} />
+          <Route path="photographForm" element={<Photographerinfo />} />
+          <Route path="event-lists" element={<UserEventList />} />
+        </Route>
+
+        {/* Private Admin */}
         <Route path="org" element={<ProtectRouteAdmin element={<Layout />} />}>
-        {/* <Route path="user" element={<Layout/>}> */}
-          <Route path="photographForm" element={<Photographerinfo />} />
           <Route path="dashboard" element={<DashBoardContainer />} />
           <Route path="create-event" element={<EventCreateContainer />} />
         </Route>
-{/* 
-          <Route path="user" element={<Layout />}>
-          <Route path="photographForm" element={<Photographerinfo />} />
-          <Route path="dashboard" element={<DashBoardContainer />} />
+
+       
+
+        {/* Private Super-Admin */}
+        <Route path="super-admin" element={<ProtectRouteUser element={<Layout />} />}>
+           <Route path="dashboard" element={<DashBoardContainer />} />
+          <Route path="event-lists" element={<UserEventList />} />
           <Route path="create-event" element={<EventCreateContainer />} />
-        </Route> */}
-
-        {/* Private admin */}
-        <Route path="user" element={<Layout/>} >
-          <Route path="photographForm" element={<Photographerinfo />} />
-          <Route path="event-list" element={<UserEventList />} />
         </Route>
-
-         {/* Private super-admin */}
-        {/* <Route path="super-admin" element={<ProtectRouteUser element={<Layout />} />}>
-          <Route path="photographForm" element={<Photographerinfo />} />
-        </Route> */}
         <Route path="*" element={<Notfound />} />
       </Routes>
     </BrowserRouter>
