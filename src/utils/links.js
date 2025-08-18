@@ -4,9 +4,26 @@ export const publicLinks = [
   { name: "Download", path: "/download" },
 ];
 
-export const privateLinks = [
+export const privateSuperAdminLinks = [
+  { href: "/super-admin/profile", label: "My Profile" },
+  { href: "/super-admin/dashboard", label: "Dashboard" },
+  { href: "/super-admin/create-event", label: "Create Event" },
+  { href: "/super-admin/event-lists", label: "Event Lists"},
+  { href: "/", label: "Logout" },
+];
+
+export const privateAdminLinks = [
   { href: "/org/profile", label: "My Profile" },
   { href: "/org/dashboard", label: "Dashboard" },
   { href: "/org/create-event", label: "Create Event" },
   { href: "/", label: "Logout" },
+]
+
+export const privateUserLinks = [
+  { href: "/user/profile", label: "My Profile" },
+  { href: "/user/dashboard", label: "Dashboard" },
+  { href: "/user/event-lists", label: "Event Lists"},
+  { href: "/", label: "Logout" }
 ];
+
+

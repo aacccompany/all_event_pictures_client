@@ -10,7 +10,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router";
 import DialogLogin from "@/components/Login/DialogLogin";
-import { privateLinks, publicLinks } from "@/utils/links";
+import {
+  publicLinks,
+  privateUserLinks,
+  privateAdminLinks,
+  privateSuperAdminLinks,
+} from "@/utils/links";
 import useAuthStore from "@/stores/auth-store";
 import { Button } from "@/components/ui/button";
 
@@ -39,7 +44,6 @@ const Nav = () => {
   // console.log("user",user)
   // console.log("token",token)
 
-
   return (
     <>
       <nav className="bg-white shadow-sm sticky top-0 z-40">
@@ -62,7 +66,8 @@ const Nav = () => {
           </div>
 
           {/* Right - Desktop Actions */}
-          {token ? (
+          {token && user.role === "super-admin" ? (
+            // ✅ กรณี super-admin
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="bg-blue-700 hover:bg-blue-800">
@@ -73,18 +78,59 @@ const Nav = () => {
               <DropdownMenuContent className="py-2 m-2">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {privateLinks.map((item, index) => {
-                  return (
-                    <Link to={item.href} key={index}>
-                      <DropdownMenuItem className="cursor-pointer">
-                        {item.label}
-                      </DropdownMenuItem>
-                    </Link>
-                  );
-                })}
+                {privateSuperAdminLinks.map((item, index) => (
+                  <Link to={item.href} key={index}>
+                    <DropdownMenuItem className="cursor-pointer">
+                      {item.label}
+                    </DropdownMenuItem>
+                  </Link>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : token && user.role === "admin" ? (
+            // ✅ กรณี admin
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="bg-blue-700 hover:bg-blue-800">
+                  <Menu />
+                  Menu
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="py-2 m-2">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {privateAdminLinks.map((item, index) => (
+                  <Link to={item.href} key={index}>
+                    <DropdownMenuItem className="cursor-pointer">
+                      {item.label}
+                    </DropdownMenuItem>
+                  </Link>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : token ? (
+            // ✅ กรณี user login
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="bg-blue-700 hover:bg-blue-800">
+                  <Menu />
+                  Menu
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="py-2 m-2">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {privateUserLinks.map((item, index) => (
+                  <Link to={item.href} key={index}>
+                    <DropdownMenuItem className="cursor-pointer">
+                      {item.label}
+                    </DropdownMenuItem>
+                  </Link>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
+            // ✅ กรณีไม่ login
             <div className="hidden md:flex items-center gap-2">
               <Link to={"/cart"}>
                 <button className="p-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100">
