@@ -27,10 +27,10 @@ import { upload_image_cover } from "@/api/uploadimage";
 import { Loader2 } from "lucide-react";
 import useEventStore from "@/stores/event-store";
 
-const DialogUpdate = ({id }) => {
+const DialogUpdate = ({ id }) => {
   const token = useAuthStore((state) => state.token);
-  const actionsGetEvents = useEventStore((state) => state.actionsGetEvents)
-  const actionGetMyEvents = useEventStore((state) => state.actionGetMyEvents)
+  const actionsGetEvents = useEventStore((state) => state.actionsGetEvents);
+  const actionGetMyEvents = useEventStore((state) => state.actionGetMyEvents);
   const [data, setData] = useState({});
   const [originalData, setOriginalData] = useState({});
   const [imageFile, setImageFile] = useState(null);
@@ -81,7 +81,7 @@ const DialogUpdate = ({id }) => {
 
       setOriginalData({ ...data, ...imageData }); // อัปเดตค่าเดิมเป็นล่าสุด
       await actionsGetEvents();
-      await actionGetMyEvents(token)
+      await actionGetMyEvents(token);
       setOpenDialog(false);
     } catch (error) {
       console.log(error);
@@ -151,6 +151,28 @@ const DialogUpdate = ({id }) => {
                 value={data.date}
                 onChange={handleOnChange}
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="event_type">Event Type</Label>
+              <Select
+                name="event_type"
+                value={data.event_type}
+                onValueChange={(value) =>
+                  setData({
+                    ...data,
+                    event_type: value,
+                  })
+                }
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Public">Public</SelectItem>
+                  <SelectItem value="Private">Private</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">

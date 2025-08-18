@@ -37,6 +37,18 @@ const EventTable = () => {
           {event.active ? "Active" : "Close"}
         </span>
       </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm">
+        <span
+          className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+      ${
+        event.event_type === "Public"
+          ? " text-green-800"
+          : " text-red-500"
+      }`}
+        >
+          {event.event_type}
+        </span>
+      </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
         {event.location}
       </td>
@@ -71,6 +83,9 @@ const EventTable = () => {
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Event Type
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Location
