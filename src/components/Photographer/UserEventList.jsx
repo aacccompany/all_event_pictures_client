@@ -8,7 +8,6 @@ const eventsData = [
     title: 'AI FOR ALL 2024',
     description: 'Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts.',
     date: '15 MAY 2024',
-    time: '17:00-21:00',
     imageUrl: 'https://placehold.co/600x400/6366f1/ffffff?text=AI+Event',
     status: 'Available',
   },
@@ -17,7 +16,6 @@ const eventsData = [
     title: 'Future of Web Development',
     description: 'Join us for a deep dive into the next generation of web technologies, from serverless functions to edge computing.',
     date: '22 JUN 2024',
-    time: '09:00-17:00',
     imageUrl: 'https://placehold.co/600x400/ec4899/ffffff?text=Web+Dev',
     status: 'Available',
   },
@@ -26,7 +24,6 @@ const eventsData = [
     title: 'Advanced Design Systems',
     description: 'A hands-on workshop for designers and developers looking to build scalable and maintainable design systems.',
     date: '18 JUL 2024',
-    time: '10:00-16:00',
     imageUrl: 'https://placehold.co/600x400/f59e0b/ffffff?text=Design+Talk',
     status: 'Available',
   },
@@ -35,9 +32,9 @@ const eventsData = [
 // Event Card Component - Updated to a horizontal layout
 const EventCard = ({ event }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col sm:flex-row items-center transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+    <div className="bg-white px-5 rounded-lg shadow-md overflow-hidden flex flex-col sm:flex-row items-center transition-transform duration-300 hover:scale-101">
       {/* Event Image (Left) */}
-      <img className="w-full h-48 sm:w-48 px-1 sm:h-full object-cover flex-shrink-0" src={event.imageUrl} alt={event.title} onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/cccccc/ffffff?text=Image+Error'; }} />
+      <img className="w-full rounded-lg h-48 sm:w-48 sm:h-full object-cover flex-shrink-0" src={event.imageUrl} alt={event.title} onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/cccccc/ffffff?text=Image+Error'; }} />
       
       {/* Text Content (Middle) */}
       <div className="flex-grow p-6 text-center sm:text-left">
@@ -53,7 +50,7 @@ const EventCard = ({ event }) => {
         
         <div className="mt-4 flex items-center justify-center sm:justify-start text-sm text-gray-500">
            <CalendarDays className="h-5 w-5 mr-1.5 text-gray-400" />
-           <span>{event.date} at {event.time}</span>
+           <span>{event.date}</span>
         </div>
       </div>
       

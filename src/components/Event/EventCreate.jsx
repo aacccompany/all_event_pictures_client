@@ -10,6 +10,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,13 +24,13 @@ import useAuthStore from "@/stores/auth-store";
 import { create_event } from "@/api/event";
 import UploadImageCover from "./UploadImageCover";
 import { upload_image_cover } from "@/api/uploadimage";
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
 import useEventStore from "@/stores/event-store";
 
 const EventCreate = () => {
   const token = useAuthStore((state) => state.token);
-  const actionGetEvents = useEventStore((state) => state.actionsGetEvents)
-  const actionGetMyEvents = useEventStore((state) => state.actionGetMyEvents)
+  const actionGetEvents = useEventStore((state) => state.actionsGetEvents);
+  const actionGetMyEvents = useEventStore((state) => state.actionGetMyEvents);
   const [data, setData] = useState({});
   const [imageFile, setImageFile] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -56,8 +63,8 @@ const EventCreate = () => {
         ...data,
         ...imageData,
       });
-      await actionGetEvents()
-      await actionGetMyEvents(token)
+      await actionGetEvents();
+      await actionGetMyEvents(token);
       setOpenDialog(false);
     } catch (error) {
       console.log(error);
@@ -118,6 +125,47 @@ const EventCreate = () => {
               />
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="event_type">Event Type</Label>
+              <Select
+                name="event_type"
+                onValueChange={(value) =>
+                  setData({
+                    ...data, 
+                    event_type: value })
+                }
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Public">Public</SelectItem>
+                  <SelectItem value="Private">Private</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="status">Status</Label>
+              <Select
+                name="active"
+                onValueChange={(val) =>
+                  setData({
+                    ...data,
+                    active: val === "true",
+                  })
+                }
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="true">Active</SelectItem>
+                  <SelectItem value="false">Close</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             {/* location */}
             <div className="md:col-span-2 space-y-2">
               <Label htmlFor="description">Description</Label>
@@ -144,7 +192,7 @@ const EventCreate = () => {
             {isSubmitting ? (
               <Button type="button" disabled className="gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Please wait... 
+                Please wait...
               </Button>
             ) : (
               <Button className="bg-blue-700 hover:bg-blue-800" type="submit">
