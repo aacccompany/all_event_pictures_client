@@ -32,11 +32,11 @@ const CartPay = () => {
         e.preventDefault();
         setError(null); // ล้างข้อผิดพลาดเก่า
         if (cartItems.length === 0) {
-            setError("กรุณาเพิ่มสินค้าลงในตะกร้าก่อน");
+            setError("Add items to your cart before checking out");
             return;
         }
         if (!customerInfo.name || !customerInfo.email) {
-            setError("กรุณากรอกชื่อและอีเมลให้ครบถ้วน");
+            setError("Please fill in your name and email");
             return;
         }
         
@@ -67,8 +67,8 @@ const CartPay = () => {
     if (orderPlaced) return (
         <div className="flex flex-col items-center justify-center h-screen bg-gray-50 text-center p-4">
             <CheckCircleIcon className="w-24 h-24 text-green-500 mb-6"/>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">ขอบคุณสำหรับคำสั่งซื้อ!</h2>
-            <p className="text-gray-600 mb-6">เราได้รับคำสั่งซื้อของคุณแล้ว และลิงก์สำหรับดาวน์โหลดจะถูกส่งไปที่อีเมลของคุณเร็วๆ นี้</p>
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">Thanks for your Order!</h2>
+            <p className="text-gray-600 mb-6">Your Downolad Link will send to your E-mail Soon</p>
             <button 
                 onClick={() => {
                     setOrderPlaced(false);
@@ -76,7 +76,7 @@ const CartPay = () => {
                 }} 
                 className="bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors"
             >
-                กลับไปหน้าแรก
+                Main page
             </button>
         </div>
     );
@@ -96,8 +96,8 @@ const CartPay = () => {
                 {cartItems.length === 0 ? (
                     <div className="text-center bg-white p-12 rounded-lg shadow-md">
                         <ShoppingBagIcon className="w-16 h-16 mx-auto text-gray-300 mb-4"/>
-                        <h2 className="text-2xl font-semibold text-gray-700 mb-2">ตะกร้าของคุณว่างเปล่า</h2>
-                        <p className="text-gray-500">ยังไม่มีสินค้าในตะกร้าของคุณ</p>
+                        <h2 className="text-2xl font-semibold text-gray-700 mb-2">Cart is empty</h2>
+                        <p className="text-gray-500">You have no items in your cart</p>
                     </div>
                 ) : (
                     <form onSubmit={handleCheckout} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
