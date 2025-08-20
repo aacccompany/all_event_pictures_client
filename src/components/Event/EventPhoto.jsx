@@ -6,7 +6,7 @@ const EventPhoto = ({ event }) => {
     return (
       <section className="mt-8">
         <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-800">All Event Photos</h2>
+          <h2 className="text-xl font-semibold text-gray-800">All Photos</h2>
           <p className="text-gray-500 mt-4">ยังไม่มีรูปภาพสำหรับอีเวนต์นี้</p>
         </div>
       </section>

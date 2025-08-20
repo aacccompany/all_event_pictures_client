@@ -59,11 +59,9 @@ const PicLoad = () => {
                         </form>
                     </CardContent>
                     <CardFooter>
-                        <div className="flex w-full">
-                            <Button className="w-full md:w-auto bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-colors duration-300">
+                            <Button className="w-full bg-blue-700 hover:bg-blue-800 text-white">
                                 Search
                             </Button>
-                        </div>
                     </CardFooter>
                 </Card>
             </div>

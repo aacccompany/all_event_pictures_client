@@ -4,6 +4,12 @@ import { useParams } from "react-router";
 import { get_event } from "@/api/event";
 import SearchFace from "./SearchFace";
 import EventPhoto from "./EventPhoto";
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "../ui/button";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "../ui/card";
+import { UploadIcon } from "lucide-react";
+
 
 const EventDetail = () => {
   const [event, setEvent] = useState([]);
@@ -37,6 +43,7 @@ const EventDetail = () => {
             </div>
             <p className="text-sm text-gray-500">Event ID: {id}</p>
           </div>
+
           <div className="mt-4">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
               {event.title}
@@ -62,11 +69,29 @@ const EventDetail = () => {
           </div>
         </section>
 
+        <Card className="w-full gap-3 mt-7">
+          <CardHeader>
+            <CardTitle className="text-blue-700">Upload Images</CardTitle>
+            <CardDescription>Select multiple images to upload.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form className="grid gap-6">
+              <div className="grid gap-2">
+                <Input id="images" type="file" multiple />
+              </div>
+            </form>
+          </CardContent>
+          <CardFooter className="flex justify-center">
+            <Button type="submit" className="w-full bg-blue-700 hover:bg-blue-900">Upload</Button>
+          </CardFooter>
+        </Card>
+
+
         {/* --- Section 2: Search by Face --- */}
         <SearchFace />
 
         {/* --- Section 3: All Event Photos --- */}
-        <EventPhoto event={event}/>
+        <EventPhoto event={event} />
       </div>
     </div>
   );
