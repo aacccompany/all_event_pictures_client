@@ -35,7 +35,7 @@ const eventsData = [
 // Event Card Component - Updated to a horizontal layout
 const EventCard = ({ event }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col sm:flex-row items-center ">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col sm:flex-row items-center transition-transform duration-300 hover:scale-105 hover:shadow-xl">
       {/* Event Image (Left) */}
       <img className="w-full h-48 sm:w-48 px-1 sm:h-full object-cover flex-shrink-0" src={event.imageUrl} alt={event.title} onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/600x400/cccccc/ffffff?text=Image+Error'; }} />
       
