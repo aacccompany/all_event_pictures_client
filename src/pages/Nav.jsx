@@ -147,7 +147,7 @@ const Nav = () => {
             </div>
           )}
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button
           <div className="md:hidden flex items-center">
             <button
               onClick={toggleMobileMenu}
@@ -156,7 +156,7 @@ const Nav = () => {
               <Menu className="h-6 w-6" />
               <span className="sr-only">Open menu</span>
             </button>
-          </div>
+          </div> */}
         </div>
       </nav>
 

@@ -74,6 +74,8 @@ const DialogUpdate = ({ id }) => {
         };
       }
 
+      if (data.event_type === "Private") delete data.limit
+
       await update_event(token, id, {
         ...data,
         ...imageData,
@@ -196,6 +198,20 @@ const DialogUpdate = ({ id }) => {
                 </SelectContent>
               </Select>
             </div>
+
+            {data.event_type === "Public" && (
+              <div className="md:col-span-2 space-y-2">
+                <Label htmlFor="count">Registration Limit</Label>
+                <Input
+                  id="limit"
+                  name="limit"
+                  type="number"
+                  placeholder="Max number of registrations"
+                  value={data.limit}
+                  onChange={handleOnChange}
+                />
+              </div>
+            )}
 
             {/* description */}
             <div className="md:col-span-2 space-y-2">
