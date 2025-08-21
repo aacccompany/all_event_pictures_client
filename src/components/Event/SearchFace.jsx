@@ -72,7 +72,7 @@ const SearchFace = () => {
                   {selectedFile.name}
                 </p>
                 <p className="text-sm text-gray-500">
-                  ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+                  ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
                 </p>
               </div>
             ) : (
