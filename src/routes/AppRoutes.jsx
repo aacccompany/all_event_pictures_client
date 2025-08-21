@@ -13,6 +13,7 @@ import DashBoardContainer from "@/components/Dashboard/DashBoardContainer";
 import EventCreateContainer from "@/components/Event/EventCreateContainer";
 import EventView from "@/pages/EventView";
 import UserEventList from "@/components/Photographer/UserEventList";
+import MyRegister from "@/components/Photographer/MyRegister";
 
 const AppRoutes = () => {
   return (
@@ -34,6 +35,7 @@ const AppRoutes = () => {
           <Route path="dashboard" element={<DashBoardContainer />} />
           <Route path="photographForm" element={<Photographerinfo />} />
           <Route path="event-lists" element={<UserEventList />} />
+          <Route path="my-register" element={<MyRegister />} />
         </Route>
 
         {/* Private Admin */}
