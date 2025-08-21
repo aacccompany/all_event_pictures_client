@@ -40,11 +40,7 @@ const EventTable = () => {
       <td className="px-6 py-4 whitespace-nowrap text-sm">
         <span
           className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
-      ${
-        event.event_type === "Public"
-          ? " text-green-800"
-          : " text-red-500"
-      }`}
+      ${event.event_type === "Public" ? " text-green-600" : " text-red-500"}`}
         >
           {event.event_type}
         </span>
@@ -53,10 +49,13 @@ const EventTable = () => {
         {event.location}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+        {event.limit || "N/A"} 
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
         {event.created_by?.email}
       </td>
       <td>
-        <div className="flex">
+        <div className="flex justify-center">
           <DialogUpdate id={event.id} />
           <EventDelete id={event.id} title={event.title} />
         </div>
@@ -75,10 +74,10 @@ const EventTable = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider ">
                   Event Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Date
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -91,9 +90,12 @@ const EventTable = () => {
                   Location
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Organizer
+                  Limit
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Organizer
+                </th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Action
                 </th>
               </tr>

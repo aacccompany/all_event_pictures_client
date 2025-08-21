@@ -59,6 +59,8 @@ const EventCreate = () => {
         };
       }
 
+      if (data.event_type === "Private") delete data.limit
+
       await create_event(token, {
         ...data,
         ...imageData,
@@ -109,7 +111,7 @@ const EventCreate = () => {
                 id="location"
                 name="location"
                 type="text"
-                placeholder="ริมบึงแก่นนคร"
+                placeholder="Location"
                 onChange={handleOnChange}
               />
             </div>
@@ -131,8 +133,9 @@ const EventCreate = () => {
                 name="event_type"
                 onValueChange={(value) =>
                   setData({
-                    ...data, 
-                    event_type: value })
+                    ...data,
+                    event_type: value,
+                  })
                 }
               >
                 <SelectTrigger className="w-full">
@@ -165,6 +168,34 @@ const EventCreate = () => {
                 </SelectContent>
               </Select>
             </div>
+
+            {data.event_type === "Public" && (
+              <div className="md:col-span-2 space-y-2">
+                <Label htmlFor="count">Registration Limit</Label>
+                <Input
+                  id="limit"
+                  name="limit"
+                  type="number"
+                  placeholder="Max number of registrations"
+                  onChange={handleOnChange}
+                />
+              </div>
+            )}
+
+            {/* {data.event_type === "Private" && (
+              <div className="md:col-span-2 space-y-2">
+                <Label htmlFor="user_ids">User Email</Label>
+                <Input
+                  id="user_ids"
+                  name="user_ids"
+                  type="text"
+                  placeholder="Limit register"
+                  onChange={handleOnChange}
+                />
+              </div>
+            )} */}
+
+            
 
             {/* location */}
             <div className="md:col-span-2 space-y-2">

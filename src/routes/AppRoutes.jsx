@@ -42,8 +42,6 @@ const AppRoutes = () => {
           <Route path="create-event" element={<EventCreateContainer />} />
         </Route>
 
-       
-
         {/* Private Super-Admin */}
         <Route path="super-admin" element={<ProtectRouteUser element={<Layout />} />}>
            <Route path="dashboard" element={<DashBoardContainer />} />
