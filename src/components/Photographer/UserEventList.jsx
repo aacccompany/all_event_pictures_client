@@ -27,7 +27,10 @@ const UserEventList = () => {
         {/* Events List (changed from Grid to Flex Column) */}
         <div className="mt-5 flex flex-col gap-2">
           {activeEvents.map((event, index) => (
-            <div key={index} className="bg-white p-5 rounded-lg shadow-md overflow-hidden flex flex-col sm:flex-row items-center transition-transform duration-300 hover:scale-101">
+            <div
+              key={index}
+              className="bg-white p-5 rounded-lg shadow-md overflow-hidden flex flex-col sm:flex-row items-center transition-transform duration-300 hover:scale-101"
+            >
               <img
                 className="w-full rounded-lg h-48 sm:w-82 sm:h-full object-cover flex-shrink-0"
                 src={event.image_cover}
@@ -37,13 +40,13 @@ const UserEventList = () => {
                 <div>
                   <span
                     className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
-                      ${
-                        event.active
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-500"
-                      }`}
+                    ${
+                      event.event_type === "Private"
+                        ? "bg-red-100 text-red-500"
+                        : "bg-green-100 text-green-800"
+                    }`}
                   >
-                    {event.active ? "Active" : "Close"}
+                    {event.event_type === "Private" ? "Private" : "Public"}
                   </span>
                 </div>
 
@@ -60,7 +63,7 @@ const UserEventList = () => {
                   <span>{event.date}</span>
                 </div>
               </div>
-              <RegisterEvent id={event.id} />
+              <RegisterEvent id={event.id} event_type={event.event_type}/>
             </div>
           ))}
         </div>

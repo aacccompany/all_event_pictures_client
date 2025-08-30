@@ -51,6 +51,7 @@ const eventStore = (set) => ({
       console.log(error);
     }
   },
+
 });
 
 const useEventStore = create(eventStore);
