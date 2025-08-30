@@ -14,6 +14,7 @@ import EventCreateContainer from "@/components/Event/EventCreateContainer";
 import EventView from "@/pages/EventView";
 import UserEventList from "@/components/Photographer/UserEventList";
 import MyRegister from "@/components/Photographer/MyRegister";
+import GrapherUpload from "@/components/Photographer/GrapherUpload";
 
 const AppRoutes = () => {
   return (
@@ -36,6 +37,7 @@ const AppRoutes = () => {
           <Route path="photographForm" element={<Photographerinfo />} />
           <Route path="event-lists" element={<UserEventList />} />
           <Route path="my-register" element={<MyRegister />} />
+          <Route path="upload-images/:id" element={<GrapherUpload />} />
         </Route>
 
         {/* Private Admin */}
@@ -46,9 +48,11 @@ const AppRoutes = () => {
 
         {/* Private Super-Admin */}
         <Route path="super-admin" element={<ProtectRouteUser element={<Layout />} />}>
-           <Route path="dashboard" element={<DashBoardContainer />} />
+          <Route path="dashboard" element={<DashBoardContainer />} />
           <Route path="event-lists" element={<UserEventList />} />
           <Route path="create-event" element={<EventCreateContainer />} />
+          <Route path="my-register" element={<MyRegister />} />
+          <Route path="upload-images/:id" element={<GrapherUpload />} />
         </Route>
         <Route path="*" element={<Notfound />} />
       </Routes>

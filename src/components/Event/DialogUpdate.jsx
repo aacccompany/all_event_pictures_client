@@ -26,6 +26,9 @@ import UploadImageCover from "./UploadImageCover";
 import { upload_image_cover } from "@/api/uploadimage";
 import { Loader2 } from "lucide-react";
 import useEventStore from "@/stores/event-store";
+import InviteEvent from "../Form/InviteEvent";
+import { invite_event } from "@/api/event_user";
+import { toast } from "sonner";
 
 const DialogUpdate = ({ id }) => {
   const token = useAuthStore((state) => state.token);
@@ -36,6 +39,23 @@ const DialogUpdate = ({ id }) => {
   const [imageFile, setImageFile] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [emails, setEmails] = useState([]);
+
+  const handleInvite = async () => {
+    if (emails.length === 0) return true;
+    try {
+      await invite_event(token, id, { user_emails: emails });
+      toast.success("Invite sent successfully");
+      return true; // success
+    } catch (error) {
+      const msgErr = error.response?.data?.detail || "Invite fail";
+      toast.warning(msgErr);
+      console.log(error);
+      return false; // fail
+    }
+  };
 
   useEffect(() => {
     if (openDialog) handleGetEvent(id);
@@ -61,7 +81,13 @@ const DialogUpdate = ({ id }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
+    if (data.event_type === "Private" && email.trim() !== "") {
+      toast.warning("Please press Enter to add email before saving");
+      return;
+    }
+
     setIsSubmitting(true);
+
     try {
       let imageData = {};
       if (imageFile) {
@@ -74,18 +100,30 @@ const DialogUpdate = ({ id }) => {
         };
       }
 
-      if (data.event_type === "Private") delete data.limit
+      if (data.event_type === "Private") delete data.limit;
 
       await update_event(token, id, {
         ...data,
         ...imageData,
       });
 
-      setOriginalData({ ...data, ...imageData }); // อัปเดตค่าเดิมเป็นล่าสุด
-      await actionsGetEvents();
-      await actionGetMyEvents(token);
-      setOpenDialog(false);
+      let inviteSuccess = true;
+      if (data.event_type === "Private") {
+        inviteSuccess = await handleInvite();
+      }
+
+      if (inviteSuccess) {
+        setOriginalData({ ...data, ...imageData });
+        await actionsGetEvents();
+        await actionGetMyEvents(token);
+        setEmails([]);
+        setEmail("");
+        setOpenDialog(false);
+        toast.success("Update successfully");
+      }
     } catch (error) {
+      const msgErr = error.response?.data?.detail || "Update fail";
+      toast.warning(msgErr);
       console.log(error);
     } finally {
       setIsSubmitting(false);
@@ -94,8 +132,10 @@ const DialogUpdate = ({ id }) => {
 
   const handleDialogChange = (open) => {
     if (!open) {
-      setData(originalData); // ถ้าปิดโดยไม่ Save ให้ revert กลับ
+      setData(originalData);
       setImageFile(null);
+      setEmails([]);
+      setEmail("");
     }
     setOpenDialog(open);
   };
@@ -107,7 +147,7 @@ const DialogUpdate = ({ id }) => {
           className="bg-purple-700 hover:bg-purple-900 hover:text-white text-white"
           variant="outline"
         >
-          Edit
+          Details
         </Button>
       </DialogTrigger>
 
@@ -212,6 +252,53 @@ const DialogUpdate = ({ id }) => {
                 />
               </div>
             )}
+
+            <div className="md:col-span-2 space-y-2">
+              {data.event_type === "Private" && (
+                <div>
+                  <Label>Invite</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="user_emails"
+                      type="email"
+                      placeholder="example@gmail.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          if (email && !emails.includes(email)) {
+                            setEmails([...emails, email]);
+                            setEmail("");
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+
+                  {/* Email list as tags */}
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {emails.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-1 px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm"
+                      >
+                        {item}
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setEmails(emails.filter((em) => em !== item))
+                          }
+                          className="ml-1 text-gray-500 hover:text-red-500"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* description */}
             <div className="md:col-span-2 space-y-2">

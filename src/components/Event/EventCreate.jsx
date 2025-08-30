@@ -59,7 +59,7 @@ const EventCreate = () => {
         };
       }
 
-      if (data.event_type === "Private") delete data.limit
+      if (data.event_type === "Private") delete data.limit;
 
       await create_event(token, {
         ...data,
@@ -181,21 +181,6 @@ const EventCreate = () => {
                 />
               </div>
             )}
-
-            {/* {data.event_type === "Private" && (
-              <div className="md:col-span-2 space-y-2">
-                <Label htmlFor="user_ids">User Email</Label>
-                <Input
-                  id="user_ids"
-                  name="user_ids"
-                  type="text"
-                  placeholder="Limit register"
-                  onChange={handleOnChange}
-                />
-              </div>
-            )} */}
-
-            
 
             {/* location */}
             <div className="md:col-span-2 space-y-2">

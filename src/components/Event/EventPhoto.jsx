@@ -1,6 +1,5 @@
 const EventPhoto = ({ event }) => {
  const images = event?.images ?? [];
-  console.log(images);
 
   if (!images.length) {
     return (
