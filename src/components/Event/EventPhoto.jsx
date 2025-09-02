@@ -60,8 +60,8 @@ const EventPhoto = ({ event }) => {
                 onClick={() => openImageViewer(image)}
               >
                 <img
-                  src={image.secure_url}
-                  alt={`Event photo ${image.public_id}`}
+                  src={image?.preview_url}
+                  alt={`Event photo ${image?.public_id}`}
                   className="w-full h-full object-cover aspect-square transform group-hover:scale-105 transition-transform duration-300"
                   onError={(e) => {
                     e.target.onerror = null;
