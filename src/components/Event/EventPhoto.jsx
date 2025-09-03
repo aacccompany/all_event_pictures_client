@@ -1,22 +1,9 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react'; // Import ไอคอน X
 
-// --- Mockup รูปภาพ ---
-const mockImages = [
-  { public_id: 'mock1', secure_url: 'https://picsum.photos/seed/p1/600/600', price: 150 },
-  { public_id: 'mock2', secure_url: 'https://picsum.photos/seed/p2/600/600', price: 100 },
-  { public_id: 'mock3', secure_url: 'https://picsum.photos/seed/p3/600/600', price: 250 },
-  { public_id: 'mock4', secure_url: 'https://picsum.photos/seed/p4/600/600', price: 120 },
-  { public_id: 'mock5', secure_url: 'https://picsum.photos/seed/p5/600/600', price: 150 },
-  { public_id: 'mock6', secure_url: 'https://picsum.photos/seed/p6/600/600', price: 180 },
-  { public_id: 'mock7', secure_url: 'https://picsum.photos/seed/p7/600/600', price: 200 },
-  { public_id: 'mock8', secure_url: 'https://picsum.photos/seed/p8/600/600', price: 100 },
-];
-
 
 const EventPhoto = ({ event }) => {
-  // ตรวจสอบว่า event.images มีข้อมูลไหม ถ้าไม่มีให้ใช้ mockImages แทน
-  const images = event?.images?.length ? event.images : mockImages;
+  const images = event?.images ?? [];
   const [selectedImage, setSelectedImage] = useState(null);
 
   if (!images.length) {
@@ -30,7 +17,6 @@ const EventPhoto = ({ event }) => {
     );
   }
 
-  // --- Handlers ---
   const handleAddToCart = (e, image) => {
     e.stopPropagation();
     console.log('Added to cart:', image);
@@ -70,13 +56,6 @@ const EventPhoto = ({ event }) => {
                   }}
                 />
                 
-                {/* Price ใช้ไหมไม่รู้แต่ใส่มาเฉยๆ */}
-                {image.price && (
-                    <div className="absolute top-2 right-2 bg-black bg-opacity-70 text-white text-sm font-bold px-2 py-1 rounded-full">
-                        ฿{image.price}
-                    </div>
-                )}
-
                 {/* Overlay ที่จะแสดงตอน hover */}
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100">
                   <button
@@ -140,3 +119,49 @@ const EventPhoto = ({ event }) => {
 
 export default EventPhoto;
 
+// const EventPhoto = ({ event }) => {
+//  const images = event?.images ?? [];
+
+//   if (!images.length) {
+//     return (
+//       <section className="mt-8">
+//         <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-200">
+//           <h2 className="text-xl font-semibold text-gray-800">All Photos</h2>
+//           <p className="text-gray-500 mt-4">No photos for this event yet.</p>
+//         </div>
+//       </section>
+//     );
+//   }
+
+//   return (
+//     <div>
+//       <section className="mt-8">
+//         <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-200">
+//           <h2 className="text-xl font-semibold text-gray-800">
+//             All Event Photos
+//           </h2>
+//           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+//             {images.map((image, index) => (
+//               <div
+//                 key={index}
+//                 className="group relative overflow-hidden rounded-lg"
+//               >
+//                 <img
+//                   src={image?.preview_url}
+//                   alt={`Event photo ${image?.public_id}`}
+//                   className="w-full h-full object-cover aspect-square transform group-hover:scale-105 transition-transform duration-300"
+//                   onError={(e) => {
+//                     e.target.onerror = null;
+//                     e.target.src =
+//                       "https://placehold.co/600x400/CCCCCC/FFFFFF?text=Image+Error";
+//                   }}
+//                 />
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+//     </div>
+//   );
+// };
+// export default EventPhoto;
