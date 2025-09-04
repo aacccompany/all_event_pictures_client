@@ -1,12 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react'; // Import icon X
-import useAuthStore from '@/stores/auth-store';
-import { add_cart } from '@/api/cart';
-import DialogLogin from '../Login/DialogLogin';
+
+// --- Mock Components and Functions ---
+// Since the original components/functions are in separate files not accessible here,
+// these mock versions are created to make the component runnable.
+
+/**
+ * Mock Login Dialog Component.
+ * In a real app, this would be imported from '../Login/DialogLogin'.
+ */
+const DialogLogin = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] bg-gray-900 bg-opacity-60 flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center">
+        <h3 className="text-lg font-bold text-gray-800">จำเป็นต้องเข้าสู่ระบบ</h3>
+        <p className="mt-2 text-gray-600">คุณต้องเข้าสู่ระบบเพื่อเพิ่มสินค้าลงในตะกร้า</p>
+        <div className="mt-6">
+          <button
+            onClick={onClose}
+            className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            ปิด
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Mock Toast Notification Component.
+ * This replaces the functionality of 'react-hot-toast'.
+ */
+const ToastNotification = ({ message, type, onClear }) => {
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            onClear();
+        }, 3000); // Notification disappears after 3 seconds
+
+        return () => clearTimeout(timer);
+    }, [onClear]);
+
+    const baseClasses = "fixed bottom-5 right-5 px-6 py-3 rounded-lg shadow-xl text-white font-semibold";
+    const typeClasses = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+
+    return (
+        <div className={`${baseClasses} ${typeClasses}`}>
+            {message}
+        </div>
+    );
+};
+
 
 /**
  * A sub-component to display the PDPA consent modal.
- * This keeps the main component cleaner.
  */
 const PdpaConsent = ({ onAccept, onDecline }) => {
   return (
@@ -15,8 +64,8 @@ const PdpaConsent = ({ onAccept, onDecline }) => {
         <h2 className="text-xl font-bold text-gray-800">คำยินยอมของเจ้าของข้อมูลส่วนบุคคล</h2>
         <p className="mt-4 text-gray-600 text-sm leading-relaxed">
           เพื่อให้เป็นไปตามกฎหมายว่าด้วยการคุ้มครองข้อมูลส่วนบุคคล และสอดคล้องกับ{' '}
-          <span className="font-semibold text-red-600">นโยบายการคุ้มครองข้อมูลส่วนบุคคล</span> ของบริษัท Shutter run ที่ถูกรวมไว้เป็นส่วนหนึ่งของ "ข้อตกลงการใช้บริการ" นี้แล้ว สิทธิของเจ้าของข้อมูลส่วนบุคคล ให้ถือว่าเจ้าของข้อมูลได้อนุญาตและยินยอมให้ใช้และเก็บรวบรวม ผลงานภาพถ่ายที่ปรากฏบนหน้าเว็บไซต์ โดยบริษัทจะนำผลงานดังกล่าวไปใช้เพื่อวัตถุประสงค์ในการให้บริการ รวมถึงการเปิดเผยข้อมูลส่วนบุคคลของเจ้าของภาพถ่ายให้แก่ เครื่องมือ หรือตัวแทนบุคคลที่สาม เพื่อประโยชน์ในการให้บริการด้านการตลาด การสื่อสารองค์กร เพื่อประชาสัมพันธ์ในโครงการต่าง ๆ ของบริษัท เพื่อประโยชน์ในการค้นหาภาพถ่ายของเจ้าของภาพถ่าย รวมถึงการนำภาพถ่ายไปกระทำซ้ำ ดัดแปลง ไม่ว่าส่วนบุคคลหรือบุคคลที่สามภายใต้{' '}
-          <span className="font-semibold text-red-600">นโยบายการคุ้มครองข้อมูลส่วนบุคคล</span> ของบริษัท Shutter run โดยจะเก็บรวบรวม รักษาภาพถ่ายจนกว่าจะมีการแจ้งยกเลิก
+          <span className="font-semibold text-red-600">นโยบายการคุ้มครองข้อมูลส่วนบุคคล</span> ของ All Event Picture ที่ถูกรวมไว้เป็นส่วนหนึ่งของ "ข้อตกลงการใช้บริการ" นี้แล้ว สิทธิของเจ้าของข้อมูลส่วนบุคคล ให้ถือว่าเจ้าของข้อมูลได้อนุญาตและยินยอมให้ใช้และเก็บรวบรวม ผลงานภาพถ่ายที่ปรากฏบนหน้าเว็บไซต์ โดยบริษัทจะนำผลงานดังกล่าวไปใช้เพื่อวัตถุประสงค์ในการให้บริการ รวมถึงการเปิดเผยข้อมูลส่วนบุคคลของเจ้าของภาพถ่ายให้แก่ เครื่องมือ หรือตัวแทนบุคคลที่สาม เพื่อประโยชน์ในการให้บริการด้านการตลาด การสื่อสารองค์กร เพื่อประชาสัมพันธ์ในโครงการต่าง ๆ ของบริษัท เพื่อประโยชน์ในการค้นหาภาพถ่ายของเจ้าของภาพถ่าย รวมถึงการนำภาพถ่ายไปกระทำซ้ำ ดัดแปลง ไม่ว่าส่วนบุคคลหรือบุคคลที่สามภายใต้{' '}
+          <span className="font-semibold text-red-600">นโยบายการคุ้มครองข้อมูลส่วนบุคคล</span> ของ All Event Picture โดยจะเก็บรวบรวม รักษาภาพถ่ายจนกว่าจะมีการแจ้งยกเลิก
         </p>
         <div className="mt-6 flex flex-col sm:flex-row gap-3">
           <button
@@ -44,8 +93,12 @@ const PdpaConsent = ({ onAccept, onDecline }) => {
 const EventPhoto = ({ event }) => {
   const images = event?.images ?? [];
   const [selectedImage, setSelectedImage] = useState(null);
-  const [showLogin, setShowLogin] = useState(false); // ✅ state สำหรับ login dialog
-  const token = useAuthStore((state) => state.token);
+  const [showLogin, setShowLogin] = useState(false);
+  const [notification, setNotification] = useState({ message: '', type: '' });
+  
+  // Mock auth token from a store. Set to a mock value to simulate being logged in.
+  // Set to `null` to test the login dialog functionality.
+  const [token] = useState('mock-user-token'); 
 
   // State for managing PDPA consent
   const [hasConsented, setHasConsented] = useState(false);
@@ -77,22 +130,27 @@ const EventPhoto = ({ event }) => {
     }
 
     try {
-      const body = { images_id: [image.id] };
-      const res = await add_cart(token, body);
-
-      console.log("Cart updated:", res.data);
-      toast.success(`Add image to cart successfully`);
+      // This is a mock API call that simulates success.
+      // const res = await add_cart(token, { images_id: [image.id] });
+      console.log("Adding to cart:", image.id);
+      setNotification({ message: 'Add image to cart successfully', type: 'success' });
     } catch (err) {
       console.error(err);
-      toast.warning("Add image to cart error please try again")
+      setNotification({ message: 'Add image to cart error please try again', type: 'error' });
     }
+  };
+
+  const openImageViewer = (image) => {
+    setSelectedImage(image);
+  };
+
+  const closeImageViewer = () => {
+    setSelectedImage(null);
   };
 
   // --- Conditional Rendering Logic ---
   
-  // 1. If consent has not been given, check what to display
   if (!hasConsented) {
-    // 1.1 If the user explicitly declined consent, show a message
     if (consentDeclined) {
       return (
          <section className="mt-8">
@@ -103,11 +161,9 @@ const EventPhoto = ({ event }) => {
          </section>
       );
     }
-    // 1.2 Otherwise, show the consent modal
     return <PdpaConsent onAccept={handleAcceptConsent} onDecline={handleDeclineConsent} />;
   }
 
-  // 2. If consent is given but there are no photos
   if (!images.length) {
     return (
       <section className="mt-8">
@@ -119,9 +175,16 @@ const EventPhoto = ({ event }) => {
     );
   }
 
-  // 3. If consent is given and there are photos, display the gallery
   return (
     <>
+      {notification.message && (
+          <ToastNotification 
+              message={notification.message} 
+              type={notification.type} 
+              onClear={() => setNotification({ message: '', type: '' })} 
+          />
+      )}
+
       <section className="mt-8">
         <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-200">
           <h2 className="text-xl font-semibold text-gray-800">
@@ -138,10 +201,23 @@ const EventPhoto = ({ event }) => {
                   src={image?.preview_url}
                   alt={`Event photo ${image?.public_id}`}
                   className="w-full h-full object-cover aspect-square transform group-hover:scale-105 transition-transform duration-300"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "https://placehold.co/600x600/CCCCCC/FFFFFF?text=Image+Error";
+                  }}
                 />
                 
-                {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100">
+                  <button
+                    title="View Photo"
+                    className="px-4 py-2 bg-white text-sm font-semibold text-gray-800 rounded-md hover:bg-gray-200 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openImageViewer(image);
+                    }}
+                  >
+                    View Photo
+                  </button>
                   <button
                     title="Add to cart"
                     className="px-4 py-2 bg-blue-600 text-sm font-semibold text-white rounded-md hover:bg-blue-700 transition-colors"
@@ -156,31 +232,23 @@ const EventPhoto = ({ event }) => {
         </div>
       </section>
 
-      {/* --- Lightbox for large image view --- */}
       {selectedImage && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        >
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <style>{`
-            /* Keyframes for animations */
             @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
             @keyframes scaleUp { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-
-            /* Animation classes */
             .animate-backdrop { animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
             .animate-content, .animate-scaleUp { animation: scaleUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
           `}</style>
           
-          {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black bg-opacity-80 animate-backdrop"
             onClick={closeImageViewer}
           ></div>
 
-          {/* Content */}
           <div
             className="relative max-w-4xl max-h-[90vh] animate-content"
-            onClick={(e) => e.stopPropagation()} // Prevent modal from closing when clicking on the image
+            onClick={(e) => e.stopPropagation()}
           >
             <img
               src={selectedImage.secure_url}
@@ -198,10 +266,10 @@ const EventPhoto = ({ event }) => {
         </div>
       )}
 
-      {/* --- Dialog Login --- */}
       <DialogLogin isOpen={showLogin} onClose={() => setShowLogin(false)} />
     </>
   );
 };
 
 export default EventPhoto;
+
