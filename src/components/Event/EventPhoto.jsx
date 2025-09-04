@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react'; // Import icon X
+import useAuthStore from '@/stores/auth-store';
+import { add_cart } from '@/api/cart';
+import DialogLogin from '../Login/DialogLogin';
 
 /**
  * A sub-component to display the PDPA consent modal.
@@ -65,7 +68,7 @@ const EventPhoto = ({ event }) => {
     setConsentDeclined(true);
   };
   
-  const handleAddToCart = (e, image) => {
+  const handleAddToCart = async(e, image) => {
     e.stopPropagation();
 
     if (!token) {
