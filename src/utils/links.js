@@ -4,6 +4,10 @@ export const publicLinks = [
   { name: "Download", path: "/download" },
 ];
 
+export const publicUserLinks = [
+  { href: "/", label: "Logout" },
+];
+
 export const privateSuperAdminLinks = [
   { href: "/super-admin/profile", label: "My Profile" },
   { href: "/super-admin/dashboard", label: "Dashboard" },
@@ -27,3 +31,4 @@ export const privateUserLinks = [
   { href: "/user/my-register", label: "My Register" },
   { href: "/", label: "Logout" },
 ];
+

@@ -12,6 +12,8 @@ const CartDownload = () => {
     // ข้อมูลรูปภาพเริ่มต้น (เอาราคาออก)
     const initialCart = [
         { id: 'p1', name: 'รูปจากงาน Chiang Mai Marathon 2025', imageUrl: 'https://placehold.co/64x64/3498db/ffffff?text=Photo+1' },
+        { id: 'p1', name: 'รูปจากงาน Chiang Mai Marathon 2025', imageUrl: 'https://placehold.co/64x64/3498db/ffffff?text=Photo+1' },
+        { id: 'p1', name: 'รูปจากงาน Chiang Mai Marathon 2025', imageUrl: 'https://placehold.co/64x64/3498db/ffffff?text=Photo+1' },
     ];
 
     const [cartItems, setCartItems] = useState(initialCart);

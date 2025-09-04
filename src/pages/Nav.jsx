@@ -15,6 +15,7 @@ import {
   privateUserLinks,
   privateAdminLinks,
   privateSuperAdminLinks,
+  publicUserLinks,
 } from "@/utils/links";
 import useAuthStore from "@/stores/auth-store";
 import { Button } from "@/components/ui/button";
@@ -51,7 +52,9 @@ const Nav = () => {
           {/* Logo */}
           <Link to={"/"} className="flex items-center gap-2 flex-shrink-0">
             <Camera className="w-8 h-8 text-blue-700" />
-            <span className="font-bold text-lg text-gray-800">EVENTPIC</span>
+            <span className="font-bold text-lg text-gray-800 uppercase">
+              event-pic
+            </span>
           </Link>
 
           {/* Desktop Menu */}
@@ -108,6 +111,33 @@ const Nav = () => {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+          ) : token && user.role === "user-public" ? (
+            <div className="hidden md:flex items-center gap-2">
+              <Link to={"/cart"}>
+                <button className="p-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 cursor-pointer">
+                  <ShoppingCart className="w-5 h-5" />
+                </button>
+              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="bg-blue-700 hover:bg-blue-800">
+                    <Menu />
+                    Menu
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="py-2 m-2">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {publicUserLinks.map((item, index) => (
+                    <Link to={item.href} key={index}>
+                      <DropdownMenuItem className="cursor-pointer">
+                        {item.label}
+                      </DropdownMenuItem>
+                    </Link>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           ) : token ? (
             // ✅ กรณี user login
             <DropdownMenu>
@@ -130,21 +160,12 @@ const Nav = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            // ✅ กรณีไม่ login
-            <div className="hidden md:flex items-center gap-2">
-              <Link to={"/cart"}>
-                <button className="p-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 cursor-pointer">
-                  <ShoppingCart className="w-5 h-5" />
-                </button>
-              </Link>
-
-              <button
+            <button
                 onClick={() => setIsLoginOpen(true)}
                 className="px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-md hover:bg-blue-800"
               >
                 Login
               </button>
-            </div>
           )}
 
           {/* Mobile Menu Button

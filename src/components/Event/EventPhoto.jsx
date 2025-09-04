@@ -41,6 +41,8 @@ const PdpaConsent = ({ onAccept, onDecline }) => {
 const EventPhoto = ({ event }) => {
   const images = event?.images ?? [];
   const [selectedImage, setSelectedImage] = useState(null);
+  const [showLogin, setShowLogin] = useState(false); // ✅ state สำหรับ login dialog
+  const token = useAuthStore((state) => state.token);
 
   // State for managing PDPA consent
   const [hasConsented, setHasConsented] = useState(false);
@@ -65,16 +67,22 @@ const EventPhoto = ({ event }) => {
   
   const handleAddToCart = (e, image) => {
     e.stopPropagation();
-    console.log('Added to cart:', image);
-    alert(`เพิ่มรูป "${image.public_id}" ราคา ${image.price || 'N/A'} บาท ลงในตะกร้าแล้ว!`);
-  };
 
-  const openImageViewer = (image) => {
-    setSelectedImage(image);
-  };
+    if (!token) {
+      setShowLogin(true);
+      return;
+    }
 
-  const closeImageViewer = () => {
-    setSelectedImage(null);
+    try {
+      const body = { images_id: [image.id] };
+      const res = await add_cart(token, body);
+
+      console.log("Cart updated:", res.data);
+      toast.success(`Add image to cart successfully`);
+    } catch (err) {
+      console.error(err);
+      toast.warning("Add image to cart error please try again")
+    }
   };
 
   // --- Conditional Rendering Logic ---
@@ -127,11 +135,6 @@ const EventPhoto = ({ event }) => {
                   src={image?.preview_url}
                   alt={`Event photo ${image?.public_id}`}
                   className="w-full h-full object-cover aspect-square transform group-hover:scale-105 transition-transform duration-300"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src =
-                      "https://placehold.co/600x600/CCCCCC/FFFFFF?text=Image+Error";
-                  }}
                 />
                 
                 {/* Hover overlay */}
@@ -191,6 +194,9 @@ const EventPhoto = ({ event }) => {
           </div>
         </div>
       )}
+
+      {/* --- Dialog Login --- */}
+      <DialogLogin isOpen={showLogin} onClose={() => setShowLogin(false)} />
     </>
   );
 };
