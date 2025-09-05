@@ -15,6 +15,7 @@ import EventView from "@/pages/EventView";
 import UserEventList from "@/components/Photographer/UserEventList";
 import MyRegister from "@/components/Photographer/MyRegister";
 import GrapherUpload from "@/components/Photographer/GrapherUpload";
+import BuyerRegis from "@/components/Register/BuyerRegis";
 
 const AppRoutes = () => {
   return (
@@ -26,6 +27,7 @@ const AppRoutes = () => {
           <Route path="/events" element={<Event />} />
           <Route path="/download" element={<Download />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/register/user" element={<BuyerRegis />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/event-detail/:id" element={<EventView />} />
           <Route path="/events/event-detail/:id" element={<EventView />} />

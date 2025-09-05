@@ -19,6 +19,11 @@ const DialogLogin = ({ isOpen, onClose }) => {
     onClose();
   };
 
+  const handleRedirectBuyer = () => {
+    navigate("/register/user");
+    onClose();
+  };
+
   const handleOnChange = (e) => {
     setForm({
       ...form,
@@ -95,7 +100,7 @@ const DialogLogin = ({ isOpen, onClose }) => {
               />
             </div>
             <div className="text-sm text-blue-500 hover:text-blue-600 cursor-pointer">
-              <div className="mb-3">Create Account for your Photo</div>
+              <div onClick={handleRedirectBuyer} className="mb-3">Create Account for your Photo</div>
               <div onClick={handleRedirect}>Create Account for Photographer</div>
             </div>
           </div>

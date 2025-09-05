@@ -15,3 +15,11 @@ export const get_my_cart = async(token) => {
         }
     })
 }
+
+export const remove_image_from_cart = async(token, cart_image_id) => {
+    return await axios.delete(`http://localhost:8081/api/v1/cart-images/${cart_image_id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}

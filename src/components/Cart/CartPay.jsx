@@ -1,11 +1,16 @@
-import { get_my_cart } from "@/api/cart";
+import { get_my_cart, remove_image_from_cart } from "@/api/cart";
 import useAuthStore from "@/stores/auth-store";
 import React, { useEffect, useState } from "react";
 import { TrashIcon } from "lucide-react";
+import { toast } from "sonner";
 
 const CartDownload = () => {
   const token = useAuthStore((state) => state.token);
   const [data, setData] = useState({});
+
+  useEffect(() => {
+    handleMyCart();
+  }, []);
 
   const handleMyCart = async () => {
     try {
@@ -16,14 +21,16 @@ const CartDownload = () => {
     }
   };
 
-  const handleRemoveItem = (id) => {
-    console.log("remove item id:", id);
-    // TODO: call API ลบรูปออกจาก cart
+  const handleRemoveItem = async (id) => {
+    try {
+      await remove_image_from_cart(token, id);
+      handleMyCart(token)
+      toast.success("Remove image successfully");
+    } catch (error) {
+      toast.warning("Image not found please try again");
+      console.log(error);
+    }
   };
-
-  useEffect(() => {
-    handleMyCart();
-  }, []);
 
   return (
     <>
