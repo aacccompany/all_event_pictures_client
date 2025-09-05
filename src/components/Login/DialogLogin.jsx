@@ -95,8 +95,8 @@ const DialogLogin = ({ isOpen, onClose }) => {
               />
             </div>
             <div className="text-sm text-blue-500 hover:text-blue-600 cursor-pointer">
-              <div className="mb-3">Forgot your password?</div>
-              <div onClick={handleRedirect}>Don't have an account?</div>
+              <div className="mb-3">Create Account for your Photo</div>
+              <div onClick={handleRedirect}>Create Account for Photographer</div>
             </div>
           </div>
           <button

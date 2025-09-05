@@ -1,5 +1,6 @@
 import { useState } from "react";
 import RegisCard from "./RegisCard";
+import BuyerRegis from "./BuyerRegis";
 import { authRegister } from "@/api/auth";
 import { toast } from "sonner";
 
