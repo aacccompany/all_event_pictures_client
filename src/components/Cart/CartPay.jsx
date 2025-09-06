@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 const CartDownload = () => {
   const token = useAuthStore((state) => state.token);
-  const user = useAuthStore((state) => state.user)
+  const user = useAuthStore((state) => state.user);
   const [data, setData] = useState({});
 
   useEffect(() => {
@@ -22,6 +22,9 @@ const CartDownload = () => {
       const res = await get_my_cart(token);
       setData(res.data);
     } catch (error) {
+      if (error.response?.status === 404) {
+        setData({});
+      }
       console.log(error);
     }
   };
@@ -29,7 +32,7 @@ const CartDownload = () => {
   const handleRemoveItem = async (id) => {
     try {
       await remove_image_from_cart(token, id);
-      handleMyCart(token);
+      await handleMyCart();
       toast.success("Remove image successfully");
     } catch (error) {
       toast.warning("Image not found please try again");
@@ -47,12 +50,11 @@ const CartDownload = () => {
       document.body.appendChild(link);
       link.click();
       link.remove();
+      await handleMyCart();
     } catch (error) {
       console.error(error);
     }
   };
-
-  console.log(data);
 
   return (
     <>
@@ -113,14 +115,14 @@ const CartDownload = () => {
               <button
                 type="button"
                 onClick={handleDownload}
-                disabled={!data?.cart_images || data.cart_images.length === 0} 
+                disabled={!data?.cart_images || data.cart_images.length === 0}
                 className={`w-full font-bold py-3 mt-6 rounded-lg shadow-md hover:shadow-lg transition-colors
               ${
                 !data?.cart_images || data.cart_images.length === 0
-                ? "bg-gray-400 cursor-not-allowed text-white"
-                : "bg-blue-600 text-white hover:bg-blue-700"
+                  ? "bg-gray-400 cursor-not-allowed text-white"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
               }`}
-                >
+              >
                 Download
               </button>
 
