@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 
 const RegisCard = ({ handleOnChange, handleSubmit }) => {
+
+
   return (
     // Main container:
     // - On mobile (default): Use flex-col for vertical stacking, add padding and reduce gap.
@@ -50,7 +52,10 @@ const RegisCard = ({ handleOnChange, handleSubmit }) => {
       {/* Set width and max-width to ensure the form looks good on all screen sizes */}
       <div className="w-full max-w-md lg:w-1/2 mt-12 lg:mt-0">
         {/* Form is styled as a card for better visual separation */}
-        <form onSubmit={handleSubmit} className="w-full space-y-6 bg-white p-8 rounded-xl shadow-lg">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full space-y-6 bg-white p-8 rounded-xl shadow-lg"
+        >
           {/* Form Header */}
           <div className="flex items-center gap-3">
             <UserRound className="h-7 w-7 text-blue-700" />
@@ -118,12 +123,12 @@ const RegisCard = ({ handleOnChange, handleSubmit }) => {
               />
             </div>
           </div>
-            <button
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-              type="submit"
-            >
-              Create Account
-            </button>
+          <button
+            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            type="submit"
+          >
+            Create Account
+          </button>
         </form>
       </div>
     </div>

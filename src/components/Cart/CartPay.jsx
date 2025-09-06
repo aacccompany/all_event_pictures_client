@@ -1,4 +1,8 @@
-import { get_my_cart, remove_image_from_cart } from "@/api/cart";
+import {
+  download_my_cart,
+  get_my_cart,
+  remove_image_from_cart,
+} from "@/api/cart";
 import useAuthStore from "@/stores/auth-store";
 import React, { useEffect, useState } from "react";
 import { TrashIcon } from "lucide-react";
@@ -6,6 +10,7 @@ import { toast } from "sonner";
 
 const CartDownload = () => {
   const token = useAuthStore((state) => state.token);
+  const user = useAuthStore((state) => state.user)
   const [data, setData] = useState({});
 
   useEffect(() => {
@@ -24,13 +29,30 @@ const CartDownload = () => {
   const handleRemoveItem = async (id) => {
     try {
       await remove_image_from_cart(token, id);
-      handleMyCart(token)
+      handleMyCart(token);
       toast.success("Remove image successfully");
     } catch (error) {
       toast.warning("Image not found please try again");
       console.log(error);
     }
   };
+
+  const handleDownload = async () => {
+    try {
+      const res = await download_my_cart(token);
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${user.email}Photo.zip`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  console.log(data);
 
   return (
     <>
@@ -89,11 +111,19 @@ const CartDownload = () => {
                 </div>
               </div>
               <button
-                type="submit"
-                className="w-full bg-blue-600 text-white font-bold py-3 mt-6 rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
-              >
-                Request Download Link
+                type="button"
+                onClick={handleDownload}
+                disabled={!data?.cart_images || data.cart_images.length === 0} 
+                className={`w-full font-bold py-3 mt-6 rounded-lg shadow-md hover:shadow-lg transition-colors
+              ${
+                !data?.cart_images || data.cart_images.length === 0
+                ? "bg-gray-400 cursor-not-allowed text-white"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+              }`}
+                >
+                Download
               </button>
+
               <p className="text-xs text-gray-500 mt-4 text-center">
                 By proceeding, you agree to our terms of service and privacy
                 policy.

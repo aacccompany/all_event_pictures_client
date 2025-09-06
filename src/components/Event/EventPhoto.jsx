@@ -21,13 +21,11 @@ const EventPhoto = ({ event }) => {
 
     try {
       const body = { images_id: [image.id] };
-      const res = await add_cart(token, body);
-
-      console.log("Cart updated:", res.data);
-      toast.success(`Add image to cart successfully`);
+      await add_cart(token, body);
+      toast.success(`Add photo to cart successfully`);
     } catch (err) {
       console.error(err);
-      toast.warning("Add image to cart error please try again")
+      toast.warning("Photo is already in cart")
     }
   };
 

@@ -23,3 +23,12 @@ export const remove_image_from_cart = async(token, cart_image_id) => {
         }
     })
 }
+
+export const download_my_cart = async(token) => {
+    return await axios.get(`http://localhost:8081/api/v1/my-cart/download`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        responseType: "blob",
+    })
+}

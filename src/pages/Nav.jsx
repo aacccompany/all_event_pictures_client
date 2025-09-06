@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ShoppingCart, Camera, Menu, X, UserRound } from "lucide-react";
+import { ShoppingCart, Camera, Menu, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,12 +20,38 @@ import {
 import useAuthStore from "@/stores/auth-store";
 import { Button } from "@/components/ui/button";
 
+// ✅ helper function: ไม่ใช้ hook โดยตรง
+const renderMenuItems = (links, actionLogout) => {
+  return links.map((item, index) =>
+    item.label === "Logout" ? (
+      <DropdownMenuItem
+        key={index}
+        className="cursor-pointer"
+        onClick={() => {
+          actionLogout();
+          window.location.href = "/";
+        }}
+      >
+        {item.label}
+      </DropdownMenuItem>
+    ) : (
+      <Link to={item.href} key={index}>
+        <DropdownMenuItem className="cursor-pointer">
+          {item.label}
+        </DropdownMenuItem>
+      </Link>
+    )
+  );
+};
+
 const Nav = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const eventMenuRef = useRef(null);
+
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
+  const actionLogout = useAuthStore((state) => state.actionLogout); // ✅ ดึง actionLogout ที่นี่
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -41,9 +67,6 @@ const Nav = () => {
   }, []);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
-
-  // console.log("user",user)
-  // console.log("token",token)
 
   return (
     <>
@@ -70,7 +93,6 @@ const Nav = () => {
 
           {/* Right - Desktop Actions */}
           {token && user.role === "super-admin" ? (
-            // ✅ กรณี super-admin
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="bg-blue-700 hover:bg-blue-800">
@@ -81,17 +103,10 @@ const Nav = () => {
               <DropdownMenuContent className="py-2 m-2">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {privateSuperAdminLinks.map((item, index) => (
-                  <Link to={item.href} key={index}>
-                    <DropdownMenuItem className="cursor-pointer">
-                      {item.label}
-                    </DropdownMenuItem>
-                  </Link>
-                ))}
+                {renderMenuItems(privateSuperAdminLinks, actionLogout)}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : token && user.role === "admin" ? (
-            // ✅ กรณี admin
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="bg-blue-700 hover:bg-blue-800">
@@ -102,13 +117,7 @@ const Nav = () => {
               <DropdownMenuContent className="py-2 m-2">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {privateAdminLinks.map((item, index) => (
-                  <Link to={item.href} key={index}>
-                    <DropdownMenuItem className="cursor-pointer">
-                      {item.label}
-                    </DropdownMenuItem>
-                  </Link>
-                ))}
+                {renderMenuItems(privateAdminLinks, actionLogout)}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : token && user.role === "user-public" ? (
@@ -128,18 +137,11 @@ const Nav = () => {
                 <DropdownMenuContent className="py-2 m-2">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  {publicUserLinks.map((item, index) => (
-                    <Link to={item.href} key={index}>
-                      <DropdownMenuItem className="cursor-pointer">
-                        {item.label}
-                      </DropdownMenuItem>
-                    </Link>
-                  ))}
+                  {renderMenuItems(publicUserLinks, actionLogout)}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          ) : token ? (
-            // ✅ กรณี user login
+          ) : token && user.role === "user" ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="bg-blue-700 hover:bg-blue-800">
@@ -150,34 +152,17 @@ const Nav = () => {
               <DropdownMenuContent className="py-2 m-2">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {privateUserLinks.map((item, index) => (
-                  <Link to={item.href} key={index}>
-                    <DropdownMenuItem className="cursor-pointer">
-                      {item.label}
-                    </DropdownMenuItem>
-                  </Link>
-                ))}
+                {renderMenuItems(privateUserLinks, actionLogout)}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <button
-                onClick={() => setIsLoginOpen(true)}
-                className="px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-md hover:bg-blue-800"
-              >
-                Login
-              </button>
-          )}
-
-          {/* Mobile Menu Button
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={toggleMobileMenu}
-              className="p-2 rounded-md text-gray-600 hover:bg-gray-100"
+              onClick={() => setIsLoginOpen(true)}
+              className="px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-md hover:bg-blue-800"
             >
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Open menu</span>
+              Login
             </button>
-          </div> */}
+          )}
         </div>
       </nav>
 

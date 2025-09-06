@@ -28,9 +28,9 @@ const AppRoutes = () => {
           <Route path="/download" element={<Download />} />
           <Route path="/register" element={<Register />} />
           <Route path="/register/user" element={<BuyerRegis />} />
-          <Route path="/cart" element={<Cart />} />
           <Route path="/event-detail/:id" element={<EventView />} />
           <Route path="/events/event-detail/:id" element={<EventView />} />
+          <Route path="cart" element={<Cart />} />
         </Route>
 
          {/* Private User */}

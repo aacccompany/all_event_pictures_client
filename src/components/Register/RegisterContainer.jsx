@@ -1,42 +1,49 @@
 import { useState } from "react";
 import RegisCard from "./RegisCard";
-import BuyerRegis from "./BuyerRegis";
 import { authRegister } from "@/api/auth";
 import { toast } from "sonner";
+import { useNavigate } from "react-router";
 
 const RegisterContainer = () => {
-    const [form, setForm] = useState({
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
     email: "",
     password: "",
     confirmPassword: "",
   });
 
+  const handleRedirect = () => {
+    navigate("/");
+  };
+
   const handleOnChange = (e) => {
     setForm({
-        ...form,
-        [e.target.name]: e.target.value
-    })
-    // console.log(e.target.name, e.target.value)
-  }
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        if (!form.password || !form.confirmPassword || !form.email) return toast.warning('Register Fail!')
-        if (form.password != form.confirmPassword) return toast.warning('Password invalid')
-        await authRegister(form)
-        toast.success('Registration successfuly')
-    } catch (error) { 
-        const msgError = error.response?.data?.detail || "Register Fail!" 
-        toast.warning(msgError)
-        console.log(error)
+      if (!form.password || !form.confirmPassword || !form.email)
+        return toast.warning("Register Fail!");
+      if (form.password != form.confirmPassword)
+        return toast.warning("Password invalid");
+      await authRegister(form);
+      toast.success("Registration successfuly");
+      handleRedirect()
+    } catch (error) {
+      const msgError = error.response?.data?.detail || "Register Fail!";
+      toast.warning(msgError);
+      console.log(error);
     }
-  }
-
+  };
 
   return (
     <div>
-      <RegisCard handleOnChange={handleOnChange} handleSubmit={handleSubmit}/>
+      <RegisCard handleOnChange={handleOnChange} handleSubmit={handleSubmit} />
     </div>
   );
 };
