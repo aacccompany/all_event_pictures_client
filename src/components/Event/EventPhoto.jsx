@@ -8,7 +8,7 @@ import { toast } from "sonner";
 const EventPhoto = ({ event }) => {
   const images = event?.images ?? [];
   const [selectedImage, setSelectedImage] = useState(null);
-  const [showLogin, setShowLogin] = useState(false); // ✅ state สำหรับ login dialog
+  const [showLogin, setShowLogin] = useState(false);
   const token = useAuthStore((state) => state.token);
 
   const handleAddToCart = async (e, image) => {
@@ -24,8 +24,9 @@ const EventPhoto = ({ event }) => {
       await add_cart(token, body);
       toast.success(`Add photo to cart successfully`);
     } catch (err) {
+      const msgErr = err.response?.data?.detail || "Please try again";
       console.error(err);
-      toast.warning("Photo is already in cart")
+      toast.warning(msgErr);
     }
   };
 

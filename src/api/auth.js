@@ -12,6 +12,14 @@ export const authLogin = async (data) => {
   return await axios.post(`http://localhost:8081/api/v1/login`,data);
 };
 
+export const currentUserPublic = async (token) => {
+    return await axios.post(`http://localhost:8081/api/v1/current-user-public`, {}, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
 export const currentUser = async (token) => {
     return await axios.post(`http://localhost:8081/api/v1/current-user`, {}, {
         headers: {
@@ -35,3 +43,4 @@ export const currentSuperAdmin = async (token) => {
         }
     })
 }
+

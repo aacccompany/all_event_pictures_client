@@ -122,7 +122,7 @@ const Nav = () => {
             </DropdownMenu>
           ) : token && user.role === "user-public" ? (
             <div className="hidden md:flex items-center gap-2">
-              <Link to={"/cart"}>
+              <Link to={"/user-public/cart"}>
                 <button className="p-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 cursor-pointer">
                   <ShoppingCart className="w-5 h-5" />
                 </button>

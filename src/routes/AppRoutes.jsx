@@ -16,6 +16,8 @@ import UserEventList from "@/components/Photographer/UserEventList";
 import MyRegister from "@/components/Photographer/MyRegister";
 import GrapherUpload from "@/components/Photographer/GrapherUpload";
 import BuyerRegis from "@/components/Register/BuyerRegis";
+import ProtectRouteUserPublic from "./ProtectRouteUserPublic";
+import ProtectRouteSuperAdmin from "./ProtectRouteSuperAdmin";
 
 const AppRoutes = () => {
   return (
@@ -30,7 +32,11 @@ const AppRoutes = () => {
           <Route path="/register/user" element={<BuyerRegis />} />
           <Route path="/event-detail/:id" element={<EventView />} />
           <Route path="/events/event-detail/:id" element={<EventView />} />
-          <Route path="cart" element={<Cart />} />
+        </Route>
+
+         {/* Private User Public */}
+         <Route path="user-public" element={<ProtectRouteUserPublic element={<Layout />} />}>
+            <Route path="cart" element={<Cart />} />
         </Route>
 
          {/* Private User */}
@@ -49,7 +55,7 @@ const AppRoutes = () => {
         </Route>
 
         {/* Private Super-Admin */}
-        <Route path="super-admin" element={<ProtectRouteUser element={<Layout />} />}>
+        <Route path="super-admin" element={<ProtectRouteSuperAdmin element={<Layout />} />}>
           <Route path="dashboard" element={<DashBoardContainer />} />
           <Route path="event-lists" element={<UserEventList />} />
           <Route path="create-event" element={<EventCreateContainer />} />

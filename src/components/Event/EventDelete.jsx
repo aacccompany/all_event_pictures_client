@@ -13,9 +13,9 @@ const EventDelete = ({ id, title }) => {
   const handleRemove = async () => {
     try {
       await remove_event(token, id);
-      toast.success(`Event "${title}" deleted successfully`);
       await actionGetEvents()
       await actionGetMyEvents(token)
+      toast.success(`Event "${title}" deleted successfully`);
     } catch (error) {
       console.log(error);
       const msgError = error.response?.data?.detail || "Failed to delete event";

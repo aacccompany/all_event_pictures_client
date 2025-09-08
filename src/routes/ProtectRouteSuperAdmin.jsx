@@ -1,10 +1,10 @@
-
 import { currentSuperAdmin } from "@/api/auth";
+import Notfound from "@/pages/Notfound";
 import useAuthStore from "@/stores/auth-store";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 
-const ProtectRouteAdmin = ({ element }) => {
+const ProtectRouteSuperAdmin = ({ element }) => {
   const token = useAuthStore((state) => state.token);
   const [isAccessDenied, setIsAccessDenied] = useState(false);
 
@@ -23,16 +23,10 @@ const ProtectRouteAdmin = ({ element }) => {
   };
 
   if (isAccessDenied) {
-    return (
-      <div className="capitalize flex w-screen h-screen items-center justify-center">
-        <p>
-          Access denied! Go to <Link to="/">home</Link>
-        </p>
-      </div>
-    );
+    return <Notfound />;
   }
 
   return element;
 };
 
-export default ProtectRouteAdmin;
+export default ProtectRouteSuperAdmin;

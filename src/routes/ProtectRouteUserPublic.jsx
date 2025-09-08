@@ -1,10 +1,10 @@
-import { currentUser } from "@/api/auth";
+import { currentAdmin, currentUserPublic } from "@/api/auth";
 import Notfound from "@/pages/Notfound";
 import useAuthStore from "@/stores/auth-store";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 
-const ProtectRouteUser = ({ element }) => {
+const ProtectRouteUserPublic = ({ element }) => {
   const token = useAuthStore((state) => state.token);
   const [isAccessDenied, setIsAccessDenied] = useState(false);
 
@@ -14,7 +14,7 @@ const ProtectRouteUser = ({ element }) => {
 
   const handleVerifyToken = async () => {
     try {
-      await currentUser(token);
+      await currentUserPublic(token);
       setIsAccessDenied(false);
     } catch (error) {
       setIsAccessDenied(true);
@@ -28,4 +28,5 @@ const ProtectRouteUser = ({ element }) => {
 
   return element;
 };
-export default ProtectRouteUser;
+
+export default ProtectRouteUserPublic;

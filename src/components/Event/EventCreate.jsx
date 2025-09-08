@@ -59,7 +59,7 @@ const EventCreate = () => {
         };
       }
 
-      if (data.event_type === "Private") delete data.limit;
+      // if (data.event_type === "Private") delete data.limit;
 
       await create_event(token, {
         ...data,
