@@ -17,6 +17,9 @@ const BuyerRegis = () => {
         email: "",
         password: "",
         confirmPassword: "",
+        first_name: "",
+        last_name: "",
+        age: ""
     });
 
     const handleRedirect = () => {
@@ -28,6 +31,7 @@ const BuyerRegis = () => {
             ...form,
             [e.target.name]: e.target.value,
         });
+        console.log(e.target.name, e.target.value)
     };
 
     const handleSubmit = async (e) => {
@@ -106,7 +110,7 @@ const BuyerRegis = () => {
                             </label>
                             <input
                                 id="first-name"
-                                name="firstName"
+                                name="first_name"
                                 type="text"
                                 placeholder="Enter your first name"
                                 required
@@ -122,7 +126,7 @@ const BuyerRegis = () => {
                             </label>
                             <input
                                 id="last-name"
-                                name="lastName"
+                                name="last_name"
                                 type="text"
                                 placeholder="Enter your last name"
                                 required
@@ -155,7 +159,7 @@ const BuyerRegis = () => {
                             <input
                                 id="tel"
                                 name="tel"
-                                type="tel" // Changed to "tel" for better mobile support
+                                type="number" // Changed to "tel" for better mobile support
                                 placeholder="Enter your phone number"
                                 required
                                 className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
