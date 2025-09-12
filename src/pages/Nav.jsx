@@ -76,7 +76,7 @@ const Nav = () => {
           <Link to={"/"} className="flex items-center gap-2 flex-shrink-0">
             <Camera className="w-8 h-8 text-blue-700" />
             <span className="font-bold text-lg text-gray-800 uppercase">
-              event-pic
+              All-Event-Photo
             </span>
           </Link>
 
