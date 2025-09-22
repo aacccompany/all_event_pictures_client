@@ -9,6 +9,7 @@ import useEventStore from "@/stores/event-store";
 
 const EventDetail = () => {
   const [event, setEvent] = useState({});
+  const [matchedPhotos, setMatchedPhotos] = useState(null); // New state to hold matched photos
   const { id } = useParams();
 
   useEffect(() => {
@@ -24,6 +25,13 @@ const EventDetail = () => {
     }
   };
 
+  const handleSearchComplete = (photos) => {
+    setMatchedPhotos(photos);
+  };
+
+  const handleClearSearch = () => {
+    setMatchedPhotos(null);
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
@@ -65,10 +73,10 @@ const EventDetail = () => {
         </section>
 
         {/* --- Section 2: Search by Face --- */}
-        <SearchFace />
+        <SearchFace onSearchComplete={handleSearchComplete} />
 
         {/* --- Section 3: All Event Photos --- */}
-        <EventPhoto event={event} />
+        <EventPhoto event={event} matchedPhotos={matchedPhotos} onClearSearch={handleClearSearch} />
       </div>
     </div>
   );

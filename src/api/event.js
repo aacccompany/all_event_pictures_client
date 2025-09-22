@@ -39,3 +39,15 @@ export const update_event = async(token, id, data) => {
         }
     })
 }
+
+export const search_faces_in_event = async (event_id, token, search_image) => {
+    const formData = new FormData();
+    formData.append("search_image", search_image);
+
+    return await axios.post(`http://localhost:8081/api/v1/search-faces/${event_id}`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};

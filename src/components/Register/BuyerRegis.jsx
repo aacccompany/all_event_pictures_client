@@ -194,6 +194,7 @@ const BuyerRegis = () => {
                                 type="password"
                                 placeholder="Create a password"
                                 required
+                                maxLength={16}
                                 className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 onChange={handleOnChange}
                             />
@@ -210,6 +211,7 @@ const BuyerRegis = () => {
                                 type="password"
                                 placeholder="Confirm your password"
                                 required
+                                maxLength={16}
                                 className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 onChange={handleOnChange}
                             />

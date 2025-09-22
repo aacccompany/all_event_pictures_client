@@ -1,30 +1,42 @@
 import { useRef, useState } from "react";
-import { Upload, FileImage } from "lucide-react";
+import { Upload, FileImage, Loader2 } from "lucide-react";
+import { useParams } from "react-router";
+import { toast } from "sonner";
+import { search_faces_in_event } from "@/api/event";
+import useAuthStore from "@/stores/auth-store";
 
-const SearchFace = () => {
-  // Create a ref for the hidden file input
+const SearchFace = ({ onSearchComplete }) => {
+  const { id: event_id } = useParams();
+  const { token } = useAuthStore();
   const inputRef = useRef(null);
-  // State to hold the selected file's information
   const [selectedFile, setSelectedFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Function to trigger the file input click
   const handleUploadClick = () => {
     inputRef.current?.click();
   };
 
-  // Function to handle the file selection
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Here you would typically handle the file upload logic
-    console.log("Selected file:", file);
+    if (file.size > 10 * 1024 * 1024) { // Max 10MB
+      toast.error("File size exceeds 10MB.");
+      setSelectedFile(null);
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file.");
+      setSelectedFile(null);
+      return;
+    }
+
     setSelectedFile(file);
   };
 
-  // Drag and drop handlers
   const handleDragOver = (event) => {
-    event.preventDefault(); // Prevent default behavior (opening file in browser)
+    event.preventDefault();
   };
 
   const handleDrop = (event) => {
@@ -32,11 +44,39 @@ const SearchFace = () => {
     const file = event.dataTransfer.files?.[0];
     if (!file) return;
 
-    console.log("Dropped file:", file);
+    if (file.size > 10 * 1024 * 1024) { // Max 10MB
+      toast.error("File size exceeds 10MB.");
+      setSelectedFile(null);
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file.");
+      setSelectedFile(null);
+      return;
+    }
+
     setSelectedFile(file);
-    // Optionally, you can also trigger the upload here
   };
 
+  const handleSearch = async () => {
+    if (!selectedFile) {
+      toast.warning("Please select an image to search.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await search_faces_in_event(event_id, token, selectedFile);
+      onSearchComplete(res.data); // Pass matched photos to parent
+      toast.success("Face search complete!");
+    } catch (error) {
+      console.error("Error searching faces:", error);
+      toast.error(error.response?.data?.detail || "Failed to search faces.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -96,11 +136,16 @@ const SearchFace = () => {
           {/* Action Button */}
           <div className="mt-6 text-center">
              <button
-              onClick={() => { /* Add your search/upload logic here */ alert(`Searching with ${selectedFile?.name || 'no file'}...`) }}
-              disabled={!selectedFile}
+              onClick={handleSearch}
+              disabled={!selectedFile || isLoading}
               className="w-full bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              Upload & Search Photos
+              {isLoading ? (
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              ) : (
+                <Upload className="mr-2 h-5 w-5" />
+              )}
+              {isLoading ? "Searching..." : "Upload & Search Photos"}
             </button>
           </div>
         </div>

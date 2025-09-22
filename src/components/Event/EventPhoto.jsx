@@ -5,11 +5,19 @@ import DialogLogin from "../Login/DialogLogin";
 import { add_cart } from "@/api/cart";
 import { toast } from "sonner";
 
-const EventPhoto = ({ event }) => {
-  const images = event?.images ?? [];
+const EventPhoto = ({ event, matchedPhotos, onClearSearch }) => {
+  const imagesToDisplay = matchedPhotos && matchedPhotos.length > 0 ? matchedPhotos : event?.images ?? [];
   const [selectedImage, setSelectedImage] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
   const token = useAuthStore((state) => state.token);
+
+  const openImageViewer = (image) => {
+    setSelectedImage(image);
+  };
+
+  const closeImageViewer = () => {
+    setSelectedImage(null);
+  };
 
   const handleAddToCart = async (e, image) => {
     e.stopPropagation();
@@ -35,10 +43,18 @@ const EventPhoto = ({ event }) => {
       <section className="mt-8">
         <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-200">
           <h2 className="text-xl font-semibold text-gray-800">
-            All Event Photos
+            {matchedPhotos && matchedPhotos.length > 0 ? "Matched Photos" : "All Event Photos"}
           </h2>
+          {matchedPhotos && matchedPhotos.length > 0 && (
+              <button
+                  onClick={onClearSearch}
+                  className="ml-4 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-300"
+              >
+                  Clear Search
+              </button>
+          )}
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {images.map((image) => (
+            {imagesToDisplay.map((image) => (
               <div
                 key={image.public_id}
                 className="group relative overflow-hidden rounded-lg cursor-pointer"
