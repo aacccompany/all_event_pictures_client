@@ -2,6 +2,7 @@ import {
   download_my_cart,
   get_my_cart,
   remove_image_from_cart,
+  create_stripe_checkout_session
 } from "@/api/cart";
 import useAuthStore from "@/stores/auth-store";
 import React, { useEffect, useState } from "react";
@@ -53,6 +54,18 @@ const CartDownload = () => {
       await handleMyCart();
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleCheckout = async () => {
+    try {
+      const successUrl = `${window.location.origin}/user-public/download?payment_success=true`; // Redirect to download page on success
+      const cancelUrl = `${window.location.origin}/user-public/cart`; // Redirect back to cart on cancel
+      const res = await create_stripe_checkout_session(token, successUrl, cancelUrl);
+      window.location.href = res.data.checkout_url;
+    } catch (error) {
+      console.error("Error creating Stripe checkout session:", error);
+      toast.error("Failed to initiate checkout. Please try again.");
     }
   };
 
@@ -114,7 +127,7 @@ const CartDownload = () => {
               </div>
               <button
                 type="button"
-                onClick={handleDownload}
+                onClick={handleCheckout}
                 disabled={!data?.cart_images || data.cart_images.length === 0}
                 className={`w-full font-bold py-3 mt-6 rounded-lg shadow-md hover:shadow-lg transition-colors
               ${
@@ -123,7 +136,7 @@ const CartDownload = () => {
                   : "bg-blue-600 text-white hover:bg-blue-700"
               }`}
               >
-                Download
+                Checkout
               </button>
 
               <p className="text-xs text-gray-500 mt-4 text-center">

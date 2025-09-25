@@ -32,3 +32,15 @@ export const download_my_cart = async(token) => {
         responseType: "blob",
     })
 }
+
+export const create_stripe_checkout_session = async(token, success_url, cancel_url) => {
+    return await axios.post(`http://localhost:8081/api/v1/my-cart/create-checkout-session`, null, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        params: {
+            success_url,
+            cancel_url
+        }
+    })
+}

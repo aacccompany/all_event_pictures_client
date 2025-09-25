@@ -37,6 +37,7 @@ const AppRoutes = () => {
          {/* Private User Public */}
          <Route path="user-public" element={<ProtectRouteUserPublic element={<Layout />} />}>
             <Route path="cart" element={<Cart />} />
+            <Route path="download" element={<Download />} />
         </Route>
 
          {/* Private User */}
