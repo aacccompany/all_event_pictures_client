@@ -71,14 +71,16 @@ const Nav = () => {
   return (
     <>
       <nav className="bg-white shadow-sm sticky top-0 z-40">
-        <div className="flex items-center justify-between w-full mx-auto h-20 px-4 sm:px-6 lg:px-8">
-          {/* Logo */}
-          <Link to={"/"} className="flex items-center gap-2 flex-shrink-0">
-            <Camera className="w-8 h-8 text-blue-700" />
-            <span className="font-bold text-lg text-gray-800 uppercase">
-              All-Event-Pictures
-            </span>
-          </Link>
+        <div className="flex items-center w-full mx-auto h-20 px-4 sm:px-6 lg:px-8">
+          {/* Left section - Logo */}
+          <div className="flex-1 flex items-center justify-start">
+            <Link to={"/"} className="flex items-center gap-2 flex-shrink-0">
+              <Camera className="w-8 h-8 text-blue-700" />
+              <span className="font-bold text-lg text-gray-800 uppercase">
+                All-Event-Pictures
+              </span>
+            </Link>
+          </div>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-4">
@@ -91,42 +93,9 @@ const Nav = () => {
             ))}
           </div>
 
-          {/* Right - Desktop Actions */}
-          {token && user.role === "super-admin" ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="bg-blue-700 hover:bg-blue-800">
-                  <Menu />
-                  Menu
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="py-2 m-2">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {renderMenuItems(privateSuperAdminLinks, actionLogout)}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : token && user.role === "admin" ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="bg-blue-700 hover:bg-blue-800">
-                  <Menu />
-                  Menu
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="py-2 m-2">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {renderMenuItems(privateAdminLinks, actionLogout)}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : token && user.role === "user-public" ? (
-            <div className="hidden md:flex items-center gap-2">
-              <Link to={"/user-public/cart"}>
-                <button className="p-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 cursor-pointer">
-                  <ShoppingCart className="w-5 h-5" />
-                </button>
-              </Link>
+          {/* Right section - Desktop Actions */}
+          <div className="flex-1 flex items-center justify-end">
+            {token && user.role === "super-admin" ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button className="bg-blue-700 hover:bg-blue-800">
@@ -137,32 +106,67 @@ const Nav = () => {
                 <DropdownMenuContent className="py-2 m-2">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  {renderMenuItems(publicUserLinks, actionLogout)}
+                  {renderMenuItems(privateSuperAdminLinks, actionLogout)}
                 </DropdownMenuContent>
               </DropdownMenu>
-            </div>
-          ) : token && user.role === "user" ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="bg-blue-700 hover:bg-blue-800">
-                  <Menu />
-                  Menu
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="py-2 m-2">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {renderMenuItems(privateUserLinks, actionLogout)}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <button
-              onClick={() => setIsLoginOpen(true)}
-              className="px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-md hover:bg-blue-800"
-            >
-              Login
-            </button>
-          )}
+            ) : token && user.role === "admin" ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="bg-blue-700 hover:bg-blue-800">
+                    <Menu />
+                    Menu
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="py-2 m-2">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {renderMenuItems(privateAdminLinks, actionLogout)}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : token && user.role === "user-public" ? (
+              <div className="flex items-center gap-2">
+                <Link to={"/user-public/cart"}>
+                  <button className="p-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 cursor-pointer">
+                    <ShoppingCart className="w-5 h-5" />
+                  </button>
+                </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="bg-blue-700 hover:bg-blue-800">
+                      <Menu />
+                      Menu
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="py-2 m-2">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {renderMenuItems(publicUserLinks, actionLogout)}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ) : token && user.role === "user" ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="bg-blue-700 hover:bg-blue-800">
+                    <Menu />
+                    Menu
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="py-2 m-2">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {renderMenuItems(privateUserLinks, actionLogout)}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <button
+                onClick={() => setIsLoginOpen(true)}
+                className="px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-md hover:bg-blue-800"
+              >
+                Login
+              </button>
+            )}
+          </div>
         </div>
       </nav>
 

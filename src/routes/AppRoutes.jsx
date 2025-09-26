@@ -18,6 +18,7 @@ import GrapherUpload from "@/components/Photographer/GrapherUpload";
 import BuyerRegis from "@/components/Register/BuyerRegis";
 import ProtectRouteUserPublic from "./ProtectRouteUserPublic";
 import ProtectRouteSuperAdmin from "./ProtectRouteSuperAdmin";
+import DownloadHistory from "@/pages/DownloadHistory";
 
 const AppRoutes = () => {
   return (
@@ -38,6 +39,7 @@ const AppRoutes = () => {
          <Route path="user-public" element={<ProtectRouteUserPublic element={<Layout />} />}>
             <Route path="cart" element={<Cart />} />
             <Route path="download" element={<Download />} />
+            <Route path="download-history" element={<DownloadHistory />} />
         </Route>
 
          {/* Private User */}

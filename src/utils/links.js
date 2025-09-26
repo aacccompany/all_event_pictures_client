@@ -1,10 +1,11 @@
 export const publicLinks = [
   { name: "Home", path: "/" },
   { name: "Events", path: "/events" },
-  { name: "Download", path: "/download" },
 ];
 
 export const publicUserLinks = [
+  { href: "/user-public/cart", label: "My Cart" },
+  { href: "/user-public/download-history", label: "Download History" },
   { href: "/", label: "Logout" },
 ];
 
