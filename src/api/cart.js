@@ -44,3 +44,20 @@ export const create_stripe_checkout_session = async(token, success_url, cancel_u
         }
     })
 }
+
+export const get_download_history = async(token) => {
+    return await axios.get(`http://localhost:8081/api/v1/my-download-history`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export const re_download_cart = async(token, cartId) => {
+    return await axios.get(`http://localhost:8081/api/v1/download-cart/${cartId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+        responseType: "blob",
+    })
+}
