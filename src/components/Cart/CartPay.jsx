@@ -105,7 +105,7 @@ const CartDownload = () => {
                       <TrashIcon className="w-5 h-5" />
                     </button>
                     <div className="p-2 text-xs text-gray-600 truncate">
-                      {item.image.public_id}
+                      {item.image.public_id.split('/').pop()}
                     </div>
                   </div>
                 ))}
