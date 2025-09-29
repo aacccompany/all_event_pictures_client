@@ -75,7 +75,56 @@ const Nav = () => {
           {/* Left section - Logo */}
           <div className="flex-1 flex items-center justify-start">
             <Link to={"/"} className="flex items-center gap-2 flex-shrink-0">
-              <Camera className="w-8 h-8 text-blue-700" />
+              <svg
+                // The class is updated to text-blue-700 to control the color
+                className="w-8 h-8 text-blue-700"
+                viewBox="0 0 100 100"
+              >
+                <defs>
+                  <mask id="logo-mask">
+                    <rect
+                      x="5"
+                      y="5"
+                      width="90"
+                      height="90"
+                      rx="15"
+                      ry="15"
+                      fill="white"
+                    />
+                    <rect
+                      x="78"
+                      y="35"
+                      width="22"
+                      height="30"
+                      rx="5"
+                      ry="5"
+                      fill="black"
+                    />
+                  </mask>
+                </defs>
+                <g>
+                  {/* This part now inherits the color from the className above */}
+                  <rect
+                    x="0"
+                    y="0"
+                    width="100"
+                    height="100"
+                    fill="currentColor"
+                    mask="url(#logo-mask)"
+                  />
+                  {/* The white and gray parts remain unchanged */}
+                  <circle cx="43" cy="50" r="22" fill="#FFFFFF" />
+                  <circle cx="43" cy="50" r="16" fill="#546E7A" />
+                  {/* This part also inherits the color */}
+                  <circle
+                    cx="43"
+                    cy="50"
+                    r="11"
+                    fill="currentColor"
+                  />
+                </g>
+              </svg>
+
               <span className="font-bold text-lg text-gray-800 uppercase">
                 All-Event-Pictures
               </span>
@@ -172,9 +221,8 @@ const Nav = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed inset-0 z-50 md:hidden transition-transform transform ${
-          isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed inset-0 z-50 md:hidden transition-transform transform ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div
           className="absolute inset-0 bg-black/30 backdrop-blur-lg"
