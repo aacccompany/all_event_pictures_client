@@ -6,8 +6,7 @@ import DashBoardContainer from '@/components/Dashboard/DashBoardContainer';
 const Home = () => {
     return (
         <div>
-            {/* <EventContainer/> */}
-            <DashBoardContainer/>
+            <EventContainer/>
         </div>
     )
 }
