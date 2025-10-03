@@ -251,6 +251,27 @@ const DialogUpdate = ({ id }) => {
               </div>
             )}
 
+            {/* Image Price (THB) */}
+            <div className="md:col-span-2 space-y-2">
+              <Label htmlFor="image_price_thb">Image Price (THB)</Label>
+              <Input
+                id="image_price_thb"
+                name="image_price_thb"
+                type="number"
+                step="0.01"
+                placeholder="20.00"
+                value={typeof data.image_price === "number" ? (data.image_price / 100).toFixed(2) : ""}
+                onChange={(e) => {
+                  const thb = parseFloat(e.target.value || "0");
+                  const satang = Math.round(thb * 100);
+                  setData({
+                    ...data,
+                    image_price: satang,
+                  });
+                }}
+              />
+            </div>
+
             <div className="md:col-span-2 space-y-2">
               {data.event_type === "Private" && (
                 <InviteEvent id={id} onInvite={setInvitedEmails} currentInvites={invitedEmails} />
