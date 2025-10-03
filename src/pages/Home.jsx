@@ -7,9 +7,7 @@ import AdminDashBoard from '@/components/AdminDashboard/AdminDashBoard';
 const Home = () => {
     return (
         <div>
-            {/* <EventContainer/> */}
-            {/* <DashBoardContainer/> */}
-            <AdminDashBoard/>
+            <EventContainer/>
         </div>
     )
 }
