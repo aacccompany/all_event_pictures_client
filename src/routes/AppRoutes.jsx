@@ -19,6 +19,7 @@ import BuyerRegis from "@/components/Register/BuyerRegis";
 import ProtectRouteUserPublic from "./ProtectRouteUserPublic";
 import ProtectRouteSuperAdmin from "./ProtectRouteSuperAdmin";
 import DownloadHistory from "@/pages/DownloadHistory";
+import AdminDashBoard from "@/components/AdminDashboard/AdminDashBoard";
 
 const AppRoutes = () => {
   return (
@@ -53,7 +54,7 @@ const AppRoutes = () => {
 
         {/* Private Admin */}
         <Route path="org" element={<ProtectRouteAdmin element={<Layout />} />}>
-          <Route path="dashboard" element={<DashBoardContainer />} />
+          <Route path="dashboard" element={<AdminDashBoard />} />
           <Route path="create-event" element={<EventCreateContainer />} />
         </Route>
 
