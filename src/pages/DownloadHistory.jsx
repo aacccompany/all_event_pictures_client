@@ -64,7 +64,7 @@ const DownloadHistory = () => {
                   Event Name
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Number of Files
+                  Number of Photos
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Purchase Date
@@ -81,7 +81,7 @@ const DownloadHistory = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{item.number_of_files}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{new Date(item.purchase_date).toLocaleDateString()}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    <Button onClick={() => handleReDownload(item.id)}>Re-download</Button>
+                    <Button onClick={() => handleReDownload(item.id)} className="bg-blue-700 hover:bg-blue-800">Download</Button>
                   </td>
                 </tr>
               ))}

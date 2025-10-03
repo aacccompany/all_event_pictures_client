@@ -15,7 +15,7 @@ const DialogLogin = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const handleRedirect = () => {
-    navigate("/register");
+    navigate("/register/photographer");
     onClose();
   };
 
@@ -78,7 +78,7 @@ const DialogLogin = ({ isOpen, onClose }) => {
                 className="w-full p-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 id="email"
                 name="email"
-                placeholder="user@email.com"
+                placeholder="your-email@email.com"
                 autoFocus
                 onChange={handleOnChange}
               />
@@ -100,8 +100,8 @@ const DialogLogin = ({ isOpen, onClose }) => {
               />
             </div>
             <div className="text-sm text-blue-500 hover:text-blue-600 cursor-pointer">
-              <div onClick={handleRedirectBuyer} className="mb-3">Create Account for your Photo</div>
-              <div onClick={handleRedirect}>Create Account for Photographer</div>
+              <div onClick={handleRedirectBuyer} className="mb-3">Create an account for User</div>
+              <div onClick={handleRedirect}>Create an account for Photographer</div>
             </div>
           </div>
           <button

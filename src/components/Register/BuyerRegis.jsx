@@ -57,7 +57,7 @@ const BuyerRegis = () => {
             <div className="text-center lg:text-left lg:max-w-xl">
                 {/* เปลี่ยนหัวข้อหลัก */}
                 <h1 className="text-4xl md:text-5xl font-bold text-slate-900">
-                    Join EventPic
+                    Join AllEventPictures
                 </h1>
                 {/* เปลี่ยนคำอธิบาย */}
                 <p className="mt-4 text-lg text-slate-600 max-w-lg mx-auto lg:mx-0">
@@ -154,7 +154,7 @@ const BuyerRegis = () => {
                         {/* Tel. */}
                         <div>
                             <label htmlFor="tel" className="block text-sm font-medium text-gray-700 mb-1">
-                                Tel.
+                                Phone Number
                             </label>
                             <input
                                 id="tel"
@@ -176,7 +176,7 @@ const BuyerRegis = () => {
                                 id="email"
                                 name="email"
                                 type="email"
-                                placeholder="your@email.com"
+                                placeholder="your-email@email.com"
                                 required
                                 className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 onChange={handleOnChange}
@@ -192,7 +192,7 @@ const BuyerRegis = () => {
                                 id="password"
                                 name="password"
                                 type="password"
-                                placeholder="Create a password"
+                                placeholder="Enter your password"
                                 required
                                 maxLength={16}
                                 className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"

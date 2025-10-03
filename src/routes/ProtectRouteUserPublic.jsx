@@ -2,7 +2,7 @@ import { currentAdmin, currentUserPublic } from "@/api/auth";
 import Notfound from "@/pages/Notfound";
 import useAuthStore from "@/stores/auth-store";
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Navigate } from "react-router";
 
 const ProtectRouteUserPublic = ({ element }) => {
   const token = useAuthStore((state) => state.token);
@@ -23,7 +23,7 @@ const ProtectRouteUserPublic = ({ element }) => {
   };
 
   if (isAccessDenied) {
-    return <Notfound />;
+    return <Navigate to="/" replace />;
   }
 
   return element;
