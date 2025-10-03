@@ -1,48 +1,36 @@
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-  } from "@/components/ui/card"
-  import { Baht, Calendar } from "lucide-react"
-  
-  const DashboardStats = ({ stats }) => {
-    return (
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
-        <Card className="sm:col-span-2" x-chunk="dashboard-05-chunk-0">
-          <CardHeader className="pb-3">
-            <CardTitle>Your Photographer Dashboard</CardTitle>
-            <p className="max-w-lg text-balance leading-relaxed">
-              Manage your events, photos, and earnings.
-            </p>
-          </CardHeader>
-        </Card>
-        <Card x-chunk="dashboard-05-chunk-1">
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-medium">Total Events</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalEvents.value}</div>
-            <p className="text-xs text-muted-foreground">
-              {stats.totalEvents.change}
-            </p>
-          </CardContent>
-        </Card>
-        <Card x-chunk="dashboard-05-chunk-2">
-          <CardHeader className="pb-2 flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
-            <Baht className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalEarnings.value}</div>
-            <p className="text-xs text-muted-foreground">
-              {stats.totalEarnings.change}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    );
+import React from 'react';
+
+const DashboardStats = ({ stats }) => {
+  const handleWithdrawClick = () => {
+    console.log("Withdraw button clicked from Total Sales!");
+    // Implement actual withdrawal logic here
   };
-  
-  export default DashboardStats;
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <StatCard title="Total Events" value={stats.totalEvents} />
+      <StatCard title="Total Users" value={stats.totalUsers} />
+      <StatCard title="Total Sales" value={`THB ${stats.totalSales}`} showWithdrawButton={true} onWithdrawClick={handleWithdrawClick} />
+      <StatCard title="Pending Approvals" value={stats.pendingApprovals} />
+    </div>
+  );
+};
+
+const StatCard = ({ title, value, showWithdrawButton, onWithdrawClick }) => {
+  return (
+    <div className="bg-white p-4 rounded-lg shadow-md">
+      <h3 className="text-lg font-semibold text-gray-500">{title}</h3>
+      <p className="text-3xl font-bold text-gray-900 mt-2">{value}</p>
+      {showWithdrawButton && (
+        <button 
+          onClick={onWithdrawClick}
+          className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-sm"
+        >
+          Withdraw
+        </button>
+      )}
+    </div>
+  );
+};
+
+export default DashboardStats;

@@ -127,7 +127,7 @@ const DashBoardContainer = () => {
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Photographer Dashboard</h2>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
         {/* Total Events Card */}
@@ -154,7 +154,7 @@ const DashBoardContainer = () => {
             <p className="text-xs text-muted-foreground">
               {dashboardStats.totalEarnings.change}
             </p>
-            <Button className="mt-4">Withdraw Money</Button>
+            <Button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold">Withdraw</Button>
           </CardContent>
         </Card>
       </div>
