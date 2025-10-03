@@ -41,12 +41,12 @@ const DialogUpdate = ({ id }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [email, setEmail] = useState("");
-  const [emails, setEmails] = useState([]);
+  const [invitedEmails, setInvitedEmails] = useState([]);
 
-  const handleInvite = async () => {
-    if (emails.length === 0) return true;
+  const handleInvite = async (emailsToInvite) => {
+    if (emailsToInvite.length === 0) return true;
     try {
-      await invite_event(token, id, { user_emails: emails });
+      await invite_event(token, id, { user_emails: emailsToInvite });
       toast.success("Invite sent successfully");
       return true; // success
     } catch (error) {
@@ -66,6 +66,10 @@ const DialogUpdate = ({ id }) => {
       const res = await get_event(id);
       setData(res.data);
       setOriginalData(res.data); // เก็บค่าเดิม
+      // Initialize invitedEmails from fetched event data
+      if (res.data.event_user && Array.isArray(res.data.event_user)) {
+        setInvitedEmails(res.data.event_user.map(user => user.email));
+      }
     } catch (error) {
       console.log(error);
     }
@@ -81,10 +85,6 @@ const DialogUpdate = ({ id }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
-    if (data.event_type === "Private" && email.trim() !== "") {
-      toast.warning("Please press Enter to add email before saving");
-      return;
-    }
 
     setIsSubmitting(true);
 
@@ -109,15 +109,14 @@ const DialogUpdate = ({ id }) => {
 
       let inviteSuccess = true;
       if (data.event_type === "Private") {
-        inviteSuccess = await handleInvite();
+        inviteSuccess = await handleInvite(invitedEmails);
       }
 
       if (inviteSuccess) {
         setOriginalData({ ...data, ...imageData });
         await actionsGetEvents();
         await actionGetMyEvents(token);
-        setEmails([]);
-        setEmail("");
+        setInvitedEmails([]);
         setOpenDialog(false);
         toast.success("Update successfully");
       }
@@ -134,8 +133,7 @@ const DialogUpdate = ({ id }) => {
     if (!open) {
       setData(originalData);
       setImageFile(null);
-      setEmails([]);
-      setEmail("");
+      setInvitedEmails([]);
     }
     setOpenDialog(open);
   };
@@ -147,7 +145,7 @@ const DialogUpdate = ({ id }) => {
           className="bg-purple-700 hover:bg-purple-900 hover:text-white text-white"
           variant="outline"
         >
-          Details
+          Edit
         </Button>
       </DialogTrigger>
 
@@ -255,48 +253,7 @@ const DialogUpdate = ({ id }) => {
 
             <div className="md:col-span-2 space-y-2">
               {data.event_type === "Private" && (
-                <div>
-                  <Label>Invite</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="user_emails"
-                      type="email"
-                      placeholder="example@gmail.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          if (email && !emails.includes(email)) {
-                            setEmails([...emails, email]);
-                            setEmail("");
-                          }
-                        }
-                      }}
-                    />
-                  </div>
-
-                  {/* Email list as tags */}
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {emails.map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-1 px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm"
-                      >
-                        {item}
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setEmails(emails.filter((em) => em !== item))
-                          }
-                          className="ml-1 text-gray-500 hover:text-red-500"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <InviteEvent id={id} onInvite={setInvitedEmails} currentInvites={invitedEmails} />
               )}
             </div>
 
