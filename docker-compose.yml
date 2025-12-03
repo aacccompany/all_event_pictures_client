@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  vite-client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+    networks:
+      - client-network
+
+networks:
+  client-network:
+    driver: bridge
