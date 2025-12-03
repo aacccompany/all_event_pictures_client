@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getDashboardEventStats, getRecentActivities, getRecentSales } from "@/api/dashboard";
 import {
   Card,
   CardContent,
@@ -19,113 +20,54 @@ import { Button } from "@/components/ui/button";
 import { DollarSign, Calendar } from "lucide-react";
 
 const DashBoardContainer = () => {
-  // --- MOCKUP DATA STATE ---
-  // This is where the mockup data is stored.
-  // In a real application, you would initialize these with empty values
-  // and fetch the data from an API inside the useEffect hook.
   const [dashboardStats, setDashboardStats] = useState({
     totalEvents: { value: 0, change: "" },
     totalEarnings: { value: "THB 0", change: "" },
   });
   const [recentEvents, setRecentEvents] = useState([]);
   const [recentSales, setRecentSales] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // useEffect hook to fetch data or define mockup data when the component mounts.
   useEffect(() => {
-    // --- MOCKUP DATA DEFINITION ---
-    // This section defines the mockup data.
-    // To connect to your database, you would replace this section
-    // with API calls (e.g., using fetch or axios).
-    
-    const mockupStats = {
-      totalEvents: {
-        value: 7,
-        change: "+2 since last month",
-      },
-      totalEarnings: {
-        value: "THB 150,000",
-        change: "+15% from last month",
-      },
+    const fetchData = async () => {
+      try {
+        const stats = await getDashboardEventStats();
+        setDashboardStats({
+          totalEvents: {
+            value: stats.totalEvents,
+            change: `${stats.changeSinceLastMonth >= 0 ? "+" : ""}${stats.changeSinceLastMonth} (${stats.percentageChange.toFixed(2)}%) since last month`,
+          },
+          totalEarnings: {
+            value: "THB 150,000",
+            change: "+15% from last month",
+          },
+        });
+
+        const activities = await getRecentActivities();
+        setRecentEvents(
+          activities.map((a) => ({
+            eventName: a.description,
+            date: a.date,
+            status: a.status,
+          }))
+        );
+        const sales = await getRecentSales(5);
+        setRecentSales(sales);
+      } catch (e) {
+        setError("Failed to load dashboard data");
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
     };
-
-    const mockupRecentEvents = [
-      {
-        eventName: "Wedding Ceremony",
-        date: "2025-09-15",
-        status: "Completed",
-      },
-      {
-        eventName: "Corporate Gala",
-        date: "2025-09-20",
-        status: "Completed",
-      },
-      {
-        eventName: "Music Festival",
-        date: "2025-10-05",
-        status: "Upcoming",
-      },
-      {
-        eventName: "Birthday Party",
-        date: "2025-10-12",
-        status: "Upcoming",
-      },
-    ];
-
-    const mockupRecentSales = [
-      {
-        customerName: "John Doe",
-        eventName: "Wedding Ceremony",
-        amount: "THB 2,500",
-      },
-      {
-        customerName: "Jane Smith",
-        eventName: "Wedding Ceremony",
-        amount: "THB 1,500",
-      },
-      {
-        customerName: "Michael Johnson",
-        eventName: "Corporate Gala",
-        amount: "THB 3,000",
-      },
-      {
-        customerName: "Emily Davis",
-        eventName: "Wedding Ceremony",
-        amount: "THB 800",
-      },
-    ];
-    
-    // --- DATA FETCHING EXAMPLE (COMMENTED OUT) ---
-    // Here is how you might fetch data from your API:
-    //
-    // const fetchDashboardData = async () => {
-    //   try {
-    //     const statsResponse = await fetch('/api/dashboard-stats');
-    //     const eventsResponse = await fetch('/api/recent-events');
-    //     const salesResponse = await fetch('/api/recent-sales');
-    //
-    //     const statsData = await statsResponse.json();
-    //     const eventsData = await eventsResponse.json();
-    //     const salesData = await salesResponse.json();
-    //
-    //     setDashboardStats(statsData);
-    //     setRecentEvents(eventsData);
-    //     setRecentSales(salesData);
-    //   } catch (error) {
-    //     console.error("Failed to fetch dashboard data:", error);
-    //   }
-    // };
-    //
-    // fetchDashboardData();
-
-    // Set the state with the mockup data for now
-    setDashboardStats(mockupStats);
-    setRecentEvents(mockupRecentEvents);
-    setRecentSales(mockupRecentSales);
-
-  }, []); // The empty dependency array ensures this effect runs only once on mount.
+    fetchData();
+  }, []);
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
+      {loading && <div>Loading Dashboard...</div>}
+      {!loading && error && <div className="text-red-500">{error}</div>}
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Photographer Dashboard</h2>
       </div>
@@ -182,7 +124,10 @@ const DashBoardContainer = () => {
                     <TableCell className="font-medium">{event.eventName}</TableCell>
                     <TableCell>{event.date}</TableCell>
                     <TableCell>
-                      <Badge variant={event.status === 'Completed' ? 'default' : 'outline'}>
+                      <Badge
+                        variant={event.status === 'Completed' || event.status === 'Ongoing' ? 'default' : 'outline'}
+                        className={event.status === 'Ongoing' ? 'bg-emerald-500 text-white hover:bg-emerald-600' : ''}
+                      >
                         {event.status}
                       </Badge>
                     </TableCell>
@@ -205,10 +150,10 @@ const DashBoardContainer = () => {
               {recentSales.map((sale, index) => (
                 <div className="flex items-center" key={index}>
                   <div className="ml-4 space-y-1">
-                    <p className="text-sm font-medium leading-none">{sale.customerName}</p>
-                    <p className="text-sm text-muted-foreground">{sale.eventName}</p>
+                    <p className="text-sm font-medium leading-none">{sale.event}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(sale.date).toISOString().split('T')[0]}</p>
                   </div>
-                  <div className="ml-auto font-medium">{sale.amount}</div>
+                  <div className="ml-auto font-medium">{sale.amount} รูป</div>
                 </div>
               ))}
             </div>

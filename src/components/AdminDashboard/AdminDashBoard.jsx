@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getDashboardStats, getRecentActivities, getRecentSales } from '../../api/dashboard';
-import { get_events } from '../../api/event';
+import { getDashboardEventStats, getRecentActivities, getRecentSales } from '../../api/dashboard';
 import DashboardStats from '../Dashboard/DashboardStats';
 import RecentEvents from '../Dashboard/RecentEvents';
 import RecentSales from '../Dashboard/RecentSales';
@@ -12,46 +11,37 @@ const AdminDashBoard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const useMockData = true; // Set to false to fetch real data when APIs are ready
+  const useMockData = false; // Set to false to fetch real data when APIs are ready
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let dashboardStats, activities, sales, events;
+        let dashboardStatsData, activities, sales;
 
         if (useMockData) {
-          dashboardStats = await getDashboardStats();
-          events = { data: [] }; // Mock for get_events when using mock data
-          activities = await getRecentActivities();
+          // This block is now effectively dead code but kept for reference if needed
+          dashboardStatsData = { totalEvents: 120, changeSinceLastMonth: 2, percentageChange: 15 };
+          activities = [
+            { id: 1, type: 'Event Created', description: 'Wedding Ceremony', date: '2025-09-15', status: 'Completed' },
+            { id: 2, type: 'Event Created', description: 'Corporate Gala', date: '2025-09-20', status: 'Completed' },
+            { id: 3, type: 'Event Created', description: 'Music Festival', date: '2025-10-05', status: 'Upcoming' },
+            { id: 4, type: 'Event Created', description: 'Birthday Party', date: '2025-10-12', status: 'Upcoming' },
+          ];
           sales = await getRecentSales();
         } else {
-          // Real API calls go here
-          // For total events, we already have a real API call:
-          events = await get_events(); 
-
-          // Placeholder for real dashboard stats API call
-          dashboardStats = { 
-            totalUsers: 0, 
-            totalSales: 0,
-            pendingApprovals: 0,
-          };
-          // Replace with actual API call to get dashboard statistics
-          // For example: dashboardStats = await getRealDashboardStats();
-          
-          // Placeholder for real recent activities API call
-          activities = [];
-          // Replace with actual API call to get recent activities
-          // For example: activities = await getRealRecentActivities();
-
-          // Placeholder for real recent sales API call
-          sales = [];
-          // Replace with actual API call to get recent sales
-          // For example: sales = await getRealRecentSales();
+          // Real API calls
+          dashboardStatsData = await getDashboardEventStats();
+          activities = await getRecentActivities();
+          sales = await getRecentSales();
         }
 
         setStats({
-          ...dashboardStats,
-          totalEvents: events.data.length, 
+          totalEvents: dashboardStatsData.totalEvents,
+          totalUsers: 0, // Placeholder for actual total users if needed
+          totalSales: 150000, // Placeholder for actual total sales if needed
+          pendingApprovals: 0, // Placeholder for actual pending approvals if needed
+          eventsChangeSinceLastMonth: dashboardStatsData.changeSinceLastMonth,
+          eventsPercentageChange: dashboardStatsData.percentageChange,
         });
         setRecentActivities(activities);
         setRecentSales(sales);

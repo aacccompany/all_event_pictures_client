@@ -1,7 +1,14 @@
 import axios from "axios"
 
-export const get_events = async () => {
-    return await axios.get("http://localhost:8081/api/v1/events")
+export const get_events = async (start_date = null, limit = null) => {
+    const params = {};
+    if (start_date) {
+        params.start_date = start_date.toISOString(); // Convert date to ISO string
+    }
+    if (limit) {
+        params.limit = limit;
+    }
+    return await axios.get("http://localhost:8081/api/v1/events", { params });
 }
 
 export const get_event = async (id) => {
