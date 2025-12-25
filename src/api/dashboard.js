@@ -1,5 +1,6 @@
 import { get_events } from './event';
 import axios from 'axios';
+import { API_BASE_URL } from "./config";
 
 export const getDashboardEventStats = async () => {
     try {
@@ -65,7 +66,7 @@ export const getRecentActivities = async () => {
 
 // Placeholder for fetching recent sales (no changes here)
 export const getRecentSales = async (limit = 5) => {
-    const res = await axios.get(`http://localhost:8081/api/v1/recent-sales`, { params: { limit } });
+    const res = await axios.get(`${API_BASE_URL}/api/v1/recent-sales`, { params: { limit } });
     // map ให้อยู่รูปแบบที่หน้า Dashboard ใช้งานง่าย
     return res.data.map((s, idx) => ({
         id: idx + 1,
