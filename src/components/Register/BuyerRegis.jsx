@@ -22,6 +22,7 @@ const BuyerRegis = () => {
         age: ""
     });
 
+
     const handleRedirect = () => {
         navigate("/");
     };
@@ -34,6 +35,8 @@ const BuyerRegis = () => {
         console.log(e.target.name, e.target.value)
     };
 
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -41,7 +44,11 @@ const BuyerRegis = () => {
                 return toast.warning("Register Fail!");
             if (form.password != form.confirmPassword)
                 return toast.warning("Password invalid");
-            await authRegisterUserPublic(form);
+
+            // Default image for public users
+            const payload = { ...form, image: "https://placehold.co/600x400" };
+
+            await authRegisterUserPublic(payload);
             toast.success("Registration successfuly");
             handleRedirect()
         } catch (error) {
@@ -216,6 +223,7 @@ const BuyerRegis = () => {
                                 onChange={handleOnChange}
                             />
                         </div>
+
 
                     </div>
                     <button

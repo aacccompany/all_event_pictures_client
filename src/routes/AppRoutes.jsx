@@ -20,6 +20,7 @@ import ProtectRouteUserPublic from "./ProtectRouteUserPublic";
 import ProtectRouteSuperAdmin from "./ProtectRouteSuperAdmin";
 import DownloadHistory from "@/pages/DownloadHistory";
 import AdminDashBoard from "@/components/AdminDashboard/AdminDashBoard";
+import Profile from "@/pages/Profile";
 
 const AppRoutes = () => {
   return (
@@ -36,20 +37,21 @@ const AppRoutes = () => {
           <Route path="/events/event-detail/:id" element={<EventView />} />
         </Route>
 
-         {/* Private User Public */}
-         <Route path="user-public" element={<ProtectRouteUserPublic element={<Layout />} />}>
-            <Route path="cart" element={<Cart />} />
-            <Route path="download" element={<Download />} />
-            <Route path="download-history" element={<DownloadHistory />} />
+        {/* Private User Public */}
+        <Route path="user-public" element={<ProtectRouteUserPublic element={<Layout />} />}>
+          <Route path="cart" element={<Cart />} />
+          <Route path="download" element={<Download />} />
+          <Route path="download-history" element={<DownloadHistory />} />
         </Route>
 
-         {/* Private User */}
+        {/* Private User */}
         <Route path="user" element={<ProtectRouteUser element={<Layout />} />}>
           <Route path="dashboard" element={<DashBoardContainer />} />
           <Route path="photographForm" element={<Photographerinfo />} />
           <Route path="event-lists" element={<UserEventList />} />
           <Route path="my-register" element={<MyRegister />} />
           <Route path="upload-images/:id" element={<GrapherUpload />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
 
         {/* Private Admin */}

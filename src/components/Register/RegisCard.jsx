@@ -7,7 +7,7 @@ import {
   UserRound,
 } from "lucide-react";
 
-const RegisCard = ({ handleOnChange, handleSubmit }) => {
+const RegisCard = ({ handleOnChange, handleSubmit, handleFileChange, previewImage, imageError }) => {
 
 
   return (
@@ -123,6 +123,56 @@ const RegisCard = ({ handleOnChange, handleSubmit }) => {
               />
             </div>
           </div>
+          {/* Book Bank Image Upload */}
+          <div className="space-y-2">
+            <label
+              htmlFor="book_bank_image"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Book Bank Image <span className="text-red-500">*</span>
+            </label>
+            <p className={`text-xs ${imageError ? "text-red-500" : "text-slate-500"}`}>
+              Required for account verification and receiving payments.
+            </p>
+            <div className="flex flex-col items-center justify-center w-full">
+              <label
+                htmlFor="book_bank_image"
+                className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${imageError
+                  ? "border-red-500 bg-red-50 hover:bg-red-100"
+                  : "border-gray-300 bg-gray-50 hover:bg-gray-100"
+                  }`}
+              >
+                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                  {previewImage ? (
+                    <img
+                      src={previewImage}
+                      alt="Preview"
+                      className="h-28 object-contain"
+                    />
+                  ) : (
+                    <>
+                      <CloudUpload className="w-8 h-8 text-gray-400 mb-2" />
+                      <p className="mb-1 text-sm text-gray-500">
+                        <span className="font-semibold">Click to upload</span>
+                      </p>
+                      <p className="text-xs text-gray-400">
+                        PNG, JPG or JPEG (MAX. 5MB)
+                      </p>
+                    </>
+                  )}
+                </div>
+                <input
+                  id="book_bank_image"
+                  name="book_bank_image"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+              </label>
+            </div>
+          </div>
+
           <button
             className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             type="submit"
@@ -130,8 +180,8 @@ const RegisCard = ({ handleOnChange, handleSubmit }) => {
             Create Account
           </button>
         </form>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 
