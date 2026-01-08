@@ -5,6 +5,7 @@ import {
   create_stripe_checkout_session
 } from "@/api/cart";
 import useAuthStore from "@/stores/auth-store";
+import useCartStore from "@/stores/cart-store";
 import React, { useEffect, useState } from "react";
 import { TrashIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -12,11 +13,17 @@ import { toast } from "sonner";
 const CartDownload = () => {
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
+  const setCartCount = useCartStore((state) => state.setCartCount);
   const [data, setData] = useState({});
 
   useEffect(() => {
     handleMyCart();
   }, []);
+
+  useEffect(() => {
+    // Update cart count when data changes
+    setCartCount(data?.cart_images?.length || 0);
+  }, [data, setCartCount]);
 
   const handleMyCart = async () => {
     try {
@@ -130,11 +137,10 @@ const CartDownload = () => {
                 onClick={handleCheckout}
                 disabled={!data?.cart_images || data.cart_images.length === 0}
                 className={`w-full font-bold py-3 mt-6 rounded-lg shadow-md hover:shadow-lg transition-colors
-              ${
-                !data?.cart_images || data.cart_images.length === 0
-                  ? "bg-gray-400 cursor-not-allowed text-white"
-                  : "bg-blue-600 text-white hover:bg-blue-700"
-              }`}
+              ${!data?.cart_images || data.cart_images.length === 0
+                    ? "bg-gray-400 cursor-not-allowed text-white"
+                    : "bg-blue-600 text-white hover:bg-blue-700"
+                  }`}
               >
                 Checkout
               </button>

@@ -18,7 +18,9 @@ import {
   publicUserLinks,
 } from "@/utils/links";
 import useAuthStore from "@/stores/auth-store";
+import useCartStore from "@/stores/cart-store";
 import { Button } from "@/components/ui/button";
+import { get_my_cart } from "@/api/cart";
 
 // ✅ helper function: ไม่ใช้ hook โดยตรง
 const renderMenuItems = (links, actionLogout) => {
@@ -52,6 +54,8 @@ const Nav = () => {
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
   const actionLogout = useAuthStore((state) => state.actionLogout); // ✅ ดึง actionLogout ที่นี่
+  const cartCount = useCartStore((state) => state.cartCount);
+  const setCartCount = useCartStore((state) => state.setCartCount);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -65,6 +69,23 @@ const Nav = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Fetch cart count on mount for user-public
+  useEffect(() => {
+    const fetchCartCount = async () => {
+      if (token && user?.role === "user-public") {
+        try {
+          const res = await get_my_cart(token);
+          setCartCount(res.data?.cart_images?.length || 0);
+        } catch (error) {
+          if (error.response?.status === 404) {
+            setCartCount(0);
+          }
+        }
+      }
+    };
+    fetchCartCount();
+  }, [token, user, setCartCount]);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
 
@@ -175,8 +196,13 @@ const Nav = () => {
             ) : token && user.role === "user-public" ? (
               <div className="flex items-center gap-2">
                 <Link to={"/user-public/cart"}>
-                  <button className="p-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 cursor-pointer">
+                  <button className="p-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 cursor-pointer relative">
                     <ShoppingCart className="w-5 h-5" />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        {cartCount}
+                      </span>
+                    )}
                   </button>
                 </Link>
                 <DropdownMenu>
