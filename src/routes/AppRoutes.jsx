@@ -62,10 +62,8 @@ const AppRoutes = () => {
 
         {/* Private Super-Admin */}
         <Route path="super-admin" element={<ProtectRouteSuperAdmin element={<Layout />} />}>
-          {/* <Route path="dashboard" element={<DashBoardContainer />} /> */}
+          <Route path="dashboard" element={<DashBoardContainer />} />
           <Route path="event-lists" element={<UserEventList />} />
-          <Route path="create-event" element={<EventCreateContainer />} />
-          <Route path="my-register" element={<MyRegister />} />
           <Route path="upload-images/:id" element={<GrapherUpload />} />
         </Route>
         <Route path="*" element={<Notfound />} />

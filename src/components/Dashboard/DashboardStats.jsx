@@ -15,7 +15,6 @@ const DashboardStats = ({ stats }) => {
       <StatCard title="Total Events" value={stats.totalEvents} subText={eventsChangeText} />
       <StatCard title="Total Users" value={stats.totalUsers} />
       <StatCard title="Total Sales" value={`THB ${stats.totalSales}`} showWithdrawButton={true} onWithdrawClick={handleWithdrawClick} />
-      <StatCard title="Pending Approvals" value={stats.pendingApprovals} />
     </div>
   );
 };

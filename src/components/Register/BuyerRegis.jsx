@@ -19,7 +19,6 @@ const BuyerRegis = () => {
         confirmPassword: "",
         first_name: "",
         last_name: "",
-        age: ""
     });
 
 
@@ -49,12 +48,27 @@ const BuyerRegis = () => {
             const payload = { ...form, image: "https://placehold.co/600x400" };
 
             await authRegisterUserPublic(payload);
-            toast.success("Registration successfuly");
+            toast.success("Registration successful");
             handleRedirect()
         } catch (error) {
-            const msgError = error.response?.data?.detail || "Register Fail!";
-            toast.warning(msgError);
             console.log(error);
+            let msgError = "Register Fail!";
+
+            if (error.response?.data?.detail) {
+                const detail = error.response.data.detail;
+                if (Array.isArray(detail)) {
+                    // Handle Pydantic validation errors (array of objects)
+                    msgError = detail.map(err => `${err.loc[1] || err.loc[0]}: ${err.msg}`).join(', ');
+                } else if (typeof detail === 'object') {
+                    // Handle other object-based errors
+                    msgError = JSON.stringify(detail);
+                } else {
+                    // Handle string errors
+                    msgError = detail;
+                }
+            }
+
+            toast.warning(msgError);
         }
     };
     return (
@@ -141,23 +155,6 @@ const BuyerRegis = () => {
                                 onChange={handleOnChange}
                             />
                         </div>
-
-                        {/* Age */}
-                        <div>
-                            <label htmlFor="age" className="block text-sm font-medium text-gray-700 mb-1">
-                                Age
-                            </label>
-                            <input
-                                id="age"
-                                name="age"
-                                type="number"
-                                placeholder="Enter your age"
-                                required
-                                className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                onChange={handleOnChange}
-                            />
-                        </div>
-
                         {/* Tel. */}
                         <div>
                             <label htmlFor="tel" className="block text-sm font-medium text-gray-700 mb-1">

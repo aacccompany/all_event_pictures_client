@@ -34,6 +34,10 @@ const RegisterEvent = ({ id, event_type }) => {
     }
   };
 
+  const user = useAuthStore((state) => state.user);
+
+  if (user?.role === "super-admin") return null;
+
   return (
     <div>
       <div className="p-6 pt-0 sm:pt-6 sm:px-6 flex-shrink-0">
@@ -42,11 +46,10 @@ const RegisterEvent = ({ id, event_type }) => {
             onClick={handleJoinEvent}
             disabled={joined}
             className={`w-full sm:w-auto font-semibold py-2 px-4 rounded-md transition-colors duration-300
-            ${
-              joined
+            ${joined
                 ? "bg-gray-400 text-white cursor-not-allowed"
                 : "bg-blue-700 text-white hover:bg-blue-900"
-            }`}
+              }`}
           >
             {joined ? "Already Joined" : "Register"}
           </button>

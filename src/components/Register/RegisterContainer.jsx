@@ -44,16 +44,16 @@ const RegisterContainer = () => {
         return toast.warning("Register Fail!");
       if (form.password != form.confirmPassword)
         return toast.warning("Password invalid");
-      if (!file) {
-        setImageError(true);
-        return toast.warning("Book Bank Image is required!");
-      }
+      // if (!file) {
+      //   setImageError(true);
+      //   return toast.warning("Book Bank Image is required!");
+      // }
 
       // Create FormData object
       const formData = new FormData();
       formData.append("email", form.email);
       formData.append("password", form.password);
-      formData.append("book_bank_image", file);
+      // formData.append("book_bank_image", file);
 
       await authRegister(formData);
       toast.success("Registration successfuly");

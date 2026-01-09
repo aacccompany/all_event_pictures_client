@@ -123,7 +123,7 @@ const RegisCard = ({ handleOnChange, handleSubmit, handleFileChange, previewImag
               />
             </div>
           </div>
-          {/* Book Bank Image Upload */}
+          {/* Book Bank Image Upload
           <div className="space-y-2">
             <label
               htmlFor="book_bank_image"
@@ -171,7 +171,7 @@ const RegisCard = ({ handleOnChange, handleSubmit, handleFileChange, previewImag
                 />
               </label>
             </div>
-          </div>
+          </div> */}
 
           <button
             className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
