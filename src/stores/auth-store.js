@@ -59,6 +59,7 @@ const AuthStore = (set, get) => ({
 
   checkToken: () => {
     const token = get().token;
+    
     if (!token || isTokenExpired(token)) {
       get().actionLogout();
     }

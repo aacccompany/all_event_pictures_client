@@ -1,10 +1,25 @@
 import React, { useState, useEffect } from "react";
 import useAuthStore from "@/stores/auth-store";
-import { get_profile, update_profile, update_book_bank_image } from "@/api/user";
+import { get_profile, update_profile, update_book_bank_image, get_bank_info, update_bank_info } from "@/api/user";
 import { toast } from "sonner";
-import { User, Mail, ShieldCheck, Save, Image as ImageIcon, Upload } from "lucide-react";
+import { User, Mail, ShieldCheck, Save, Image as ImageIcon, Upload, Landmark } from "lucide-react";
 
 const Profile = () => {
+    const THAI_BANKS = [
+        { code: 'BBL', name: 'Bangkok Bank' },
+        { code: 'KBANK', name: 'Kasikornbank' },
+        { code: 'KTB', name: 'Krungthai Bank' },
+        { code: 'SCB', name: 'Siam Commercial Bank' },
+        { code: 'BAY', name: 'Bank of Ayudhya (Krungsri)' },
+        { code: 'TTB', name: 'TMBThanachart Bank' },
+        { code: 'GSB', name: 'Government Savings Bank' },
+        { code: 'KKP', name: 'Kiatnakin Phatra Bank' },
+        { code: 'CIMBT', name: 'CIMB Thai Bank' },
+        { code: 'TISCO', name: 'TISCO Bank' },
+        { code: 'UOB', name: 'United Overseas Bank (UOB)' },
+        { code: 'LH', name: 'Land and Houses Bank' },
+    ];
+
     const { token, user: authUser } = useAuthStore();
     const [loading, setLoading] = useState(true);
     const [userData, setUserData] = useState(null);
@@ -14,18 +29,51 @@ const Profile = () => {
         tel: "",
         address: "",
     });
+    const [bankData, setBankData] = useState({
+        bank_name: "",
+        bank_branch: "",
+        account_name: "",
+        account_number: "",
+        citizen_id: ""
+    });
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+    const [isCustomBank, setIsCustomBank] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
                 const res = await get_profile(token);
-                setUserData(res.data);
+                const user = res.data.payload || res.data;
+                setUserData(user);
                 setFormData({
-                    first_name: res.data.first_name || "",
-                    last_name: res.data.last_name || "",
-                    tel: res.data.tel || "",
-                    address: res.data.address || "",
+                    first_name: user.first_name || "",
+                    last_name: user.last_name || "",
+                    tel: user.tel || "",
+                    address: user.address || "",
+
                 });
+
+                // Fetch Bank Info if user is not public (assuming logic based on role)
+                if (authUser?.role === 'user') {
+                    try {
+                        const bankRes = await get_bank_info(token);
+                        if (bankRes.data) {
+                            const bankName = bankRes.data.bank_name || "";
+                            const isKnownBank = THAI_BANKS.some(b => b.name === bankName);
+                            setIsCustomBank(!!bankName && !isKnownBank);
+
+                            setBankData({
+                                bank_name: bankName,
+                                bank_branch: bankRes.data.bank_branch || "",
+                                account_name: bankRes.data.account_name || "",
+                                account_number: bankRes.data.account_number || "",
+                                citizen_id: bankRes.data.citizen_id || ""
+                            });
+                        }
+                    } catch (err) {
+                        console.log("No bank info found or error fetching", err);
+                    }
+                }
             } catch (error) {
                 console.error("Failed to fetch profile", error);
                 toast.error("Failed to load profile data");
@@ -44,16 +92,30 @@ const Profile = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    const handleBankInputChange = (e) => {
+        const { name, value } = e.target;
+        setBankData(prev => ({ ...prev, [name]: value }));
+    };
+
     const handleInfoSubmit = async (e) => {
         e.preventDefault();
         try {
             await update_profile(token, formData);
             toast.success("Profile updated successfully");
-            // Refresh data ? Or just update local state if needed. 
-            // The formData is already updated.
         } catch (error) {
             console.error(error);
             toast.error("Failed to update profile");
+        }
+    };
+
+    const handleBankInfoSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await update_bank_info(token, bankData);
+            toast.success("Bank info updated successfully");
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to update bank info");
         }
     };
 
@@ -67,18 +129,14 @@ const Profile = () => {
         try {
             const res = await update_book_bank_image(token, formDataImage);
             toast.success("Book Bank Image updated");
-            // Update the displayed image
-            // Assuming the response contains the new URL or we re-fetch
             const newUrl = res.data.book_bank_image || (res.data.payload && res.data.payload.book_bank_image);
-            // Adjust based on actual API response structure. 
-            // User request says: "Update the displayed image with the new URL returned in the response".
+
 
             if (newUrl) {
                 setUserData(prev => ({ ...prev, book_bank_image: newUrl }));
             } else {
-                // If API doesn't return URL directly, re-fetch profile
                 const profileRes = await get_profile(token);
-                setUserData(profileRes.data);
+                setUserData(profileRes.data.payload || profileRes.data);
             }
         } catch (error) {
             console.error(error);
@@ -108,13 +166,10 @@ const Profile = () => {
 
                 {/* Header */}
                 <div className="bg-white shadow-xl rounded-2xl overflow-hidden">
-                    <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-8 py-10">
+                    <div className=" bg-blue-600  px-8 py-10">
                         <div className="flex items-center gap-6">
-                            <div className="h-24 w-24 rounded-full bg-white flex items-center justify-center shadow-lg">
-                                <User className="h-12 w-12 text-blue-600" />
-                            </div>
                             <div className="text-white">
-                                <h1 className="text-3xl font-bold font-sans">User Profile</h1>
+                                <h1 className="text-3xl font-bold font-sans">Photograper Profile</h1>
                                 <p className="text-blue-100 mt-1 opacity-90">Manage your account information</p>
                             </div>
                         </div>
@@ -135,14 +190,6 @@ const Profile = () => {
                                         <span className="text-slate-900 break-all">{userData.email}</span>
                                     </div>
                                 </div>
-
-                                <div>
-                                    <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Role</label>
-                                    <div className="flex items-center gap-2 mt-1">
-                                        <ShieldCheck className="h-4 w-4 text-blue-500" />
-                                        <span className="text-slate-900 capitalize">{userData.role || authUser?.role || "User"}</span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -151,72 +198,74 @@ const Profile = () => {
                     <div className="lg:col-span-2 space-y-8">
 
                         {/* Personal Info Form */}
-                        <div className="bg-white p-6 rounded-xl shadow-md">
-                            <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-xl font-bold text-gray-800">Personal Information</h3>
+                        {authUser?.role === 'user-public' && (
+                            <div className="bg-white p-6 rounded-xl shadow-md">
+                                <div className="flex items-center justify-between mb-6">
+                                    <h3 className="text-xl font-bold text-gray-800">Personal Information</h3>
+                                </div>
+
+                                <form onSubmit={handleInfoSubmit} className="space-y-5">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <div className="space-y-1">
+                                            <label className="text-sm font-medium text-gray-700">First Name</label>
+                                            <input
+                                                type="text"
+                                                name="first_name"
+                                                value={formData.first_name}
+                                                onChange={handleInputChange}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                                placeholder="First Name"
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="text-sm font-medium text-gray-700">Last Name</label>
+                                            <input
+                                                type="text"
+                                                name="last_name"
+                                                value={formData.last_name}
+                                                onChange={handleInputChange}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                                placeholder="Last Name"
+                                            />
+                                        </div>
+
+                                        <div className="space-y-1">
+                                            <label className="text-sm font-medium text-gray-700">Phone Number</label>
+                                            <input
+                                                type="tel" // Changed to tel
+                                                name="tel"
+                                                value={formData.tel}
+                                                onChange={handleInputChange}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                                placeholder="0812345678"
+                                            />
+                                        </div>
+
+                                        <div className="col-span-1 md:col-span-2 space-y-1">
+                                            <label className="text-sm font-medium text-gray-700">Address</label>
+                                            <textarea
+                                                name="address"
+                                                value={formData.address}
+                                                onChange={handleInputChange}
+                                                rows="3"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                                placeholder="Your address"
+                                            ></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-4 flex justify-end">
+                                        <button
+                                            type="submit"
+                                            className="inline-flex items-center px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all gap-2"
+                                        >
+                                            <Save className="h-4 w-4" />
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-
-                            <form onSubmit={handleInfoSubmit} className="space-y-5">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div className="space-y-1">
-                                        <label className="text-sm font-medium text-gray-700">First Name</label>
-                                        <input
-                                            type="text"
-                                            name="first_name"
-                                            value={formData.first_name}
-                                            onChange={handleInputChange}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                                            placeholder="First Name"
-                                        />
-                                    </div>
-                                    <div className="space-y-1">
-                                        <label className="text-sm font-medium text-gray-700">Last Name</label>
-                                        <input
-                                            type="text"
-                                            name="last_name"
-                                            value={formData.last_name}
-                                            onChange={handleInputChange}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                                            placeholder="Last Name"
-                                        />
-                                    </div>
-
-                                    <div className="space-y-1">
-                                        <label className="text-sm font-medium text-gray-700">Phone Number</label>
-                                        <input
-                                            type="tel" // Changed to tel
-                                            name="tel"
-                                            value={formData.tel}
-                                            onChange={handleInputChange}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                                            placeholder="0812345678"
-                                        />
-                                    </div>
-
-                                    <div className="col-span-1 md:col-span-2 space-y-1">
-                                        <label className="text-sm font-medium text-gray-700">Address</label>
-                                        <textarea
-                                            name="address"
-                                            value={formData.address}
-                                            onChange={handleInputChange}
-                                            rows="3"
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                                            placeholder="Your address"
-                                        ></textarea>
-                                    </div>
-                                </div>
-
-                                <div className="pt-4 flex justify-end">
-                                    <button
-                                        type="submit"
-                                        className="inline-flex items-center px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all gap-2"
-                                    >
-                                        <Save className="h-4 w-4" />
-                                        Save Changes
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                        )}
 
                         {/* Book Bank Image Section - Only for Photographer (role === 'user') */}
                         {authUser?.role === 'user' && (
@@ -233,7 +282,8 @@ const Profile = () => {
                                                 <img
                                                     src={userData.book_bank_image}
                                                     alt="Book Bank"
-                                                    className="w-full h-full object-cover"
+                                                    className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                                                    onClick={() => setIsImageModalOpen(true)}
                                                 />
                                             ) : (
                                                 <div className="text-slate-400 flex flex-col items-center">
@@ -269,6 +319,145 @@ const Profile = () => {
                                             Accepted formats: JPG, PNG. Max size: 5MB.
                                         </p>
                                     </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Bank Information Code - Only for Photographer */}
+                        {authUser?.role === 'user' && (
+                            <div className="bg-white p-6 rounded-xl shadow-md">
+                                <div className="flex items-center gap-3 mb-6 border-b pb-4">
+                                    <Landmark className="h-6 w-6 text-blue-600" />
+                                    <div>
+                                        <h3 className="text-xl font-bold text-gray-800">Bank Information</h3>
+                                        <p className="text-sm text-gray-500">บัญชีธนาคารสำหรับรับเงิน</p>
+                                    </div>
+                                </div>
+
+                                <form onSubmit={handleBankInfoSubmit} className="space-y-5">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <div className="space-y-1">
+                                            <label className="block text-sm font-semibold text-gray-700">
+                                                ธนาคาร <span className="block text-xs font-normal text-gray-500">Bank</span>
+                                            </label>
+                                            <select
+                                                name="bank_name"
+                                                value={isCustomBank ? 'OTHER' : bankData.bank_name}
+                                                onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    if (val === 'OTHER') {
+                                                        setIsCustomBank(true);
+                                                        setBankData(prev => ({ ...prev, bank_name: "" }));
+                                                    } else {
+                                                        setIsCustomBank(false);
+                                                        setBankData(prev => ({ ...prev, bank_name: val }));
+                                                    }
+                                                }}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
+                                            >
+                                                <option value="">Select Bank / เลือกธนาคาร</option>
+                                                {THAI_BANKS.map((bank) => (
+                                                    <option key={bank.code} value={bank.name}>
+                                                        {bank.name}
+                                                    </option>
+                                                ))}
+                                                <option value="OTHER">Other / อื่นๆ</option>
+                                            </select>
+
+                                            {isCustomBank && (
+                                                <input
+                                                    type="text"
+                                                    name="bank_name"
+                                                    value={bankData.bank_name}
+                                                    onChange={handleBankInputChange}
+                                                    placeholder="Specify Bank Name / ระบุชื่อธนาคาร"
+                                                    className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                                />
+                                            )}
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="block text-sm font-semibold text-gray-700">
+                                                สาขา <span className="block text-xs font-normal text-gray-500">Bank Branch</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="bank_branch"
+                                                value={bankData.bank_branch}
+                                                onChange={handleBankInputChange}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="block text-sm font-semibold text-gray-700">
+                                                ชื่อบัญชี <span className="block text-xs font-normal text-gray-500">Bank Account Name</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="account_name"
+                                                value={bankData.account_name}
+                                                onChange={handleBankInputChange}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="block text-sm font-semibold text-gray-700">
+                                                เลขที่บัญชี <span className="block text-xs font-normal text-gray-500">Bank Account Number</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="account_number"
+                                                value={bankData.account_number}
+                                                onChange={handleBankInputChange}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                            />
+                                        </div>
+                                        <div className="col-span-1 md:col-span-2 space-y-1">
+                                            <label className="block text-sm font-semibold text-gray-700">
+                                                เลขประจำตัวผู้เสียภาษี / เลขบัตรประชาชน <span className="block text-xs font-normal text-gray-500">TAX ID / THAI CITIZEN ID</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="citizen_id"
+                                                value={bankData.citizen_id}
+                                                onChange={handleBankInputChange}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-4 flex justify-end">
+                                        <button
+                                            type="submit"
+                                            className="inline-flex items-center px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all gap-2"
+                                        >
+                                            <Save className="h-4 w-4" />
+                                            Save Bank Info
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        )}
+
+                        {/* Image Modal */}
+                        {isImageModalOpen && userData?.book_bank_image && (
+                            <div
+                                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4"
+                                onClick={() => setIsImageModalOpen(false)}
+                            >
+                                <div className="relative max-w-4xl w-full max-h-[90vh] flex items-center justify-center">
+                                    <img
+                                        src={userData.book_bank_image}
+                                        alt="Book Bank Full Size"
+                                        className="max-w-full max-h-full rounded-lg shadow-2xl"
+                                    />
+                                    <button
+                                        className="absolute top-4 right-4 text-white bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-all"
+                                        onClick={() => setIsImageModalOpen(false)}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         )}

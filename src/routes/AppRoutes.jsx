@@ -21,6 +21,7 @@ import ProtectRouteSuperAdmin from "./ProtectRouteSuperAdmin";
 import DownloadHistory from "@/pages/DownloadHistory";
 import AdminDashBoard from "@/components/AdminDashboard/AdminDashBoard";
 import Profile from "@/pages/Profile";
+import UserList from "@/pages/UserManagement/UserList";
 
 const AppRoutes = () => {
   return (
@@ -42,6 +43,7 @@ const AppRoutes = () => {
           <Route path="cart" element={<Cart />} />
           <Route path="download" element={<Download />} />
           <Route path="download-history" element={<DownloadHistory />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
 
         {/* Private User */}
@@ -58,6 +60,7 @@ const AppRoutes = () => {
         <Route path="org" element={<ProtectRouteAdmin element={<Layout />} />}>
           <Route path="dashboard" element={<AdminDashBoard />} />
           <Route path="create-event" element={<EventCreateContainer />} />
+          <Route path="users" element={<UserList />} />
         </Route>
 
         {/* Private Super-Admin */}
@@ -65,6 +68,7 @@ const AppRoutes = () => {
           <Route path="dashboard" element={<DashBoardContainer />} />
           <Route path="event-lists" element={<UserEventList />} />
           <Route path="upload-images/:id" element={<GrapherUpload />} />
+          <Route path="users" element={<UserList />} />
         </Route>
         <Route path="*" element={<Notfound />} />
       </Routes>

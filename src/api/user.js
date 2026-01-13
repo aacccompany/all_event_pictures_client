@@ -41,3 +41,19 @@ export const update_book_bank_image = async(token, formData) => {
         }
     })
 }
+
+export const get_bank_info = async(token) => {
+    return await axios.get(`${API_BASE_URL}/api/v1/bank-info`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export const update_bank_info = async(token, data) => {
+    return await axios.put(`${API_BASE_URL}/api/v1/bank-info`, data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
