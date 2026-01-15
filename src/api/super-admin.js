@@ -1,9 +1,9 @@
 import axios from "axios";
 
 // List Users
-export const getUsers = async (token, page = 1, size = 10) => {
+export const getUsers = async (token, page = 1, size = 10, include_deleted = false) => {
   return await axios.get(
-    `${import.meta.env.VITE_API_URL}/api/v1/super-admin/users?page=${page}&size=${size}`,
+    `${import.meta.env.VITE_API_URL}/api/v1/super-admin/users?page=${page}&size=${size}&include_deleted=${include_deleted}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

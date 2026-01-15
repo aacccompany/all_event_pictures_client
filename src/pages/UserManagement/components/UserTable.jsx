@@ -81,7 +81,7 @@ const UserTable = ({
                                             <span className={`px-2 py-1 rounded-full text-xs font-semibold
                                                 ${user.role === 'super-admin' ? 'bg-purple-100 text-purple-800' :
                                                     user.role === 'admin' ? 'bg-blue-100 text-blue-800' :
-                                                        user.role === 'photographer' ? 'bg-green-100 text-green-800' :
+                                                        user.role === 'user' ? 'bg-green-100 text-green-800' :
                                                             'bg-gray-100 text-gray-800'}`}>
                                                 {user.role}
                                             </span>

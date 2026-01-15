@@ -11,6 +11,7 @@ const useUserManagement = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [showDeleted, setShowDeleted] = useState(false);
     const [pagination, setPagination] = useState({
         page: 1,
         size: 100, // Fetch more for client-side filtering
@@ -36,7 +37,7 @@ const useUserManagement = () => {
     const fetchUsers = async (page = 1) => {
         setLoading(true);
         try {
-            const res = await getUsers(token, page, pagination.size);
+            const res = await getUsers(token, page, pagination.size, showDeleted);
             setUsers(res.data.items);
             setPagination({
                 ...pagination,
@@ -54,7 +55,7 @@ const useUserManagement = () => {
 
     useEffect(() => {
         fetchUsers(pagination.page);
-    }, [pagination.page]);
+    }, [pagination.page, showDeleted]);
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
@@ -192,7 +193,11 @@ const useUserManagement = () => {
         formData,
         loggedInUser,
         
+        loggedInUser,
+        showDeleted,
+        
         // Actions
+        setShowDeleted,
         setIsCreateOpen,
         setIsUpdateOpen,
         handleSearchChange,

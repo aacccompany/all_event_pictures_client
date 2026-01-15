@@ -23,7 +23,9 @@ const UserList = () => {
         openUpdateModal,
         handleCreateUser,
         handleUpdateUser,
-        handleDeleteUser
+        handleDeleteUser,
+        showDeleted,
+        setShowDeleted
     } = useUserManagement();
 
     return (
@@ -32,6 +34,8 @@ const UserList = () => {
                 searchTerm={searchTerm}
                 onSearchChange={handleSearchChange}
                 onCreateClick={openCreateModal}
+                showDeleted={showDeleted}
+                setShowDeleted={setShowDeleted}
             />
 
             <UserTable
