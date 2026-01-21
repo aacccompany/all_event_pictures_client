@@ -22,6 +22,8 @@ import DownloadHistory from "@/pages/DownloadHistory";
 import AdminDashBoard from "@/components/AdminDashboard/AdminDashBoard";
 import Profile from "@/pages/Profile";
 import UserList from "@/pages/UserManagement/UserList";
+import WithdrawalManagement from "@/components/AdminDashboard/WithdrawalManagement";
+import SuperAdminDashboard from "@/components/AdminDashboard/SuperAdminDashboard";
 
 const AppRoutes = () => {
   return (
@@ -65,10 +67,11 @@ const AppRoutes = () => {
 
         {/* Private Super-Admin */}
         <Route path="super-admin" element={<ProtectRouteSuperAdmin element={<Layout />} />}>
-          <Route path="dashboard" element={<DashBoardContainer />} />
+          <Route path="dashboard" element={<SuperAdminDashboard />} />
           <Route path="event-lists" element={<UserEventList />} />
           <Route path="upload-images/:id" element={<GrapherUpload />} />
           <Route path="users" element={<UserList />} />
+          <Route path="withdrawals" element={<WithdrawalManagement />} />
         </Route>
         <Route path="*" element={<Notfound />} />
       </Routes>

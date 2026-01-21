@@ -54,6 +54,7 @@ export const getRecentActivities = async () => {
                 description: event.title,
                 date: eventDateStr,
                 status,
+                photos: event.images ? event.images.length : 0,
             };
         });
         console.log("Formatted recent activities:", recentActivities);

@@ -13,6 +13,7 @@ export const privateSuperAdminLinks = [
   { href: "/super-admin/dashboard", label: "Dashboard" },
   { href: "/super-admin/event-lists", label: "Event Lists" }, 
   { href: "/super-admin/users", label: "User Management" },
+  { href: "/super-admin/withdrawals", label: "Withdrawal Management" },
   { href: "/", label: "Logout" },
 ];
 

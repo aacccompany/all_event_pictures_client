@@ -1,49 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import { getDashboardEventStats, getRecentActivities, getRecentSales } from '../../api/dashboard';
+import { getUsers, getWithdrawalRequests } from '../../api/super-admin';
+import { getMyBalance } from '../../api/wallet';
 import DashboardStats from '../Dashboard/DashboardStats';
 import RecentEvents from '../Dashboard/RecentEvents';
 import RecentSales from '../Dashboard/RecentSales';
+import useAuthStore from "@/stores/auth-store";
 
 const AdminDashBoard = () => {
+  const token = useAuthStore((state) => state.token);
   const [stats, setStats] = useState(null);
   const [recentActivities, setRecentActivities] = useState([]);
   const [recentSales, setRecentSales] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const useMockData = false; // Set to false to fetch real data when APIs are ready
-
   useEffect(() => {
     const fetchData = async () => {
+      if (!token) return;
       try {
-        let dashboardStatsData, activities, sales;
+        const [dashboardStatsData, activities, sales, users, withdrawals, balanceData] = await Promise.all([
+          getDashboardEventStats(),
+          getRecentActivities(),
+          getRecentSales(),
+          getUsers(token, 1, 1000, false, "user"), // Get all photographers to count
+          getWithdrawalRequests(token),
+          getMyBalance(token)
+        ]);
 
-        if (useMockData) {
-          // This block is now effectively dead code but kept for reference if needed
-          dashboardStatsData = { totalEvents: 120, changeSinceLastMonth: 2, percentageChange: 15 };
-          activities = [
-            { id: 1, type: 'Event Created', description: 'Wedding Ceremony', date: '2025-09-15', status: 'Completed' },
-            { id: 2, type: 'Event Created', description: 'Corporate Gala', date: '2025-09-20', status: 'Completed' },
-            { id: 3, type: 'Event Created', description: 'Music Festival', date: '2025-10-05', status: 'Upcoming' },
-            { id: 4, type: 'Event Created', description: 'Birthday Party', date: '2025-10-12', status: 'Upcoming' },
-          ];
-          sales = await getRecentSales();
-        } else {
-          // Real API calls
-          dashboardStatsData = await getDashboardEventStats();
-          activities = await getRecentActivities();
-          sales = await getRecentSales();
-        }
+        const withdrawalList = withdrawals.data;
+        const pendingWithdrawals = withdrawalList.filter(w => w.status === 'pending').length;
 
         setStats({
           totalEvents: dashboardStatsData.totalEvents,
-          totalUsers: 0, // Placeholder for actual total users if needed
-          totalSales: 150000, // Placeholder for actual total sales if needed
-          pendingApprovals: 0, // Placeholder for actual pending approvals if needed
+          totalUsers: users.data.total,
+          totalSales: (balanceData.balance / 100).toFixed(2),
+          pendingApprovals: pendingWithdrawals,
           eventsChangeSinceLastMonth: dashboardStatsData.changeSinceLastMonth,
           eventsPercentageChange: dashboardStatsData.percentageChange,
         });
-        setRecentActivities(activities);
+
+        setRecentActivities(activities.map(a => ({
+          name: a.description,
+          date: a.date,
+          status: a.status,
+          photos: a.photos,
+          sales: "-"
+        })));
         setRecentSales(sales);
       } catch (err) {
         setError("Failed to fetch dashboard data.");
@@ -54,7 +57,7 @@ const AdminDashBoard = () => {
     };
 
     fetchData();
-  }, [useMockData]);
+  }, [token]);
 
   if (loading) {
     return <div>Loading Dashboard...</div>;
@@ -65,12 +68,14 @@ const AdminDashBoard = () => {
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+    <div className="flex-1 space-y-4 p-8 pt-6">
+      <div className="flex items-center justify-between space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight">Admin Dashboard</h2>
+      </div>
       {stats && <DashboardStats stats={stats} />}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <RecentEvents events={recentActivities} />
-        <RecentSales sales={recentSales} />
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <RecentEvents events={recentActivities} className="col-span-4" />
+        <RecentSales sales={recentSales} className="col-span-3" />
       </div>
     </div>
   );

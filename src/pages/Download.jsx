@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import PicLoad from '@/components/Download/PicLoad';
 import { download_my_cart } from "@/api/cart";
+import { verifyPayment } from "@/api/wallet"; // Import verifyPayment
 import useAuthStore from "@/stores/auth-store";
 import { toast } from "sonner";
 
@@ -9,6 +10,7 @@ const Download = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const paymentSuccess = searchParams.get('payment_success');
+  const sessionId = searchParams.get('session_id'); // Get session_id
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
   const [downloadTriggered, setDownloadTriggered] = useState(false);
@@ -18,9 +20,22 @@ const Download = () => {
     const handleDownload = async () => {
       if (paymentSuccess === 'true' && token && !downloadTriggered) {
         setDownloadTriggered(true); // Prevent multiple downloads
-        toast.success("Payment successful! Your download will start shortly.");
+
         try {
+          if (sessionId) {
+            try {
+              await verifyPayment(token, sessionId);
+              toast.success("Payment verified and transaction recorded.");
+            } catch (verifyError) {
+              console.error("Verification failed", verifyError);
+              // Decide if we block download? Maybe not, but warn.
+              // toast.error("Payment verification failed, but downloading anyway.");
+            }
+          }
+
+          toast.success("Payment successful! Your download will start shortly.");
           const res = await download_my_cart(token);
+
           let url = null;
           try {
             url = window.URL.createObjectURL(new Blob([res.data]));

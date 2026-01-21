@@ -66,7 +66,7 @@ const CartDownload = () => {
 
   const handleCheckout = async () => {
     try {
-      const successUrl = `${window.location.origin}/user-public/download?payment_success=true`; // Redirect to download page on success
+      const successUrl = `${window.location.origin}/user-public/download?payment_success=true&session_id={CHECKOUT_SESSION_ID}`; // Redirect to download page on success
       const cancelUrl = `${window.location.origin}/user-public/cart`; // Redirect back to cart on cancel
       const res = await create_stripe_checkout_session(token, successUrl, cancelUrl);
       window.location.href = res.data.checkout_url;

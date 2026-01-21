@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { getDashboardEventStats, getRecentActivities, getRecentSales } from "@/api/dashboard";
+import { getMyBalance } from "@/api/wallet";
+import useAuthStore from "@/stores/auth-store";
 import {
   Card,
   CardContent,
@@ -16,53 +18,59 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { DollarSign, Calendar } from "lucide-react";
+import WithdrawDialog from "./WithdrawDialog";
 
 const DashBoardContainer = () => {
+  const token = useAuthStore((state) => state.token);
   const [dashboardStats, setDashboardStats] = useState({
     totalEvents: { value: 0, change: "" },
-    totalEarnings: { value: "THB 0", change: "" },
+    totalEarnings: { value: 0, display: "THB 0.00", change: "" },
   });
   const [recentEvents, setRecentEvents] = useState([]);
   const [recentSales, setRecentSales] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const stats = await getDashboardEventStats();
-        setDashboardStats({
-          totalEvents: {
-            value: stats.totalEvents,
-            change: `${stats.changeSinceLastMonth >= 0 ? "+" : ""}${stats.changeSinceLastMonth} (${stats.percentageChange.toFixed(2)}%) since last month`,
-          },
-          totalEarnings: {
-            value: "THB 150,000",
-            change: "+15% from last month",
-          },
-        });
+  const fetchData = async () => {
+    if (!token) return;
+    try {
+      const stats = await getDashboardEventStats();
+      const balanceData = await getMyBalance(token);
 
-        const activities = await getRecentActivities();
-        setRecentEvents(
-          activities.map((a) => ({
-            eventName: a.description,
-            date: a.date,
-            status: a.status,
-          }))
-        );
-        const sales = await getRecentSales(5);
-        setRecentSales(sales);
-      } catch (e) {
-        setError("Failed to load dashboard data");
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    };
+      setDashboardStats({
+        totalEvents: {
+          value: stats.totalEvents,
+          change: `${stats.changeSinceLastMonth >= 0 ? "+" : ""}${stats.changeSinceLastMonth} (${stats.percentageChange.toFixed(2)}%) since last month`,
+        },
+        totalEarnings: {
+          value: balanceData.balance, // in satang
+          display: `THB ${(balanceData.balance / 100).toFixed(2)} `,
+          change: "Current Balance",
+        },
+      });
+
+      const activities = await getRecentActivities();
+      setRecentEvents(
+        activities.map((a) => ({
+          eventName: a.description,
+          date: a.date,
+          status: a.status,
+        }))
+      );
+      const sales = await getRecentSales(5);
+      setRecentSales(sales);
+    } catch (e) {
+      setError("Failed to load dashboard data");
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
-  }, []);
+  }, [token]);
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
@@ -92,11 +100,15 @@ const DashBoardContainer = () => {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{dashboardStats.totalEarnings.value}</div>
+            <div className="text-2xl font-bold">{dashboardStats.totalEarnings.display}</div>
             <p className="text-xs text-muted-foreground">
               {dashboardStats.totalEarnings.change}
             </p>
-            <Button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold">Withdraw</Button>
+            <WithdrawDialog
+              token={token}
+              currentBalance={dashboardStats.totalEarnings.value}
+              onWithdrawSuccess={fetchData}
+            />
           </CardContent>
         </Card>
       </div>

@@ -21,6 +21,7 @@ import useAuthStore from "@/stores/auth-store";
 import useCartStore from "@/stores/cart-store";
 import { Button } from "@/components/ui/button";
 import { get_my_cart } from "@/api/cart";
+import NotificationDropdown from "@/components/Nav/NotificationDropdown";
 
 // ✅ helper function: ไม่ใช้ hook โดยตรง
 const renderMenuItems = (links, actionLogout) => {
@@ -166,33 +167,39 @@ const Nav = () => {
           {/* Right section - Desktop Actions */}
           <div className="flex-1 flex items-center justify-end">
             {token && user.role === "super-admin" ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className="bg-blue-700 hover:bg-blue-800">
-                    <Menu />
-                    Menu
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="py-2 m-2">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {renderMenuItems(privateSuperAdminLinks, actionLogout)}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="flex items-center">
+                <NotificationDropdown />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="bg-blue-700 hover:bg-blue-800">
+                      <Menu />
+                      Menu
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="py-2 m-2">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {renderMenuItems(privateSuperAdminLinks, actionLogout)}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             ) : token && user.role === "admin" ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button className="bg-blue-700 hover:bg-blue-800">
-                    <Menu />
-                    Menu
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="py-2 m-2">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {renderMenuItems(privateAdminLinks, actionLogout)}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="flex items-center">
+                <NotificationDropdown />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="bg-blue-700 hover:bg-blue-800">
+                      <Menu />
+                      Menu
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="py-2 m-2">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {renderMenuItems(privateAdminLinks, actionLogout)}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             ) : token && user.role === "user-public" ? (
               <div className="flex items-center gap-2">
                 <Link to={"/user-public/cart"}>
