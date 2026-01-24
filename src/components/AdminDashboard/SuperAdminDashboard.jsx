@@ -4,6 +4,7 @@ import { getUsers, getWithdrawalRequests, getPlatformRevenue } from '../../api/s
 import DashboardStats from '../Dashboard/DashboardStats';
 import RecentEvents from '../Dashboard/RecentEvents';
 import RecentSales from '../Dashboard/RecentSales';
+import TransactionHistory from '../Dashboard/TransactionHistory';
 import useAuthStore from "@/stores/auth-store";
 
 const SuperAdminDashboard = () => {
@@ -71,7 +72,7 @@ const SuperAdminDashboard = () => {
             <div className="flex items-center justify-between space-y-2">
                 <h2 className="text-3xl font-bold tracking-tight">Super Admin Dashboard</h2>
             </div>
-            {stats && <DashboardStats stats={stats} />}
+            {stats && <DashboardStats stats={stats} totalSalesAction={<TransactionHistory token={token} />} />}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <RecentEvents events={recentActivities} className="col-span-4" />
                 <RecentSales sales={recentSales} className="col-span-3" />

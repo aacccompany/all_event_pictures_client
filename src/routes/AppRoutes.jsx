@@ -1,3 +1,4 @@
+import AdminProfile from "@/pages/AdminProfile";
 import Cart from "@/pages/Cart";
 import Download from "@/pages/Download";
 import Event from "@/pages/Event";
@@ -63,6 +64,7 @@ const AppRoutes = () => {
           <Route path="dashboard" element={<AdminDashBoard />} />
           <Route path="create-event" element={<EventCreateContainer />} />
           <Route path="users" element={<UserList />} />
+          <Route path="profile" element={<AdminProfile />} />
         </Route>
 
         {/* Private Super-Admin */}

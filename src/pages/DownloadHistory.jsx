@@ -12,7 +12,8 @@ const DownloadHistory = () => {
     const fetchDownloadHistory = async () => {
       try {
         const res = await get_download_history(token);
-        setHistory(res.data);
+        const sortedData = res.data.sort((a, b) => new Date(b.purchase_date) - new Date(a.purchase_date));
+        setHistory(sortedData);
       } catch (error) {
         console.error("Error fetching download history:", error);
         toast.error("Failed to fetch download history.");
@@ -27,7 +28,7 @@ const DownloadHistory = () => {
   const handleReDownload = async (cartId) => {
     try {
       toast.info(`Initiating re-download for cart ID: ${cartId}`);
-      
+
       const res = await re_download_cart(token, cartId); // เรียก API ใหม่
       let url = null;
       try {

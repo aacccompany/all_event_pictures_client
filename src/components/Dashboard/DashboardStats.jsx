@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DashboardStats = ({ stats }) => {
+const DashboardStats = ({ stats, totalSalesAction }) => {
 
 
   const eventsChangeText = stats.eventsChangeSinceLastMonth !== undefined ?
@@ -11,17 +11,22 @@ const DashboardStats = ({ stats }) => {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <StatCard title="Total Events" value={stats.totalEvents} subText={eventsChangeText} />
       <StatCard title="Total Users" value={stats.totalUsers} />
-      <StatCard title="Total Sales" value={`THB ${stats.totalSales}`} />
+      <StatCard title="Total Sales" value={`THB ${stats.totalSales}`} action={totalSalesAction} />
     </div>
   );
 };
 
-const StatCard = ({ title, value, subText, showWithdrawButton, onWithdrawClick }) => {
+const StatCard = ({ title, value, subText, showWithdrawButton, onWithdrawClick, action }) => {
   return (
     <div className="bg-white p-4 rounded-lg shadow-md">
-      <h3 className="text-lg font-semibold text-gray-500">{title}</h3>
-      <p className="text-3xl font-bold text-gray-900 mt-2">{value}</p>
-      {subText && <p className="text-sm text-gray-500 mt-1">{subText}</p>}
+      <div className="flex justify-between items-start">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-500">{title}</h3>
+          <p className="text-3xl font-bold text-gray-900 mt-2">{value}</p>
+          {subText && <p className="text-sm text-gray-500 mt-1">{subText}</p>}
+        </div>
+        {action && <div>{action}</div>}
+      </div>
       {showWithdrawButton && (
         <button
           onClick={onWithdrawClick}

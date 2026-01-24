@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getDashboardEventStats, getRecentActivities, getRecentSales } from "@/api/dashboard";
 import { getMyBalance } from "@/api/wallet";
+import TransactionHistory from "./TransactionHistory";
 import useAuthStore from "@/stores/auth-store";
 import {
   Card,
@@ -97,18 +98,20 @@ const DashBoardContainer = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <TransactionHistory token={token} />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{dashboardStats.totalEarnings.display}</div>
             <p className="text-xs text-muted-foreground">
               {dashboardStats.totalEarnings.change}
             </p>
-            <WithdrawDialog
-              token={token}
-              currentBalance={dashboardStats.totalEarnings.value}
-              onWithdrawSuccess={fetchData}
-            />
+            <div className="flex gap-2 mt-4">
+              <WithdrawDialog
+                token={token}
+                currentBalance={dashboardStats.totalEarnings.value}
+                onWithdrawSuccess={fetchData}
+              />
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -172,6 +175,7 @@ const DashBoardContainer = () => {
           </CardContent>
         </Card>
       </div>
+
     </div>
   );
 };
