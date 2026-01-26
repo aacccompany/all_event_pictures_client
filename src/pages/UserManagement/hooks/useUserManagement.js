@@ -207,7 +207,10 @@ const useUserManagement = () => {
         openUpdateModal,
         handleCreateUser,
         handleUpdateUser,
-        handleDeleteUser
+        handleCreateUser,
+        handleUpdateUser,
+        handleDeleteUser,
+        fetchUsers
     };
 };
 

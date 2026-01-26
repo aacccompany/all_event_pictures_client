@@ -32,6 +32,7 @@ const UserTable = ({
                             <TableHead>Email</TableHead>
                             <TableHead>Name</TableHead>
                             <TableHead>Role</TableHead>
+                            {loggedInUser?.role === 'super-admin' && <TableHead>Revenue</TableHead>}
                             <TableHead>Status</TableHead>
                             <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
@@ -86,12 +87,28 @@ const UserTable = ({
                                                 {user.role === 'user' ? 'Photographer' : user.role}
                                             </span>
                                         </TableCell>
+                                        {/* Revenue Column for Admin users when viewed by Super Admin */}
+                                        {loggedInUser?.role === 'super-admin' && (
+                                            <TableCell>
+                                                {user.wallet_balance ? (user.wallet_balance / 100).toFixed(2) : '0.00'} THB
+                                            </TableCell>
+                                        )}
                                         <TableCell>
                                             <span className={`px-2 py-1 rounded-full text-xs font-semibold ${user.enabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                                                 {user.enabled ? 'Active' : 'Disabled'}
                                             </span>
                                         </TableCell>
                                         <TableCell className="text-right space-x-2">
+                                            {loggedInUser?.role === 'super-admin' && user.role === 'admin' && (
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="text-orange-500 hover:text-orange-700 border-orange-200 hover:bg-orange-50"
+                                                    onClick={() => onEditClick(user, 'deduct')}
+                                                >
+                                                    Cut Revenue
+                                                </Button>
+                                            )}
                                             <Button variant="ghost" size="icon" onClick={() => onEditClick(user)}>
                                                 <Edit className="h-4 w-4" />
                                             </Button>

@@ -50,3 +50,20 @@ export const verifyPayment = async (token, sessionId) => {
     );
     return response.data;
 };
+
+export const adminDeductBalance = async (token, userId, amount) => {
+    const response = await axios.post(
+        `${API_BASE_URL}/api/v1/wallet/admin/deduct`,
+        null,
+        {
+            params: {
+                user_id: userId,
+                amount: amount
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+    return response.data;
+};
