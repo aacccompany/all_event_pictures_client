@@ -12,6 +12,38 @@ export const get_events = async (start_date = null, limit = null) => {
     return await axios.get(`${API_BASE_URL}/api/v1/events`, { params });
 }
 
+export const get_my_events = async (token, start_date = null, limit = null) => {
+    const params = {};
+    if (start_date) {
+        params.start_date = start_date.toISOString();
+    }
+    if (limit) {
+        params.limit = limit;
+    }
+    return await axios.get(`${API_BASE_URL}/api/v1/events/my-events`, {
+        params,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+}
+
+export const get_my_created_events = async (token, start_date = null, limit = null) => {
+    const params = {};
+    if (start_date) {
+        params.start_date = start_date.toISOString();
+    }
+    if (limit) {
+        params.limit = limit;
+    }
+    return await axios.get(`${API_BASE_URL}/api/v1/events/my-created-events`, {
+        params,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+}
+
 export const get_event = async (id) => {
     return await axios.get(`${API_BASE_URL}/api/v1/event/${id}`)
 }

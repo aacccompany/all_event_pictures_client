@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { getDashboardEventStats, getRecentActivities, getRecentSales } from "@/api/dashboard";
+import {
+  getDashboardEventStats,
+  getRecentActivities,
+  getRecentSales,
+  getPhotographerDashboardEventStats,
+  getPhotographerRecentActivities,
+} from "@/api/dashboard";
+
 import { getMyBalance } from "@/api/wallet";
 import TransactionHistory from "./TransactionHistory";
 import useAuthStore from "@/stores/auth-store";
@@ -36,7 +43,7 @@ const DashBoardContainer = () => {
   const fetchData = async () => {
     if (!token) return;
     try {
-      const stats = await getDashboardEventStats();
+      const stats = await getPhotographerDashboardEventStats(token);
       const balanceData = await getMyBalance(token);
 
       setDashboardStats({
@@ -51,7 +58,8 @@ const DashBoardContainer = () => {
         },
       });
 
-      const activities = await getRecentActivities();
+
+      const activities = await getPhotographerRecentActivities(token);
       setRecentEvents(
         activities.map((a) => ({
           eventName: a.description,
@@ -59,7 +67,7 @@ const DashBoardContainer = () => {
           status: a.status,
         }))
       );
-      const sales = await getRecentSales(5);
+      const sales = await getRecentSales(5, token);
       setRecentSales(sales);
     } catch (e) {
       setError("Failed to load dashboard data");
@@ -164,9 +172,16 @@ const DashBoardContainer = () => {
             <div className="space-y-8">
               {recentSales.map((sale, index) => (
                 <div className="flex items-center" key={index}>
-                  <div className="ml-4 space-y-1">
+                  {sale.image && (
+                    <img
+                      src={sale.image}
+                      alt={sale.event}
+                      className="h-9 w-9 rounded bg-gray-100 object-cover mr-4"
+                    />
+                  )}
+                  <div className="space-y-1">
                     <p className="text-sm font-medium leading-none">{sale.event}</p>
-                    <p className="text-xs text-muted-foreground">{new Date(sale.date).toISOString().split('T')[0]}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(sale.date).toLocaleDateString()}</p>
                   </div>
                   <div className="ml-auto font-medium">{sale.amount} รูป</div>
                 </div>

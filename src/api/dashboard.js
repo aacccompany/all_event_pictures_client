@@ -1,4 +1,4 @@
-import { get_events } from './event';
+import { get_events, get_my_events, get_my_created_events } from './event';
 import axios from 'axios';
 import { API_BASE_URL } from "./config";
 
@@ -65,15 +65,166 @@ export const getRecentActivities = async () => {
     }
 };
 
+export const getPhotographerDashboardEventStats = async (token) => {
+    try {
+        const allEventsResponse = await get_my_events(token);
+        console.log("Photographer allEventsResponse:", allEventsResponse);
+        const totalEvents = allEventsResponse.data.length;
+
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+        const eventsLastMonthResponse = await get_my_events(token, oneMonthAgo);
+        console.log("Photographer eventsLastMonthResponse:", eventsLastMonthResponse);
+        const eventsLastMonth = eventsLastMonthResponse.data.length;
+
+        const changeSinceLastMonth = totalEvents - eventsLastMonth;
+        const percentageChange = eventsLastMonth > 0 ? (changeSinceLastMonth / eventsLastMonth) * 100 : 0;
+
+        console.log("Photographer Dashboard Event Stats:", { totalEvents, changeSinceLastMonth, percentageChange });
+        return {
+            totalEvents,
+            changeSinceLastMonth,
+            percentageChange,
+        };
+    } catch (error) {
+        console.error("Error fetching photographer dashboard event stats:", error);
+        throw error;
+    }
+};
+
+export const getPhotographerRecentActivities = async (token) => {
+    try {
+        const response = await get_my_events(token, null, 4); // Get the 4 most recent events
+        console.log("getPhotographerRecentActivities response:", response);
+        // Build local YYYY-MM-DD for reliable lexicographic comparison
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${yyyy}-${mm}-${dd}`;
+
+        const recentActivities = response.data.map(event => {
+            const rawDate = (event.date || event.created_at || '').toString();
+            const eventDateStr = rawDate.includes('T') ? rawDate.split('T')[0] : rawDate; // YYYY-MM-DD
+
+            let status = 'Upcoming';
+            if (eventDateStr < todayStr) status = 'Completed';
+            else if (eventDateStr === todayStr) status = 'Ongoing';
+
+            return {
+                id: event.id,
+                type: 'Event Joined',
+                description: event.title,
+                date: eventDateStr,
+                status,
+                photos: event.images ? event.images.length : 0,
+            };
+        });
+        console.log("Formatted photographer recent activities:", recentActivities);
+        return recentActivities;
+    } catch (error) {
+        console.error("Error fetching photographer recent events:", error);
+        throw error;
+    }
+};
+
+export const getAdminDashboardEventStats = async (token) => {
+    try {
+        const allEventsResponse = await get_my_created_events(token);
+        const totalEvents = allEventsResponse.data.length;
+
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+        const eventsLastMonthResponse = await get_my_created_events(token, oneMonthAgo);
+        const eventsLastMonth = eventsLastMonthResponse.data.length;
+
+        const changeSinceLastMonth = totalEvents - eventsLastMonth;
+        const percentageChange = eventsLastMonth > 0 ? (changeSinceLastMonth / eventsLastMonth) * 100 : 0;
+
+        return {
+            totalEvents,
+            changeSinceLastMonth,
+            percentageChange,
+        };
+    } catch (error) {
+        console.error("Error fetching admin dashboard event stats:", error);
+        throw error;
+    }
+};
+
+export const getAdminRecentActivities = async (token) => {
+    try {
+        const response = await get_my_created_events(token, null, 4);
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${yyyy}-${mm}-${dd}`;
+
+        const recentActivities = response.data.map(event => {
+            const rawDate = (event.date || event.created_at || '').toString();
+            const eventDateStr = rawDate.includes('T') ? rawDate.split('T')[0] : rawDate;
+
+            let status = 'Upcoming';
+            if (eventDateStr < todayStr) status = 'Completed';
+            else if (eventDateStr === todayStr) status = 'Ongoing';
+
+            return {
+                id: event.id,
+                type: 'Event Created',
+                description: event.title,
+                date: eventDateStr,
+                status,
+                photos: event.images ? event.images.length : 0,
+            };
+        });
+        return recentActivities;
+    } catch (error) {
+        console.error("Error fetching admin recent events:", error);
+        throw error;
+    }
+};
+
+
 // Placeholder for fetching recent sales (no changes here)
-export const getRecentSales = async (limit = 5) => {
-    const res = await axios.get(`${API_BASE_URL}/api/v1/recent-sales`, { params: { limit } });
+export const getRecentSales = async (limit = 5, token = null) => {
+    let res;
+    if (token) {
+        res = await axios.get(`${API_BASE_URL}/api/v1/recent-sales/my-sales`, {
+            params: { limit },
+            headers: { Authorization: `Bearer ${token}` }
+        });
+    } else {
+        res = await axios.get(`${API_BASE_URL}/api/v1/recent-sales`, { params: { limit } });
+    }
+    
     // map ให้อยู่รูปแบบที่หน้า Dashboard ใช้งานง่าย
     return res.data.map((s, idx) => ({
         id: idx + 1,
         event: s.event_name,
         amount: s.photo_count, // number of photos
         date: s.purchased_at,
+        image: s.image_url,
     }));
+};
+
+export const getAdminRecentSales = async (limit = 5, token) => {
+    try {
+        const res = await axios.get(`${API_BASE_URL}/api/v1/recent-sales/from-my-events`, {
+            params: { limit },
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        return res.data.map((s, idx) => ({
+            id: idx + 1,
+            event: s.event_name,
+            amount: s.photo_count,
+            date: s.purchased_at,
+            image: s.image_url,
+        }));
+    } catch (error) {
+        console.error("Error fetching admin recent sales:", error);
+        throw error;
+    }
 };
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getDashboardEventStats, getRecentActivities, getRecentSales } from '../../api/dashboard';
+import { getAdminDashboardEventStats, getAdminRecentActivities, getAdminRecentSales } from '../../api/dashboard';
 import { getUsers, getWithdrawalRequests } from '../../api/super-admin';
 import { getMyBalance } from '../../api/wallet';
 import DashboardStats from '../Dashboard/DashboardStats';
@@ -21,9 +21,9 @@ const AdminDashBoard = () => {
       if (!token) return;
       try {
         const [dashboardStatsData, activities, sales, users, withdrawals, balanceData] = await Promise.all([
-          getDashboardEventStats(),
-          getRecentActivities(),
-          getRecentSales(),
+          getAdminDashboardEventStats(token),
+          getAdminRecentActivities(token),
+          getAdminRecentSales(5, token),
           getUsers(token, 1, 1000, false, "user"), // Get all photographers to count
           getWithdrawalRequests(token),
           getMyBalance(token)

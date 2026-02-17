@@ -10,7 +10,7 @@ const DashboardStats = ({ stats, totalSalesAction }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <StatCard title="Total Events" value={stats.totalEvents} subText={eventsChangeText} />
-      <StatCard title="Total Users" value={stats.totalUsers} />
+      <StatCard title="Total Photographer" value={stats.totalUsers} />
       <StatCard title="Total Sales" value={`THB ${stats.totalSales}`} action={totalSalesAction} />
     </div>
   );
