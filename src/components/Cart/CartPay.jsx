@@ -132,7 +132,7 @@ const CartDownload = () => {
                   <span>{data?.cart_images?.length || 0}</span>
                 </div>
               </div>
-              <button
+              {/* <button
                 type="button"
                 onClick={handleCheckout}
                 disabled={!data?.cart_images || data.cart_images.length === 0}
@@ -143,6 +143,18 @@ const CartDownload = () => {
                   }`}
               >
                 Checkout
+              </button> */}
+              <button
+                type="button"
+                onClick={handleDownload}
+                disabled={!data?.cart_images || data.cart_images.length === 0}
+                className={`w-full font-bold py-3 mt-6 rounded-lg shadow-md hover:shadow-lg transition-colors
+              ${!data?.cart_images || data.cart_images.length === 0
+                    ? "bg-gray-400 cursor-not-allowed text-white"
+                    : "bg-blue-600 text-white hover:bg-blue-700"
+                  }`}
+              >
+                download
               </button>
 
               <p className="text-xs text-gray-500 mt-4 text-center">
