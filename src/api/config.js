@@ -1,4 +1,4 @@
-// API Configuration
+// API Configuration/../
 // Use environment variable or fallback to localhost
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://api.alleventpictures.com/';
 
