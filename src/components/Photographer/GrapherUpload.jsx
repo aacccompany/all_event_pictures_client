@@ -12,6 +12,8 @@ import { get_event } from "@/api/event";
 import useAuthStore from "@/stores/auth-store";
 import { upload_images } from "@/api/uploadimage";
 import { toast } from "sonner";
+import { API_BASE_URL } from "@/api/config";
+import ManageImages from "../ManageImage/ManageImages";
 
 const GrapherUpload = () => {
   const [files, setFiles] = useState([]);
@@ -20,8 +22,35 @@ const GrapherUpload = () => {
   const token = useAuthStore((state) => state.token);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Track images being processed by AI
+  const [processingImages, setProcessingImages] = useState([]);
+
+  // Trigger to refresh ManageImages
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
   useEffect(() => {
     handleGetEvent();
+
+    // Connect to WebSocket
+    const wsUrl = API_BASE_URL.replace("http", "ws") + `/api/v1/ws/${id}`;
+    const ws = new WebSocket(wsUrl);
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === "COMPLETED") {
+        setProcessingImages((prev) =>
+          prev.map((img) => img.id === data.image_id ? { ...img, status: "COMPLETED" } : img)
+        );
+      } else if (data.type === "FAILED") {
+        setProcessingImages((prev) =>
+          prev.map((img) => img.id === data.image_id ? { ...img, status: "FAILED" } : img)
+        );
+      }
+    };
+
+    return () => {
+      ws.close();
+    };
   }, []);
 
   const handleGetEvent = async () => {
@@ -56,8 +85,20 @@ const GrapherUpload = () => {
         formData.append("images", file);
       });
 
-      await upload_images(token, id, formData);
-      toast.success("Upload successfully!");
+      const res = await upload_images(token, id, formData);
+      toast.success("Images uploaded! AI is processing in the background.");
+
+      // Add the new images to the processing list
+      const newImages = res.data.map(img => ({
+        id: img.id,
+        secure_url: img.secure_url,
+        status: img.status || "PENDING_AI"
+      }));
+      setProcessingImages(prev => [...prev, ...newImages]);
+
+      // Tell ManageImages to refresh its list to show the new PENDING_AI items
+      setRefreshTrigger(prev => prev + 1);
+
       setFiles([]);
     } catch (error) {
       console.error(error);
@@ -175,7 +216,54 @@ const GrapherUpload = () => {
             ))}
           </div>
         )}
+
+        {/* Processing State */}
+        {processingImages.length > 0 && (
+          <div className="mt-8 border-t pt-8">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                {processingImages.filter(img => img.status === "COMPLETED" || img.status === "FAILED").length < processingImages.length && (
+                  <Loader2 className="w-5 h-5 animate-spin text-indigo-600" />
+                )}
+                AI Processing Status
+              </h2>
+              <span className="text-sm bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full font-medium">
+                {processingImages.filter(img => img.status === "COMPLETED").length} / {processingImages.length} Completed
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {processingImages.map((img) => (
+                <div key={img.id} className="relative rounded-xl overflow-hidden shadow-sm border">
+                  <img
+                    src={img.secure_url}
+                    alt={`uploaded-${img.id}`}
+                    className={`w-full aspect-square object-cover transition duration-300 ${img.status === 'PENDING_AI' ? 'opacity-50 grayscale' : ''}`}
+                  />
+                  {/* Status Overlay */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white font-medium p-2 text-center">
+                    {img.status === "PENDING_AI" && (
+                      <>
+                        <Loader2 className="w-8 h-8 animate-spin mb-2" />
+                        <span className="text-xs">Finding Faces...</span>
+                      </>
+                    )}
+                    {img.status === "COMPLETED" && (
+                      <span className="bg-green-500 text-white px-2 py-1 rounded-md text-xs shadow-lg">Ready!</span>
+                    )}
+                    {img.status === "FAILED" && (
+                      <span className="bg-red-500 text-white px-2 py-1 rounded-md text-xs shadow-lg">Failed</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
+
+      {/* Management Section */}
+      <ManageImages eventId={id} refreshTrigger={refreshTrigger} />
     </div>
   );
 };

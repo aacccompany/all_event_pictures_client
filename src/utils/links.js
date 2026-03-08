@@ -11,9 +11,10 @@ export const publicUserLinks = [
 
 export const privateSuperAdminLinks = [
   { href: "/super-admin/dashboard", label: "Dashboard" },
-  { href: "/super-admin/event-lists", label: "Event Lists" }, 
+  { href: "/super-admin/create-event", label: "Create/Edit Event" },
   { href: "/super-admin/users", label: "User Management" },
   { href: "/super-admin/withdrawals", label: "Withdrawal Management" },
+  { href: "/super-admin/detailed-sales", label: "Detailed Sales" },
   { href: "/", label: "Logout" },
 ];
 
@@ -22,6 +23,7 @@ export const privateAdminLinks = [
   { href: "/org/dashboard", label: "Dashboard" },
   { href: "/org/create-event", label: "Create/Edit Event" },
   { href: "/org/users", label: "User Management" },
+  { href: "/org/detailed-sales", label: "Detailed Sales" },
   { href: "/", label: "Logout" },
 ];
 
@@ -30,6 +32,7 @@ export const privateUserLinks = [
   { href: "/user/dashboard", label: "Dashboard" },
   { href: "/user/event-lists", label: "Event Lists" },
   { href: "/user/my-register", label: "My Register" },
+  { href: "/user/detailed-sales", label: "Detailed Sales" },
   { href: "/", label: "Logout" },
 ];
 

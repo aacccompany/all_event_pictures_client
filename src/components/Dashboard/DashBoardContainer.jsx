@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router";
 import {
   getDashboardEventStats,
   getRecentActivities,
@@ -65,6 +66,7 @@ const DashBoardContainer = () => {
           eventName: a.description,
           date: a.date,
           status: a.status,
+          earnings: a.earnings,
         }))
       );
       const sales = await getRecentSales(5, token);
@@ -105,7 +107,7 @@ const DashBoardContainer = () => {
         {/* Total Earnings Card */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
+            <CardTitle className="text-sm font-medium">Current Balance</CardTitle>
             <TransactionHistory token={token} />
           </CardHeader>
           <CardContent>
@@ -126,11 +128,16 @@ const DashBoardContainer = () => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         {/* Recent Events Table */}
         <Card className="col-span-4">
-          <CardHeader>
-            <CardTitle>Recent Events</CardTitle>
-            <CardDescription>
-              An overview of your most recent and upcoming events.
-            </CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Recent Events</CardTitle>
+              <CardDescription>
+                An overview of your most recent and upcoming events.
+              </CardDescription>
+            </div>
+            <Link to="/user/my-register" className="text-sm font-medium text-blue-600 hover:text-blue-800">
+              View All
+            </Link>
           </CardHeader>
           <CardContent>
             <Table>
@@ -139,6 +146,7 @@ const DashBoardContainer = () => {
                   <TableHead>Event</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Earnings</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -154,6 +162,9 @@ const DashBoardContainer = () => {
                         {event.status}
                       </Badge>
                     </TableCell>
+                    <TableCell className="text-right font-medium text-green-600">
+                      ฿{(event.earnings || 0).toFixed(2)}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -162,11 +173,16 @@ const DashBoardContainer = () => {
         </Card>
         {/* Recent Sales List */}
         <Card className="col-span-3">
-          <CardHeader>
-            <CardTitle>Recent Sales</CardTitle>
-            <CardDescription>
-              Recent sales from your events.
-            </CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Recent Sales</CardTitle>
+              <CardDescription>
+                Recent sales from your events.
+              </CardDescription>
+            </div>
+            <Link to="/user/detailed-sales" className="text-sm font-medium text-blue-600 hover:text-blue-800">
+              View All
+            </Link>
           </CardHeader>
           <CardContent>
             <div className="space-y-8">

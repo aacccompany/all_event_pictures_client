@@ -25,6 +25,11 @@ import Profile from "@/pages/Profile";
 import UserList from "@/pages/UserManagement/UserList";
 import WithdrawalManagement from "@/components/AdminDashboard/WithdrawalManagement";
 import SuperAdminDashboard from "@/components/AdminDashboard/SuperAdminDashboard";
+import ManageEventImages from "@/pages/ManageEventImages";
+import ManageAllImages from "@/pages/ManageAllImages";
+import DetailedSales from "@/pages/DetailedSales";
+import MyEventsDetail from "@/pages/MyEventsDetail";
+import PhotographerManagement from "@/pages/PhotographerManagement";
 
 const AppRoutes = () => {
   return (
@@ -57,23 +62,34 @@ const AppRoutes = () => {
           <Route path="my-register" element={<MyRegister />} />
           <Route path="upload-images/:id" element={<GrapherUpload />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="all-images" element={<ManageAllImages />} />
+          <Route path="detailed-sales" element={<DetailedSales />} />
         </Route>
 
         {/* Private Admin */}
         <Route path="org" element={<ProtectRouteAdmin element={<Layout />} />}>
           <Route path="dashboard" element={<AdminDashBoard />} />
           <Route path="create-event" element={<EventCreateContainer />} />
+          <Route path="manage-event/:id" element={<ManageEventImages />} />
           <Route path="users" element={<UserList />} />
           <Route path="profile" element={<AdminProfile />} />
+          <Route path="all-images" element={<ManageAllImages />} />
+          <Route path="detailed-sales" element={<DetailedSales />} />
+          <Route path="my-events" element={<MyEventsDetail />} />
         </Route>
 
         {/* Private Super-Admin */}
         <Route path="super-admin" element={<ProtectRouteSuperAdmin element={<Layout />} />}>
           <Route path="dashboard" element={<SuperAdminDashboard />} />
-          <Route path="event-lists" element={<UserEventList />} />
+          <Route path="create-event" element={<EventCreateContainer />} />
           <Route path="upload-images/:id" element={<GrapherUpload />} />
+          <Route path="manage-event/:id" element={<ManageEventImages />} />
           <Route path="users" element={<UserList />} />
           <Route path="withdrawals" element={<WithdrawalManagement />} />
+          <Route path="all-images" element={<ManageAllImages />} />
+          <Route path="detailed-sales" element={<DetailedSales />} />
+          <Route path="my-events" element={<MyEventsDetail />} />
+          <Route path="photographers" element={<PhotographerManagement />} />
         </Route>
         <Route path="*" element={<Notfound />} />
       </Routes>

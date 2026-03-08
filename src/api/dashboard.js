@@ -118,6 +118,7 @@ export const getPhotographerRecentActivities = async (token) => {
                 date: eventDateStr,
                 status,
                 photos: event.images ? event.images.length : 0,
+                earnings: event.earnings || 0,
             };
         });
         console.log("Formatted photographer recent activities:", recentActivities);
@@ -176,6 +177,8 @@ export const getAdminRecentActivities = async (token) => {
                 date: eventDateStr,
                 status,
                 photos: event.images ? event.images.length : 0,
+                sales: event.sales_count || 0,
+                earnings: event.earnings || 0,
             };
         });
         return recentActivities;
@@ -200,11 +203,12 @@ export const getRecentSales = async (limit = 5, token = null) => {
     
     // map ให้อยู่รูปแบบที่หน้า Dashboard ใช้งานง่าย
     return res.data.map((s, idx) => ({
-        id: idx + 1,
+        id: s.sale_id || idx + 1,
         event: s.event_name,
         amount: s.photo_count, // number of photos
         date: s.purchased_at,
         image: s.image_url,
+        earnings: s.earnings || 0,
     }));
 };
 
@@ -214,11 +218,10 @@ export const getAdminRecentSales = async (limit = 5, token) => {
             params: { limit },
             headers: { Authorization: `Bearer ${token}` }
         });
-        
         return res.data.map((s, idx) => ({
-            id: idx + 1,
+            id: s.sale_id || idx + 1,
             event: s.event_name,
-            amount: s.photo_count,
+            amount: s.photo_count, // number of photos
             date: s.purchased_at,
             image: s.image_url,
         }));
@@ -226,5 +229,32 @@ export const getAdminRecentSales = async (limit = 5, token) => {
         console.error("Error fetching admin recent sales:", error);
         throw error;
     }
+};
+
+export const getRecentSalesByRole = async (role, token, limit = 50) => {
+  try {
+    let res;
+    if (role === 'admin') {
+      res = await axios.get(`${API_BASE_URL}/api/v1/recent-sales/from-my-events`, {
+        params: { limit },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } else if (role === 'super-admin') {
+      res = await axios.get(`${API_BASE_URL}/api/v1/recent-sales`, {
+        params: { limit },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } else {
+      // standard user / photographer
+      res = await axios.get(`${API_BASE_URL}/api/v1/recent-sales/my-sales`, {
+        params: { limit },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    }
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching detailed sales by role:", error);
+    throw error;
+  }
 };
 

@@ -44,6 +44,16 @@ export const get_my_created_events = async (token, start_date = null, limit = nu
     });
 }
 
+export const get_all_events_with_stats = async (token, start_date = null, limit = null) => {
+    const params = {};
+    if (start_date) params.start_date = start_date.toISOString();
+    if (limit) params.limit = limit;
+    return await axios.get(`${API_BASE_URL}/api/v1/events/all-with-stats`, {
+        params,
+        headers: { Authorization: `Bearer ${token}` }
+    });
+}
+
 export const get_event = async (id) => {
     return await axios.get(`${API_BASE_URL}/api/v1/event/${id}`)
 }

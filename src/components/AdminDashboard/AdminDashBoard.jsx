@@ -42,11 +42,13 @@ const AdminDashBoard = () => {
         });
 
         setRecentActivities(activities.map(a => ({
+          id: a.id,
           name: a.description,
           date: a.date,
           status: a.status,
           photos: a.photos,
-          sales: "-"
+          sales: a.sales,
+          earnings: a.earnings
         })));
         setRecentSales(sales);
       } catch (err) {
@@ -77,7 +79,7 @@ const AdminDashBoard = () => {
         {stats && <DashboardStats stats={stats} totalSalesAction={<TransactionHistory token={token} />} />}
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <RecentEvents events={recentActivities} className="col-span-4" />
+        <RecentEvents events={recentActivities} className="col-span-4" viewAllPath="/org/my-events" />
         <RecentSales sales={recentSales} className="col-span-3" />
       </div>
 

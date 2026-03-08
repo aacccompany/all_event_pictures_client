@@ -3,6 +3,8 @@ import DialogUpdate from "./DialogUpdate";
 import EventDelete from "./EventDelete";
 import { useEffect } from "react";
 import useAuthStore from "@/stores/auth-store";
+import { Link } from "react-router";
+import { Image as ImageIcon } from "lucide-react";
 
 const EventTable = () => {
   const actionGetEvents = useEventStore((state) => state.actionsGetEvents);
@@ -28,10 +30,9 @@ const EventTable = () => {
       <td className="px-6 py-4 whitespace-nowrap text-sm">
         <span
           className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
-            ${
-              event.active
-                ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-500"
+            ${event.active
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-500"
             }`}
         >
           {event.active ? "Active" : "Close"}
@@ -49,13 +50,20 @@ const EventTable = () => {
         {event.location}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-        {event.limit || "N/A"} 
+        {event.limit || "N/A"}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
         {event.created_by?.email}
       </td>
       <td>
-        <div className="flex justify-center">
+        <div className="flex justify-center items-center gap-2">
+          <Link
+            to={user?.role === "super-admin" ? `/super-admin/manage-event/${event.id}` : `/org/manage-event/${event.id}`}
+            title="Manage Images"
+            className="p-2 bg-indigo-50 text-indigo-600 rounded-md hover:bg-indigo-100 transition-colors"
+          >
+            <ImageIcon className="w-4 h-4" />
+          </Link>
           <DialogUpdate id={event.id} />
           <EventDelete id={event.id} title={event.title} />
         </div>
