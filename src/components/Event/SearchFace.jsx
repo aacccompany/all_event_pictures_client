@@ -116,7 +116,7 @@ const SearchFace = ({ onSearchComplete }) => {
                 </p>
               </div>
             ) : (
-              
+
               // Button not Activate when no file is selected
               <>
                 <Upload className="w-10 h-10 text-gray-400" />
@@ -132,21 +132,48 @@ const SearchFace = ({ onSearchComplete }) => {
               </>
             )}
           </div>
-          
+
           {/* Action Button */}
-          <div className="mt-6 text-center">
-             <button
+          <div className="mt-8 text-center px-4 md:px-0">
+            <button
               onClick={handleSearch}
               disabled={!selectedFile || isLoading}
-              className="w-full bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className={`
+      group relative w-full md:max-w-md mx-auto
+      flex items-center justify-center gap-3
+      py-4 px-8 rounded-2xl font-bold text-lg
+      transition-all duration-300 ease-out
+      ${!selectedFile || isLoading
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-200 active:scale-[0.98] shadow-lg shadow-blue-100"
+                }
+    `}
             >
-              {isLoading ? (
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              ) : (
-                <Upload className="mr-2 h-5 w-5" />
+              {/* ส่วนของ Icon และข้อความ */}
+              <div className="flex items-center justify-center gap-2">
+                {isLoading ? (
+                  <Loader2 className="h-6 w-6 animate-spin text-blue-300" />
+                ) : (
+                  <Upload className={`h-5 w-5 transition-transform duration-300 ${!selectedFile ? '' : 'group-hover:-translate-y-1'}`} />
+                )}
+
+                <span className="tracking-wide">
+                  {isLoading ? "กำลังประมวลผล AI..." : "Upload & Search Photos"}
+                </span>
+              </div>
+
+              {/* ลูกเล่นเส้นขอบเรืองแสงเวลา Hover (Optional) */}
+              {!isLoading && selectedFile && (
+                <div className="absolute inset-0 rounded-2xl border-2 border-white/20 pointer-events-none" />
               )}
-              {isLoading ? "Searching..." : "Upload & Search Photos"}
             </button>
+
+            {/* ช่วยบอก User หน่อยว่าทำไมปุ่มถึงกดไม่ได้ */}
+            {!selectedFile && !isLoading && (
+              <p className="mt-3 text-xs text-gray-400 animate-pulse">
+                กรุณาเลือกรูปภาพก่อนเริ่มการค้นหา
+              </p>
+            )}
           </div>
         </div>
       </section>
