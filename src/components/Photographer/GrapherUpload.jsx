@@ -153,15 +153,16 @@ const GrapherUpload = () => {
               disabled
               className="w-full flex items-center gap-2 bg-gray-400 text-white px-6 py-2 rounded-lg shadow cursor-not-allowed"
             >
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="h-5 w-5 animate-spin" />
               Please wait...
             </button>
           ) : (
             <button
               onClick={handleUpload}
-              className="w-full flex justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2 rounded-lg shadow hover:from-indigo-700 hover:to-purple-700 transition"
+              className="w-full h-12 flex justify-center items-center gap-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-xl active:scale-[0.98] transition-all duration-300"
             >
-              UPLOAD
+              <Upload className="h-5 w-5" />
+              <span className="tracking-wider">UPLOAD IMAGE</span>
             </button>
           )}
         </div>
