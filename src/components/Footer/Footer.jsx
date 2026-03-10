@@ -1,58 +1,91 @@
-import React from 'react'
+import React from 'react';
+import { Camera, Facebook, Instagram, Twitter, Mail, MapPin, Phone } from 'lucide-react';
+import { Link } from 'react-router';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
   return (
-    <footer className="w-full bg-white text-black border-t border-gray-100 mt-auto">
-      {/* ส่วนเนื้อหาหลัก */}
-      <div className="max-w-[1440px] mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+    <footer className="bg-blue-700 text-white mt-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           
           {/* Brand Section */}
-          <div className="md:col-span-2 space-y-4">
-            <h2 className="text-black text-2xl font-bold tracking-tight">
-              AllEvent<span className="text-blue-500">Pictures</span>
-            </h2>
-            <p className="text-gray-600 text-base leading-relaxed max-w-md">
-              Find your moments instantly using our AI facial recognition technology. 
-              The future of event photography.
+          <div className="space-y-6">
+            <Link to="/" className="flex items-center gap-3">
+              <div className="bg-white p-2 rounded-xl">
+                <Camera className="w-6 h-6 text-blue-700" />
+              </div>
+              <span className="font-bold text-xl tracking-tight uppercase">
+                All-Event-Pictures
+              </span>
+            </Link>
+            <p className="text-blue-100/80 text-sm leading-relaxed">
+              Capture your precious moments with our professional photography service and find them instantly.
             </p>
+            <div className="flex gap-4">
+              <div className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-500 cursor-pointer transition-all">
+                <Facebook size={18} />
+              </div>
+              <div className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-500 cursor-pointer transition-all">
+                <Instagram size={18} />
+              </div>
+              <div className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-500 cursor-pointer transition-all">
+                <Twitter size={18} />
+              </div>
+            </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-black font-bold mb-5 text-sm uppercase tracking-wider">Services</h3>
-            <ul className="space-y-3 text-gray-600">
-              <li><a href="#find-photos" className="hover:text-blue-500 transition-colors">Find My Photos</a></li>
-              <li><a href="#how-it-works" className="hover:text-blue-500 transition-colors">How it Works</a></li>
-              {/* <li><a href="#pricing" className="hover:text-blue-500 transition-colors">Pricing</a></li> */}
+            <h4 className="text-lg font-bold mb-6 border-b border-blue-600 pb-2 inline-block">Quick Links</h4>
+            <ul className="space-y-4 text-blue-100/70 text-sm">
+              <li className="hover:text-white transition-colors cursor-pointer">Browse Events</li>
+              <li className="hover:text-white transition-colors cursor-pointer">Search by Face</li>
+              {/* <li className="hover:text-white transition-colors cursor-pointer">Pricing</li>
+              <li className="hover:text-white transition-colors cursor-pointer">About Us</li> */}
             </ul>
           </div>
 
-          {/* Support/Legal */}
+          {/* Support */}
           <div>
-            <h3 className="text-black font-bold mb-5 text-sm uppercase tracking-wider">Support</h3>
-            <ul className="space-y-3 text-gray-600">
-              <li><a href="#faq" className="hover:text-blue-500 transition-colors">FAQs</a></li>
-              <li><a href="#terms" className="hover:text-blue-500 transition-colors">Terms of Service</a></li>
-              <li><a href="#privacy" className="hover:text-blue-500 transition-colors">Privacy Policy</a></li>
+            <h4 className="text-lg font-bold mb-6 border-b border-blue-600 pb-2 inline-block">Support</h4>
+            <ul className="space-y-4 text-blue-100/70 text-sm">
+              <li className="hover:text-white transition-colors cursor-pointer">Terms of Service</li>
+              <li className="hover:text-white transition-colors cursor-pointer">Privacy Policy</li>
+              <li className="hover:text-white transition-colors cursor-pointer">Help Center</li>
+              <li className="hover:text-white transition-colors cursor-pointer">FAQ</li>
             </ul>
           </div>
+
+          {/* Contact Info */}
+          <div>
+            <h4 className="text-lg font-bold mb-6 border-b border-blue-600 pb-2 inline-block">Contact Us</h4>
+            <div className="space-y-4 text-blue-100/80 text-sm">
+              <div className="flex items-start gap-3">
+                <MapPin size={18} className="shrink-0 text-blue-300" />
+                <span>99/99 Example Tower, Sukhumvit Rd, Bangkok, Thailand</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone size={18} className="shrink-0 text-blue-300" />
+                <span>+66 2 123 4567</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail size={18} className="shrink-0 text-blue-300" />
+                <span>support@alleventpics.com</span>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        {/* ส่วนท้ายสุด (Copyright) */}
-        <div className="border-t border-gray-200 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-          <p>© {currentYear} Alleventpictures. All rights reserved.</p>
-          <div className="flex gap-6 mt-4 md:mt-0">
-            <span className="hover:text-black cursor-pointer">Facebook</span>
-            <span className="hover:text-black cursor-pointer">Instagram</span>
-            <span className="hover:text-black cursor-pointer">Line OA</span>
-          </div>
+        {/* Bottom Bar */}
+        <div className="mt-16 pt-8 border-t border-blue-600 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-blue-200/50 text-xs font-medium tracking-wider uppercase">
+            © 2026 All-Event-Pictures. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

@@ -5,191 +5,149 @@ import {
   Banknote,
   PencilRuler,
   UserRound,
+  ArrowRight,
+  Loader2,
+  Sparkles,
 } from "lucide-react";
 
-const RegisCard = ({ handleOnChange, handleSubmit, handleFileChange, previewImage, imageError }) => {
-
+const RegisCard = ({ 
+  handleOnChange, 
+  handleSubmit, 
+  handleFileChange, 
+  previewImage, 
+  imageError,
+  isLoading 
+}) => {
 
   return (
-    // Main container:
-    // - On mobile (default): Use flex-col for vertical stacking, add padding and reduce gap.
-    // - On large screens (lg): Switch to flex-row for a side-by-side layout.
-    <div className="flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-16 min-h-190 bg-grey-50 py-16 px-4 sm:px-6 lg:px-8">
-      {/* === Left Content Section === */}
-      {/* Adjust text alignment and font sizes for different screens */}
-      <div className="text-center lg:text-left lg:max-w-xl">
-        {/* Responsive font size for the main heading */}
-        <h1 className="text-4xl md:text-5xl font-bold text-slate-900">
-          Photographer Register
-        </h1>
-        <p className="mt-4 text-lg text-slate-600 max-w-lg mx-auto lg:mx-0">
-          Register as a photographer on EventPic to participate in official
-          photography.
-        </p>
+    <div className="min-h-screen bg-[#F8FAFC] py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background Decor - วงกลมฟุ้งๆ ด้านหลัง */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-50 via-transparent to-transparent pointer-events-none z-0" />
 
-        {/* Group features into a single container for better spacing and alignment */}
-        <div className="mt-8 grid grid-cols-2 gap-x-8 gap-y-1 lg:flex lg:flex-col lg:items-start lg:space-y-5">
-          <FeatureItem
-            icon={<IdCard className="h-8 w-8 text-blue-600" />}
-            text="Official Free Pass"
-          />
-          <FeatureItem
-            icon={<CloudUpload className="h-8 w-8 text-blue-600" />}
-            text="Easy To Manage"
-          />
-          <FeatureItem
-            icon={<Banknote className="h-8 w-8 text-blue-600" />}
-            text="Make Money"
-          />
-          <FeatureItem
-            icon={<PencilRuler className="h-8 w-8 text-blue-600" />}
-            text="Enjoy with Dev Tools"
-          />
+      <div className="max-w-4xl mx-auto relative z-10">
+        
+        {/* === Top Content Section (เนื้อหาอยู่ข้างบน) === */}
+        <div className="text-center mb-12 space-y-6">          
+          <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight">
+            Photographer <span className="text-blue-600">Register</span>
+          </h1>
+          
+          <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
+            Register as a photographer on <span className="font-bold text-slate-800">AllEventPictures</span> to showcase your talent, manage your shots easily, and turn your vision into earnings.
+          </p>
+
+          {/* Features Grid - ปรับเป็น 4 คอลัมน์เล็กๆ */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
+            <SmallFeature icon={<IdCard />} text="Official Pass" />
+            <SmallFeature icon={<CloudUpload />} text="Easy Manage" />
+            <SmallFeature icon={<Banknote />} text="Make Money" />
+            <SmallFeature icon={<PencilRuler />} text="Dev Tools" />
+          </div>
         </div>
-      </div>
 
-      {/* === Right Form Section === */}
-      {/* Set width and max-width to ensure the form looks good on all screen sizes */}
-      <div className="w-full max-w-md lg:w-1/2 mt-12 lg:mt-0">
-        {/* Form is styled as a card for better visual separation */}
-        <form
-          onSubmit={handleSubmit}
-          className="w-full space-y-6 bg-white p-8 rounded-xl shadow-lg"
-        >
-          {/* Form Header */}
-          <div className="flex items-center gap-3">
-            <UserRound className="h-7 w-7 text-blue-700" />
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
-              Create Account
-            </h2>
-          </div>
-
-          {/* Input Fields */}
-          <div className="space-y-4">
-            {/* Email Address */}
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email Address
-              </label>
-              <input
-                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                id="email"
-                name="email"
-                type="email"
-                placeholder="your@email.com"
-                required
-                onChange={handleOnChange}
-              />
+        {/* === Bottom Form Section (ฟอร์มอยู่ข้างล่าง) === */}
+        <div className="bg-white rounded-[2.5rem] shadow-[0_20px_70px_-10px_rgba(0,0,0,0.1)] border border-slate-100 overflow-hidden group">
+          <div className="p-8 md:p-12 lg:p-16">
+            
+            <div className="flex items-center gap-4 mb-10 border-b border-slate-50 pb-8">
+              <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 shadow-inner">
+                <UserRound className="w-7 h-7" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900">Create Account</h2>
+                <p className="text-sm text-slate-400 font-medium">Join our professional photographer network</p>
+              </div>
             </div>
 
-            {/* Password */}
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Create a password"
-                required
-                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                onChange={handleOnChange}
-              />
-            </div>
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+                {/* Email Field */}
+                <InputGroup 
+                  label="Email Address" 
+                  id="email" 
+                  name="email" 
+                  type="email" 
+                  placeholder="photographer@example.com" 
+                  onChange={handleOnChange} 
+                />
+                
+                {/* Password Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <InputGroup 
+                    label="Password" 
+                    id="password" 
+                    name="password" 
+                    type="password" 
+                    placeholder="••••••••" 
+                    onChange={handleOnChange} 
+                  />
+                  <InputGroup 
+                    label="Confirm Password" 
+                    id="confirmPassword" 
+                    name="confirmPassword" 
+                    type="password" 
+                    placeholder="••••••••" 
+                    onChange={handleOnChange} 
+                  />
+                </div>
+              </div>
 
-            {/* Confirm Password */}
-            <div>
-              <label
-                htmlFor="confirm-password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Confirm Password
-              </label>
-              <input
-                id="confirm-password"
-                name="confirmPassword"
-                type="password"
-                placeholder="Confirm your password"
-                required
-                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                onChange={handleOnChange}
-              />
-            </div>
-          </div>
-          {/* Book Bank Image Upload
-          <div className="space-y-2">
-            <label
-              htmlFor="book_bank_image"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Book Bank Image <span className="text-red-500">*</span>
-            </label>
-            <p className={`text-xs ${imageError ? "text-red-500" : "text-slate-500"}`}>
-              Required for account verification and receiving payments.
-            </p>
-            <div className="flex flex-col items-center justify-center w-full">
-              <label
-                htmlFor="book_bank_image"
-                className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${imageError
-                  ? "border-red-500 bg-red-50 hover:bg-red-100"
-                  : "border-gray-300 bg-gray-50 hover:bg-gray-100"
-                  }`}
-              >
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  {previewImage ? (
-                    <img
-                      src={previewImage}
-                      alt="Preview"
-                      className="h-28 object-contain"
-                    />
+              {/* Submit Button */}
+              <div className="pt-4">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full group relative flex items-center justify-center py-5 px-8 border border-transparent rounded-2xl text-white bg-blue-600 hover:bg-blue-700 active:scale-[0.98] transition-all duration-300 font-bold text-lg shadow-2xl shadow-blue-100 disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? (
+                    <Loader2 className="w-6 h-6 animate-spin" />
                   ) : (
                     <>
-                      <CloudUpload className="w-8 h-8 text-gray-400 mb-2" />
-                      <p className="mb-1 text-sm text-gray-500">
-                        <span className="font-semibold">Click to upload</span>
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        PNG, JPG or JPEG (MAX. 5MB)
-                      </p>
+                      Register Now
+                      <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
-                </div>
-                <input
-                  id="book_bank_image"
-                  name="book_bank_image"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleFileChange}
-                />
-              </label>
-            </div>
-          </div> */}
+                </button>
+              </div>
+            </form>
 
-          <button
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-            type="submit"
-          >
-            Create Account
-          </button>
-        </form>
-      </div >
-    </div >
+            {/* <div className="mt-10 text-center">
+              <p className="text-slate-400 text-sm">
+                Already have an account?{" "}
+                <button className="text-blue-600 font-bold hover:underline transition-all">Sign In</button>
+              </p>
+            </div> */}
+          </div>
+        </div>
+
+        {/* Footer Note */}
+        <p className="text-center mt-8 text-slate-300 text-xs tracking-widest uppercase font-medium">
+          © 2026 EventPictures Pro Service
+        </p>
+      </div>
+    </div>
   );
 };
 
-// A helper component to avoid repeating the feature item structure
-const FeatureItem = ({ icon, text }) => (
-  <div className="flex items-center gap-3">
-    {icon}
-    <h2 className="text-xl md:text-2xl font-semibold text-slate-800">{text}</h2>
+// --- Sub-components สำหรับความคลีนของโค้ด ---
+
+const SmallFeature = ({ icon, text }) => (
+  <div className="flex flex-col items-center gap-3 p-5 rounded-2xl bg-white border border-slate-50 shadow-sm hover:shadow-md transition-shadow">
+    <div className="text-blue-500 w-6 h-6">{icon}</div>
+    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{text}</span>
+  </div>
+);
+
+const InputGroup = ({ label, ...props }) => (
+  <div className="flex flex-col space-y-2.5">
+    <label htmlFor={props.id} className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">
+      {label}
+    </label>
+    <input
+      {...props}
+      required
+      className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all duration-300 placeholder:text-slate-300 text-slate-700 font-medium"
+    />
   </div>
 );
 

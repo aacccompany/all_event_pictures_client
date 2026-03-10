@@ -4,6 +4,8 @@ import {
     CreditCard,
     Heart,
     UserRound,
+    ArrowRight,
+    Sparkles
 } from "lucide-react";
 import { useState } from "react";
 import { authRegisterUserPublic } from "@/api/auth";
@@ -19,227 +21,142 @@ const BuyerRegis = () => {
         confirmPassword: "",
         first_name: "",
         last_name: "",
+        tel: ""
     });
-
 
     const handleRedirect = () => {
         navigate("/");
     };
 
     const handleOnChange = (e) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value,
-        });
-        console.log(e.target.name, e.target.value)
+        setForm({ ...form, [e.target.name]: e.target.value });
     };
-
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             if (!form.password || !form.confirmPassword || !form.email)
-                return toast.warning("Register Fail!");
-            if (form.password != form.confirmPassword)
-                return toast.warning("Password invalid");
+                return toast.warning("Please fill in all required fields");
+            if (form.password !== form.confirmPassword)
+                return toast.warning("Passwords do not match");
 
-            // Default image for public users
             const payload = { ...form, image: "https://placehold.co/600x400" };
-
             await authRegisterUserPublic(payload);
-            toast.success("Registration successful");
-            handleRedirect()
+            toast.success("Welcome! Registration successful");
+            handleRedirect();
         } catch (error) {
             console.log(error);
-            let msgError = "Register Fail!";
-
-            if (error.response?.data?.detail) {
-                const detail = error.response.data.detail;
-                if (Array.isArray(detail)) {
-                    // Handle Pydantic validation errors (array of objects)
-                    msgError = detail.map(err => `${err.loc[1] || err.loc[0]}: ${err.msg}`).join(', ');
-                } else if (typeof detail === 'object') {
-                    // Handle other object-based errors
-                    msgError = JSON.stringify(detail);
-                } else {
-                    // Handle string errors
-                    msgError = detail;
-                }
-            }
-
-            toast.warning(msgError);
+            toast.error("Registration failed. Please try again.");
         }
     };
+
     return (
-        // Main container: โครงสร้างหลักยังคงเดิม
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-16 min-h-190 bg-grey-50 py-16 px-4 sm:px-6 lg:px-8">
-            {/* === Left Content Section (ปรับเนื้อหาสำหรับ User) === */}
-            <div className="text-center lg:text-left lg:max-w-xl">
-                {/* เปลี่ยนหัวข้อหลัก */}
-                <h1 className="text-4xl md:text-5xl font-bold text-slate-900">
-                    Join AllEventPictures
-                </h1>
-                {/* เปลี่ยนคำอธิบาย */}
-                <p className="mt-4 text-lg text-slate-600 max-w-lg mx-auto lg:mx-0">
-                    Sign up to find, purchase, and download your memorable moments from
-                    events.
-                </p>
+        <div className="min-h-screen bg-[#F8FAFC] py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+            {/* Background Light Effects */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-b from-blue-50/50 to-transparent pointer-events-none z-0" />
 
-                {/* เปลี่ยนฟีเจอร์ให้เป็นประโยชน์สำหรับ User */}
-                <div className="mt-8 grid grid-cols-2 gap-x-8 gap-y-1 lg:flex lg:flex-col lg:items-start lg:space-y-5">
-                    <FeatureItem
-                        icon={<Search className="h-8 w-8 text-blue-600" />}
-                        text="Find Your Photos Instantly"
-                    />
-                    <FeatureItem
-                        icon={<DownloadCloud className="h-8 w-8 text-blue-600" />}
-                        text="High-Quality Downloads"
-                    />
-                    <FeatureItem
-                        icon={<CreditCard className="h-8 w-8 text-blue-600" />}
-                        text="Secure & Easy Payments"
-                    />
-                    <FeatureItem
-                        icon={<Heart className="h-8 w-8 text-blue-600" />}
-                        text="Cherish Your Moments"
-                    />
+            <div className="max-w-4xl mx-auto relative z-10">
+                
+                {/* === Top Content Section === */}
+                <div className="text-center mb-12 space-y-6">
+                    <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight">
+                        Create Your Account
+                    </h1>
+                    
+                    <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
+                        Join <span className="text-blue-600 font-bold">AllEventPictures</span> to find, purchase, and cherish your high-quality memories from every special event.
+                    </p>
+
+                    {/* Features Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
+                        <SmallFeature icon={<Search />} text="AI Face Search" />
+                        <SmallFeature icon={<DownloadCloud />} text="High-Resolution Download" />
+                        <SmallFeature icon={<CreditCard />} text="Easy Pay" />
+                        <SmallFeature icon={<Heart />} text="Save Memories" />
+                    </div>
                 </div>
-            </div>
 
-            {/* === Right Form Section === */}
-            <div className="w-full max-w-md lg:w-1/2 mt-12 lg:mt-0">
-                <form
-                    onSubmit={handleSubmit}
-                    className="w-full space-y-6 bg-white p-8 rounded-xl shadow-lg"
-                >
-                    {/* Form Header */}
-                    <div className="flex items-center gap-3">
-                        <UserRound className="h-7 w-7 text-blue-700" />
-                        <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
-                            Create Account
-                        </h2>
+                {/* === Bottom Form Section === */}
+                <div className="bg-white rounded-[2.5rem] shadow-[0_20px_70px_-10px_rgba(0,0,0,0.1)] border border-slate-100 overflow-hidden">
+                    <div className="p-8 md:p-12">
+                        <div className="flex items-center gap-4 mb-10 border-b border-slate-50 pb-6">
+                            <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+                                <UserRound className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <h2 className="text-xl font-bold text-slate-800">Personal Information</h2>
+                                <p className="text-sm text-slate-400">Please fill in your details below</p>
+                            </div>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            {/* Name Row */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <InputGroup label="First Name" id="first_name" name="first_name" type="text" placeholder="John" onChange={handleOnChange} />
+                                <InputGroup label="Last Name" id="last_name" name="last_name" type="text" placeholder="Doe" onChange={handleOnChange} />
+                            </div>
+
+                            {/* Contact Row */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <InputGroup label="Phone Number" id="tel" name="tel" type="tel" placeholder="08x-xxx-xxxx" onChange={handleOnChange} />
+                                <InputGroup label="Email Address" id="email" name="email" type="email" placeholder="john@example.com" onChange={handleOnChange} />
+                            </div>
+
+                            {/* Password Row */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <InputGroup label="Password" id="password" name="password" type="password" placeholder="••••••••" onChange={handleOnChange} />
+                                <InputGroup label="Confirm Password" id="confirmPassword" name="confirmPassword" type="password" placeholder="••••••••" onChange={handleOnChange} />
+                            </div>
+
+                            <div className="pt-6">
+                                <button
+                                    type="submit"
+                                    className="w-full group relative flex items-center justify-center py-4 px-6 border border-transparent rounded-2xl text-white bg-blue-600 hover:bg-blue-700 active:scale-[0.98] transition-all duration-200 font-bold text-lg shadow-xl shadow-blue-100"
+                                >
+                                    Create My Account
+                                    <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                </button>
+                            </div>
+                        </form>
+
+                        {/* <div className="mt-10 text-center">
+                            <p className="text-slate-500">
+                                Already have an account?{" "}
+                                <button onClick={handleRedirect} className="text-blue-600 font-bold hover:underline transition-all">
+                                    Sign In here
+                                </button>
+                            </p>
+                        </div> */}
                     </div>
+                </div>
 
-                    {/* Input Fields */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-
-                        {/* First Name */}
-                        <div>
-                            <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 mb-1">
-                                First Name
-                            </label>
-                            <input
-                                id="first-name"
-                                name="first_name"
-                                type="text"
-                                placeholder="Enter your first name"
-                                required
-                                className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                onChange={handleOnChange}
-                            />
-                        </div>
-
-                        {/* Last Name */}
-                        <div>
-                            <label htmlFor="last-name" className="block text-sm font-medium text-gray-700 mb-1">
-                                Last Name
-                            </label>
-                            <input
-                                id="last-name"
-                                name="last_name"
-                                type="text"
-                                placeholder="Enter your last name"
-                                required
-                                className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                onChange={handleOnChange}
-                            />
-                        </div>
-                        {/* Tel. */}
-                        <div>
-                            <label htmlFor="tel" className="block text-sm font-medium text-gray-700 mb-1">
-                                Phone Number
-                            </label>
-                            <input
-                                id="tel"
-                                name="tel"
-                                type="number" // Changed to "tel" for better mobile support
-                                placeholder="Enter your phone number"
-                                required
-                                className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                onChange={handleOnChange}
-                            />
-                        </div>
-
-                        {/* Email Address */}
-                        <div className="md:col-span-2">
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                                Email Address
-                            </label>
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                placeholder="your-email@email.com"
-                                required
-                                className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                onChange={handleOnChange}
-                            />
-                        </div>
-
-                        {/* Password */}
-                        <div className="md:col-span-2">
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                                Password
-                            </label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                placeholder="Enter your password"
-                                required
-                                maxLength={16}
-                                className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                onChange={handleOnChange}
-                            />
-                        </div>
-
-                        {/* Confirm Password */}
-                        <div className="md:col-span-2">
-                            <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-1">
-                                Confirm Password
-                            </label>
-                            <input
-                                id="confirm-password"
-                                name="confirmPassword"
-                                type="password"
-                                placeholder="Confirm your password"
-                                required
-                                maxLength={16}
-                                className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                onChange={handleOnChange}
-                            />
-                        </div>
-
-
-                    </div>
-                    <button
-                        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-                        type="submit"
-                    >
-                        Create Account
-                    </button>
-                </form>
+                {/* Footer Note */}
+                <p className="text-center mt-8 text-slate-400 text-sm">
+                    © 2024 AllEventPictures. All rights reserved.
+                </p>
             </div>
         </div>
     );
 };
 
-// A helper component (ไม่มีการเปลี่ยนแปลง)
-const FeatureItem = ({ icon, text }) => (
-    <div className="flex items-center gap-3">
-        {icon}
-        <h2 className="text-xl md:text-2xl font-semibold text-slate-800">{text}</h2>
+// Sub-components
+const SmallFeature = ({ icon, text }) => (
+    <div className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white border border-slate-50 shadow-sm">
+        <div className="text-blue-500 w-5 h-5">{icon}</div>
+        <span className="text-xs font-bold text-slate-600">{text}</span>
+    </div>
+);
+
+const InputGroup = ({ label, ...props }) => (
+    <div className="flex flex-col space-y-2">
+        <label htmlFor={props.id} className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">
+            {label}
+        </label>
+        <input
+            {...props}
+            required
+            className="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all duration-300 placeholder:text-slate-300 text-slate-700"
+        />
     </div>
 );
 
