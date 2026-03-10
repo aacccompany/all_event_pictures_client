@@ -88,12 +88,19 @@ const Nav = () => {
     <>
       <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 transition-all">
         <div className="max-w-7xl mx-auto h-20 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          
+
           {/* Left section - Logo */}
           <div className="flex items-center gap-8">
             <Link to={"/"} className="flex items-center gap-3 group transition-transform active:scale-95">
-              <div className="bg-blue-700 p-2 rounded-xl shadow-lg shadow-blue-200">
+              {/* <div className="bg-blue-700 p-2 rounded-xl shadow-lg shadow-blue-200">
                 <Camera className="w-6 h-6 text-white" />
+              </div> */}
+              <div className="bg-blue-700 p-1.5 rounded-xl shadow-lg shadow-blue-200 flex items-center justify-center overflow-hidden">
+                <img
+                  src="/public/Allevent.png" // เปลี่ยนเป็นที่อยู่ไฟล์ PNG ของคุณ
+                  alt="Logo"
+                  className="w-12 h-12 object-contain" // ปรับขนาด w- และ h- ตามความเหมาะสม
+                />
               </div>
               <span className="font-black text-xl text-gray-900 tracking-tighter uppercase hidden sm:block">
                 All-Event-<span className="text-blue-700">Pictures</span>
@@ -117,7 +124,7 @@ const Nav = () => {
             {token ? (
               <div className="flex items-center gap-3">
                 <NotificationDropdown />
-                
+
                 {user.role === "user-public" && (
                   <Link to={"/user-public/cart"}>
                     <button className="p-2.5 rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-blue-200 transition-all relative">
@@ -162,7 +169,7 @@ const Nav = () => {
             )}
 
             {/* Mobile Menu Toggle */}
-            <button 
+            <button
               onClick={toggleMobileMenu}
               className="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
             >
@@ -174,15 +181,13 @@ const Nav = () => {
 
       {/* Mobile Menu Sidebar */}
       <div
-        className={`fixed inset-0 z-[60] lg:hidden transition-opacity duration-300 ${
-          isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed inset-0 z-[60] lg:hidden transition-opacity duration-300 ${isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
       >
         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={toggleMobileMenu}></div>
         <div
-          className={`absolute right-0 w-72 h-full bg-white p-6 shadow-2xl transition-transform duration-300 ease-out ${
-            isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+          className={`absolute right-0 w-72 h-full bg-white p-6 shadow-2xl transition-transform duration-300 ease-out ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+            }`}
         >
           <div className="flex items-center justify-between mb-8">
             <span className="font-black text-blue-700 text-lg uppercase tracking-tight">Menu</span>
@@ -190,7 +195,7 @@ const Nav = () => {
               <X size={20} />
             </button>
           </div>
-          
+
           <div className="flex flex-col gap-2">
             {publicLinks.map((link) => (
               <Link key={link.path} to={link.path} onClick={toggleMobileMenu}>
@@ -199,7 +204,7 @@ const Nav = () => {
                 </span>
               </Link>
             ))}
-            
+
             {/* {!token && (
               <div className="pt-6 mt-4 border-t border-gray-100">
                 <Button
