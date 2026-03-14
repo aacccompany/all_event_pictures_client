@@ -13,6 +13,7 @@ const DetailedSales = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
     const [eventFilter, setEventFilter] = useState("all");
+    const [organizerFilter, setOrganizerFilter] = useState("all");
     const itemsPerPage = 10;
 
     const token = useAuthStore((state) => state.token);
@@ -42,6 +43,11 @@ const DetailedSales = () => {
         return names.sort();
     }, [sales]);
 
+    const organizerNames = useMemo(() => {
+        const names = [...new Set(sales.map((s) => s.organizer_name).filter(Boolean))];
+        return names.sort();
+    }, [sales]);
+
     // Filtered result
     const filtered = useMemo(() => {
         const q = search.toLowerCase();
@@ -52,14 +58,15 @@ const DetailedSales = () => {
                 s.buyer_name?.toLowerCase().includes(q) ||
                 s.buyer_email?.toLowerCase().includes(q);
             const matchEvent = eventFilter === "all" || s.event_name === eventFilter;
-            return matchSearch && matchEvent;
+            const matchOrganizer = organizerFilter === "all" || s.organizer_name === organizerFilter;
+            return matchSearch && matchEvent && matchOrganizer;
         });
-    }, [sales, search, eventFilter]);
+    }, [sales, search, eventFilter, organizerFilter]);
 
     // Reset page when filters change
     useEffect(() => {
         setCurrentPage(1);
-    }, [search, eventFilter]);
+    }, [search, eventFilter, organizerFilter]);
 
     const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
     const currentSales = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -67,8 +74,8 @@ const DetailedSales = () => {
     const handleNextPage = () => { if (currentPage < totalPages) setCurrentPage(currentPage + 1); };
     const handlePrevPage = () => { if (currentPage > 1) setCurrentPage(currentPage - 1); };
 
-    const clearFilters = () => { setSearch(""); setEventFilter("all"); };
-    const hasActiveFilter = search || eventFilter !== "all";
+    const clearFilters = () => { setSearch(""); setEventFilter("all"); setOrganizerFilter("all"); };
+    const hasActiveFilter = search || eventFilter !== "all" || organizerFilter !== "all";
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -106,6 +113,20 @@ const DetailedSales = () => {
                             ))}
                         </select>
 
+                        {/* Organizer dropdown filter (Super Admin only) */}
+                        {userRole === 'super-admin' && (
+                            <select
+                                value={organizerFilter}
+                                onChange={(e) => setOrganizerFilter(e.target.value)}
+                                className="h-9 rounded-md border border-input bg-background px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-ring"
+                            >
+                                <option value="all">All Organizers</option>
+                                {organizerNames.map((name) => (
+                                    <option key={name} value={name}>{name}</option>
+                                ))}
+                            </select>
+                        )}
+
                         {/* Clear filters */}
                         {hasActiveFilter && (
                             <button
@@ -138,10 +159,8 @@ const DetailedSales = () => {
                                         <TableHead>Date</TableHead>
                                         <TableHead>Event</TableHead>
                                         <TableHead>Photos Sold</TableHead>
-                                        {userRole === 'super-admin' && (
-                                            <TableHead>Total Revenue</TableHead>
-                                        )}
-                                        <TableHead>Your Earnings</TableHead>
+                                        <TableHead>Photographer</TableHead>
+                                        <TableHead>Organizer</TableHead>
                                         <TableHead>Buyer</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -173,14 +192,11 @@ const DetailedSales = () => {
                                             <TableCell className="text-sm text-gray-500 font-medium">
                                                 {sale.photo_count} รูป
                                             </TableCell>
-                                            {userRole === 'super-admin' && (
-                                                <TableCell className="text-sm font-medium text-gray-700">
-                                                    ฿{sale.total_amount?.toFixed(2) || "0.00"}
-                                                </TableCell>
-                                            )}
-                                            <TableCell className="text-sm">
-                                                <div className="text-xs text-blue-500 mb-1 font-semibold">{sale.role_split}</div>
-                                                <div className="font-bold text-green-600">฿{sale.earnings?.toFixed(2) || "0.00"}</div>
+                                            <TableCell className="text-sm text-gray-900">
+                                                {sale.photographer_name}
+                                            </TableCell>
+                                            <TableCell className="text-sm text-gray-900">
+                                                {sale.organizer_name}
                                             </TableCell>
                                             <TableCell className="text-sm">
                                                 <div className="font-medium text-gray-900">

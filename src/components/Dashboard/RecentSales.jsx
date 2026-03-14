@@ -28,9 +28,6 @@ const RecentSales = ({ sales, className, viewAllPath = "/org/detailed-sales" }) 
                 <p className="text-xs text-muted-foreground">{new Date(sale.date).toLocaleDateString()}</p>
               </div>
               <div className="ml-auto text-right">
-                <div className="font-medium text-green-600">
-                  ฿{sale.earnings ? sale.earnings.toFixed(2) : "0.00"}
-                </div>
                 <div className="text-xs text-muted-foreground">{sale.amount} Photos</div>
               </div>
             </div>

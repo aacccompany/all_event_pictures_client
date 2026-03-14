@@ -14,6 +14,7 @@ const UserTable = ({
     users,
     loading,
     searchTerm,
+    roleFilter,
     pagination,
     loggedInUser,
     onEditClick,
@@ -55,12 +56,16 @@ const UserTable = ({
                                 .filter((user) => {
                                     // 1. Role-Based Visibility
                                     if (loggedInUser?.role === 'super-admin') {
-                                        if (user.role !== 'admin') return false;
+                                        // Super Admin can see both Organizers (admin) and Photographers (user)
+                                        if (user.role !== 'admin' && user.role !== 'user') return false;
                                     } else if (loggedInUser?.role === 'admin') {
                                         if (user.role !== 'user') return false;
                                     }
 
-                                    // 2. Search Filter
+                                    // 2. Role Filter
+                                    if (roleFilter !== 'all' && user.role !== roleFilter) return false;
+
+                                    // 3. Search Filter
                                     if (searchTerm) {
                                         const lowerTerm = searchTerm.toLowerCase();
                                         return (
@@ -84,7 +89,9 @@ const UserTable = ({
                                                     user.role === 'admin' ? 'bg-blue-100 text-blue-800' :
                                                         user.role === 'user' ? 'bg-green-100 text-green-800' :
                                                             'bg-gray-100 text-gray-800'}`}>
-                                                {user.role === 'user' ? 'Photographer' : user.role}
+                                                {user.role === 'user' ? 'Photographer' : 
+                                                 user.role === 'admin' ? 'Organizer' : 
+                                                 user.role}
                                             </span>
                                         </TableCell>
                                         {/* Revenue Column for Admin users when viewed by Super Admin */}

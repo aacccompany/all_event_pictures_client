@@ -37,7 +37,6 @@ const RecentEvents = ({ events, className, viewAllPath = "/org/create-event" }) 
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Photos</TableHead>
               <TableHead className="text-right">Sales</TableHead>
-              <TableHead className="text-right">Earnings</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -60,9 +59,7 @@ const RecentEvents = ({ events, className, viewAllPath = "/org/create-event" }) 
                   </TableCell>
                   <TableCell className="text-right">{event.photos}</TableCell>
                   <TableCell className="text-right">{event.sales}</TableCell>
-                  <TableCell className="text-right font-medium text-green-600">
-                    ฿{event.earnings ? event.earnings.toFixed(2) : "0.00"}
-                  </TableCell>
+
                 </TableRow>
               ))
             ) : (

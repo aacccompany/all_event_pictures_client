@@ -12,12 +12,14 @@ const UserList = () => {
         users,
         loading,
         searchTerm,
+        roleFilter,
         pagination,
         isCreateOpen,
         isUpdateOpen,
         formData,
         loggedInUser,
         setIsCreateOpen,
+        setRoleFilter,
         setIsUpdateOpen,
         handleSearchChange,
         handlePageChange,
@@ -37,6 +39,8 @@ const UserList = () => {
             <UserHeader
                 searchTerm={searchTerm}
                 onSearchChange={handleSearchChange}
+                roleFilter={roleFilter}
+                onRoleFilterChange={(e) => setRoleFilter(e.target.value)}
                 onCreateClick={openCreateModal}
                 showDeleted={showDeleted}
                 setShowDeleted={setShowDeleted}
@@ -46,6 +50,7 @@ const UserList = () => {
                 users={users}
                 loading={loading}
                 searchTerm={searchTerm}
+                roleFilter={roleFilter}
                 pagination={pagination}
                 loggedInUser={loggedInUser}
                 onEditClick={async (user, action) => {
