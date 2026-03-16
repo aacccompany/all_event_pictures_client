@@ -29,7 +29,6 @@ import ManageEventImages from "@/pages/ManageEventImages";
 import ManageAllImages from "@/pages/ManageAllImages";
 import DetailedSales from "@/pages/DetailedSales";
 import MyEventsDetail from "@/pages/MyEventsDetail";
-import PhotographerManagement from "@/pages/PhotographerManagement";
 
 const AppRoutes = () => {
   return (
@@ -89,7 +88,6 @@ const AppRoutes = () => {
           <Route path="all-images" element={<ManageAllImages />} />
           <Route path="detailed-sales" element={<DetailedSales />} />
           <Route path="my-events" element={<MyEventsDetail />} />
-          <Route path="photographers" element={<PhotographerManagement />} />
         </Route>
         <Route path="*" element={<Notfound />} />
       </Routes>

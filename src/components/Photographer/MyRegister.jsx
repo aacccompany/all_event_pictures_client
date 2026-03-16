@@ -105,7 +105,6 @@ const MyRegister = () => {
                       size={20}
                       className="mr-2 text-green-500 flex-shrink-0"
                     />
-                    <span>Earnings: ฿{(event.earnings || 0).toFixed(2)}</span>
                   </div>
                 </div>
                 <div className="p-4 sm:p-6 flex items-center justify-center border-t sm:border-t-0 sm:border-l border-gray-100 bg-gray-50/50">

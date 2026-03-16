@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { getUsers, deleteUser, createUser, updateUser } from "@/api/super-admin";
 import useAuthStore from "@/stores/auth-store";
 import Swal from "sweetalert2";
@@ -7,10 +8,13 @@ const useUserManagement = () => {
     const token = useAuthStore((state) => state.token);
     const loggedInUser = useAuthStore((state) => state.user);
     
+    const [searchParams] = useSearchParams();
+    
     // Listing & Pagination State
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [roleFilter, setRoleFilter] = useState(searchParams.get("role") || "all");
     const [showDeleted, setShowDeleted] = useState(false);
     const [pagination, setPagination] = useState({
         page: 1,
@@ -30,7 +34,7 @@ const useUserManagement = () => {
         confirm_password: "",
         first_name: "",
         last_name: "",
-        role: "user",
+        role: "admin", // Default to Organizer
         enabled: true
     });
 
@@ -57,6 +61,14 @@ const useUserManagement = () => {
         fetchUsers(pagination.page);
     }, [pagination.page, showDeleted]);
 
+    // Sync roleFilter with searchParams if they change
+    useEffect(() => {
+        const role = searchParams.get("role");
+        if (role) {
+            setRoleFilter(role);
+        }
+    }, [searchParams]);
+
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
     };
@@ -76,7 +88,7 @@ const useUserManagement = () => {
             confirm_password: "",
             first_name: "",
             last_name: "",
-            role: "user",
+            role: "admin",
             enabled: true
         });
         setCurrentUser(null);
@@ -187,17 +199,17 @@ const useUserManagement = () => {
         users,
         loading,
         searchTerm,
+        roleFilter,
         pagination,
         isCreateOpen,
         isUpdateOpen,
         formData,
         loggedInUser,
-        
-        loggedInUser,
         showDeleted,
         
         // Actions
         setShowDeleted,
+        setRoleFilter,
         setIsCreateOpen,
         setIsUpdateOpen,
         handleSearchChange,
@@ -205,8 +217,6 @@ const useUserManagement = () => {
         handleInputChange,
         openCreateModal,
         openUpdateModal,
-        handleCreateUser,
-        handleUpdateUser,
         handleCreateUser,
         handleUpdateUser,
         handleDeleteUser,

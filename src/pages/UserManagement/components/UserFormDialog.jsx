@@ -63,6 +63,19 @@ const UserFormDialog = ({
                         <Input id="last_name" name="last_name" value={formData.last_name} onChange={onInputChange} className="col-span-3" />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="role" className="text-right">Role</Label>
+                        <select
+                            id="role"
+                            name="role"
+                            value={formData.role}
+                            onChange={onInputChange}
+                            className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            <option value="admin">Organizer</option>
+                            <option value="user">Photographer</option>
+                        </select>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="enabled" className="text-right">Enabled</Label>
                         <div className="col-span-3 flex items-center">
                             <input

@@ -1,4 +1,4 @@
-import { get_events, get_my_events, get_my_created_events } from './event';
+import { get_events, get_my_events, get_my_created_events, get_all_events_with_stats } from './event';
 import axios from 'axios';
 import { API_BASE_URL } from "./config";
 
@@ -184,6 +184,41 @@ export const getAdminRecentActivities = async (token) => {
         return recentActivities;
     } catch (error) {
         console.error("Error fetching admin recent events:", error);
+        throw error;
+    }
+};
+
+export const getSuperAdminRecentActivities = async (token) => {
+    try {
+        const response = await get_all_events_with_stats(token, null, 4);
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${yyyy}-${mm}-${dd}`;
+
+        const recentActivities = response.data.map(event => {
+            const rawDate = (event.date || event.created_at || '').toString();
+            const eventDateStr = rawDate.includes('T') ? rawDate.split('T')[0] : rawDate;
+
+            let status = 'Upcoming';
+            if (eventDateStr < todayStr) status = 'Completed';
+            else if (eventDateStr === todayStr) status = 'Ongoing';
+
+            return {
+                id: event.id,
+                type: 'Event Created',
+                description: event.title,
+                date: eventDateStr,
+                status,
+                photos: event.images ? event.images.length : 0,
+                sales: event.sales_count || 0,
+                earnings: event.earnings || 0,
+            };
+        });
+        return recentActivities;
+    } catch (error) {
+        console.error("Error fetching super admin recent events:", error);
         throw error;
     }
 };

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router";
 import { get_my_created_events, get_all_events_with_stats } from "@/api/event";
+import { getPlatformRevenue } from "@/api/super-admin";
 import useAuthStore from "@/stores/auth-store";
 import {
     Card,
@@ -33,6 +34,7 @@ const MyEventsDetail = () => {
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
+    const [netPlatformRevenue, setNetPlatformRevenue] = useState(null);
 
 
     const today = new Date();
@@ -50,11 +52,17 @@ const MyEventsDetail = () => {
         const fetchEvents = async () => {
             if (!token) return;
             try {
-                const res = isSuperAdmin
-                    ? await get_all_events_with_stats(token)  // super-admin: ALL events with stats
-                    : await get_my_created_events(token);     // admin: only their own
-                setEvents(res.data);
-                setFiltered(res.data);
+                const [eventRes, revenueRes] = await Promise.all([
+                    isSuperAdmin ? get_all_events_with_stats(token) : get_my_created_events(token),
+                    isSuperAdmin ? getPlatformRevenue(token) : Promise.resolve(null)
+                ]);
+
+                setEvents(eventRes.data);
+                setFiltered(eventRes.data);
+                
+                if (revenueRes) {
+                    setNetPlatformRevenue((revenueRes.data.total_revenue / 100).toFixed(2));
+                }
             } catch (err) {
                 console.error("Failed to load events", err);
             } finally {
@@ -128,7 +136,9 @@ const MyEventsDetail = () => {
                     <CardHeader className="pb-1">
                         <CardDescription>Total Earnings</CardDescription>
                         <CardTitle className="text-2xl text-green-600">
-                            ฿{totalEarnings.toFixed(2)}
+                            ฿{isSuperAdmin && netPlatformRevenue !== null 
+                                ? netPlatformRevenue 
+                                : totalEarnings.toFixed(2)}
                         </CardTitle>
                     </CardHeader>
                 </Card>
@@ -165,7 +175,6 @@ const MyEventsDetail = () => {
                                     <TableHead>Status</TableHead>
                                     <TableHead className="text-right">Photos</TableHead>
                                     <TableHead className="text-right">Sales</TableHead>
-                                    <TableHead className="text-right">Earnings</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -193,9 +202,6 @@ const MyEventsDetail = () => {
                                             </TableCell>
                                             <TableCell className="text-right">
                                                 {event.sales_count ?? 0}
-                                            </TableCell>
-                                            <TableCell className="text-right font-semibold text-green-600">
-                                                ฿{(event.earnings ?? 0).toFixed(2)}
                                             </TableCell>
                                         </TableRow>
                                     );

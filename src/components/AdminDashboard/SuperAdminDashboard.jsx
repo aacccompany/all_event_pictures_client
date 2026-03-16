@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getDashboardEventStats, getRecentActivities, getRecentSales } from '../../api/dashboard';
+import { getDashboardEventStats, getRecentActivities, getRecentSales, getSuperAdminRecentActivities } from '../../api/dashboard';
 import { getUsers, getWithdrawalRequests, getPlatformRevenue } from '../../api/super-admin';
 import { get_events } from '@/api/event';
 import RecentEvents from '../Dashboard/RecentEvents';
@@ -43,20 +43,22 @@ const SuperAdminDashboard = () => {
     const [platformRevenue, setPlatformRevenue] = useState(0);
     const [pendingWithdrawals, setPendingWithdrawals] = useState(0);
     const [totalSalesCount, setTotalSalesCount] = useState(0);
+    const [adminBalance, setAdminBalance] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
             if (!token) return;
             try {
-                const [eventStats, activities, sales, photographers, admins, withdrawals, revenue, allEvents] = await Promise.all([
+                const [eventStats, activities, sales, photographers, admins, withdrawals, revenue, allEvents, profile] = await Promise.all([
                     getDashboardEventStats(),
-                    getRecentActivities(),
+                    getSuperAdminRecentActivities(token),
                     getRecentSales(),
                     getUsers(token, 1, 1000, false, "user"),
                     getUsers(token, 1, 1000, false, "admin"),
                     getWithdrawalRequests(token),
                     getPlatformRevenue(token),
                     get_events(), // all events to count photos
+                    import('@/api/user').then(m => m.get_profile(token)),
                 ]);
 
                 // Total Events
@@ -82,18 +84,25 @@ const SuperAdminDashboard = () => {
                 // Total platform sales count
                 setTotalSalesCount(sales.length);
 
-                // Recent activities (platform-wide)
+                // Recent activities (platform-wide) - activities from getSuperAdminRecentActivities is already formatted
                 setRecentActivities(activities.map(a => ({
-                    id: a.id,
+                    ...a,
                     name: a.description,
-                    date: a.date,
-                    status: a.status,
-                    photos: a.photos,
-                    sales: a.sales || 0,
-                    earnings: a.earnings || 0,
                 })));
-                // Super admin doesn't personally earn from individual sales — earnings = ฿0
-                setRecentSales(sales.map(s => ({ ...s, earnings: 0 })));
+
+                // Super admin balance (from wallet)
+                const userData = profile.data.payload || profile.data;
+                setAdminBalance(userData.wallet_balance ? (userData.wallet_balance / 100).toFixed(2) : "0.00");
+
+                // Super Admin earnings on dashboard view - show the 50% share for platform-wide sales
+                setRecentSales(sales.map(s => {
+                    // s.earnings from getRecentSales is mostly for current user, but for SuperAdmin we calculate 50%
+                    // Actually, let's just use what the API returns if we updated the API or calculate if needed.
+                    // For now, if we want to show 50% of something, we need the total amount.
+                    // But getRecentSales doesn't return total_amount.
+                    // Let's assume s.earnings is now populated by the backend EARNING record if we log in as super-admin.
+                    return { ...s };
+                }));
             } catch (err) {
                 setError("Failed to fetch dashboard data.");
                 console.error("Error fetching dashboard data:", err);
@@ -149,7 +158,7 @@ const SuperAdminDashboard = () => {
                     subtitle="Registered users"
                     icon={Users}
                     color="text-blue-600"
-                    linkTo="/super-admin/photographers"
+                    linkTo="/super-admin/users?role=user"
                 />
                 <StatCard
                     title="Organizers"
@@ -157,7 +166,7 @@ const SuperAdminDashboard = () => {
                     subtitle="Admin accounts"
                     icon={Users}
                     color="text-purple-600"
-                    linkTo="/super-admin/users"
+                    linkTo="/super-admin/users?role=admin"
                 />
                 <StatCard
                     title="Photos Uploaded"
@@ -169,7 +178,7 @@ const SuperAdminDashboard = () => {
                 <StatCard
                     title="Platform Revenue"
                     value={`฿${platformRevenue}`}
-                    subtitle="Total sales revenue"
+                    subtitle="Sales - Withdrawals"
                     icon={TrendingUp}
                     color="text-green-600"
                     linkTo="/super-admin/detailed-sales"

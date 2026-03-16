@@ -72,7 +72,7 @@ const CartDownload = () => {
   return (
     <div className="min-h-screen bg-[#F8FAFC] py-12 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-6xl">
-        
+
         {/* Header */}
         <div className="flex items-center gap-4 mb-10 border-b border-slate-200 pb-6">
           <div className="p-3 bg-blue-600 rounded-2xl shadow-lg shadow-blue-200">
@@ -85,7 +85,7 @@ const CartDownload = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          
+
           {/* ซ้าย: Cart Items */}
           <div className="lg:col-span-2 space-y-6">
             {isCartEmpty ? (
@@ -123,10 +123,10 @@ const CartDownload = () => {
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                       </div>
-                      
+
                       {/* Overlay & Trash Button */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                      
+
                       <button
                         type="button"
                         onClick={() => handleRemoveItem(item.id)}
@@ -136,9 +136,9 @@ const CartDownload = () => {
                       </button>
 
                       <div className="p-3 bg-white">
-                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">
-                           {item.image.public_id.split('/').pop()}
-                         </p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">
+                          {item.image.public_id.split('/').pop()}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -151,7 +151,7 @@ const CartDownload = () => {
           <div className="lg:col-span-1">
             <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/50 sticky top-28">
               <h2 className="text-xl font-bold text-slate-900 mb-6">Summary</h2>
-              
+
               <div className="space-y-4 py-6 border-y border-slate-50">
                 <div className="flex justify-between items-center">
                   <span className="text-slate-500 font-medium">Quantity</span>
@@ -159,7 +159,7 @@ const CartDownload = () => {
                 </div>
                 <div className="flex justify-between items-center text-lg">
                   <span className="text-slate-900 font-bold">Price</span>
-                  <span className="text-blue-600 font-black">Free</span> 
+                  <span className="text-blue-600 font-black">Free</span>
                   {/* ปรับเป็นราคาจริงถ้ามีฟิลด์ราคา */}
                 </div>
               </div>
@@ -190,8 +190,8 @@ const CartDownload = () => {
               </div>
 
               <div className="mt-8 flex items-center justify-center gap-2 text-[10px] text-slate-400 uppercase tracking-[0.2em] font-bold">
-                 <span>Secure Checkout</span>
-                 <ArrowRight size={10} />
+                <span>Secure Checkout</span>
+                <ArrowRight size={10} />
               </div>
             </div>
           </div>
