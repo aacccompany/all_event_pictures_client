@@ -144,7 +144,9 @@ const Nav = () => {
                       <div className="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center text-blue-700">
                         <UserIcon className="w-4 h-4" />
                       </div>
-                      <span className="text-sm font-bold text-gray-700">Account</span>
+                      <span className="text-sm font-bold text-gray-700">
+                        {key.user}
+                      </span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56 mt-2" align="end">
