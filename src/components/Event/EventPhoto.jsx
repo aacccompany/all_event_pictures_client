@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { X, ChevronDown, Loader2 } from "lucide-react"; // Import ไอคอน X
+import React, { useState, useEffect, useCallback } from "react";
+import { X, ChevronDown, Loader2, ChevronLeft, ChevronRight } from "lucide-react"; 
 import useAuthStore from "@/stores/auth-store";
 import useCartStore from "@/stores/cart-store";
 import DialogLogin from "../Login/DialogLogin";
@@ -10,11 +10,11 @@ import { API_BASE_URL } from "@/api/config";
 const EventPhoto = ({ event, matchedPhotos, onClearSearch }) => {
   const [liveImages, setLiveImages] = useState([]);
 
-  // Sync the external images array with local state so we can patch objects when WS updates 
   useEffect(() => {
     const imagesToDisplay = matchedPhotos && matchedPhotos.length > 0 ? matchedPhotos : event?.images ?? [];
     setLiveImages(imagesToDisplay);
   }, [matchedPhotos, event?.images]);
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
   const token = useAuthStore((state) => state.token);
@@ -22,7 +22,6 @@ const EventPhoto = ({ event, matchedPhotos, onClearSearch }) => {
   const setCartCount = useCartStore((state) => state.setCartCount);
   const [visibleCount, setVisibleCount] = useState(24);
 
-  // Connect to WebSocket to listen for AI processing updates for the live grid
   useEffect(() => {
     if (!event?.id) return;
     const wsUrl = API_BASE_URL.replace("http", "ws") + `/api/v1/ws/${event.id}`;
@@ -39,12 +38,9 @@ const EventPhoto = ({ event, matchedPhotos, onClearSearch }) => {
       }
     };
 
-    return () => {
-      ws.close();
-    };
+    return () => ws.close();
   }, [event?.id]);
 
-  // Reset visible count if the images source changes (e.g., searching)
   useEffect(() => {
     setVisibleCount(24);
   }, [matchedPhotos, event?.images]);
@@ -63,18 +59,49 @@ const EventPhoto = ({ event, matchedPhotos, onClearSearch }) => {
     setSelectedImage(null);
   };
 
+  const navigateImage = useCallback((direction) => {
+    if (!selectedImage) return;
+    
+    const currentIndex = liveImages.findIndex(img => img.id === selectedImage.id);
+    const total = liveImages.length;
+    
+    const findNextValid = (startIdx, dir) => {
+      let curr = startIdx;
+      for (let i = 0; i < total; i++) {
+        curr = (curr + dir + total) % total;
+        const target = liveImages[curr];
+        if (target.status !== "PENDING_AI" && target.status !== "FAILED") {
+          return target;
+        }
+      }
+      return null;
+    };
+
+    const nextImg = findNextValid(currentIndex, direction);
+    if (nextImg) setSelectedImage(nextImg);
+  }, [selectedImage, liveImages]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!selectedImage) return;
+      if (e.key === "ArrowRight") navigateImage(1);
+      if (e.key === "ArrowLeft") navigateImage(-1);
+      if (e.key === "Escape") closeImageViewer();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedImage, navigateImage]);
+
   const handleAddToCart = async (e, image) => {
     e.stopPropagation();
-
     if (!token) {
       setShowLogin(true);
       return;
     }
-
     try {
       const body = { images_id: [image.id] };
       await add_cart(token, body);
-      setCartCount(cartCount + 1); // Increment cart count
+      setCartCount(cartCount + 1);
       toast.success(`Add photo to cart successfully`);
     } catch (err) {
       const msgErr = err.response?.data?.detail || "Please try again";
@@ -121,27 +148,20 @@ const EventPhoto = ({ event, matchedPhotos, onClearSearch }) => {
                   className={`w-full h-full object-cover aspect-square transition-transform duration-300 ${image.status === "PENDING_AI" ? "opacity-50 grayscale" : "transform group-hover:scale-105"
                     }`}
                 />
-
-                {/* AI Processing Overlay */}
                 {image.status === "PENDING_AI" && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white font-medium p-2 text-center">
                     <Loader2 className="w-8 h-8 animate-spin mb-2" />
                     <span className="text-xs">Processing...</span>
                   </div>
                 )}
-
-                {/* Failed Overlay */}
                 {image.status === "FAILED" && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-red-900/60 text-white font-medium p-2 text-center">
                     <span className="text-xs font-bold text-red-200">Processing Failed</span>
                   </div>
                 )}
-
-                {/* Hover overlay for completed images */}
                 {image.status !== "PENDING_AI" && image.status !== "FAILED" && (
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center space-x-2 opacity-0 group-hover:opacity-100">
                     <button
-                      title="Add to cart"
                       className="px-4 py-2 bg-blue-600 text-sm font-semibold text-white rounded-md hover:bg-blue-700 transition-colors"
                       onClick={(e) => handleAddToCart(e, image)}
                     >
@@ -153,7 +173,6 @@ const EventPhoto = ({ event, matchedPhotos, onClearSearch }) => {
             ))}
           </div>
 
-          {/* Load More Button */}
           {visibleCount < liveImages.length && (
             <div className="mt-8 flex justify-center">
               <button
@@ -168,33 +187,51 @@ const EventPhoto = ({ event, matchedPhotos, onClearSearch }) => {
         </div>
       </section>
 
-      {/* --- แสดงรูปภาพขนาดใหญ่ (Lightbox) --- */}
       {selectedImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-black bg-opacity-80 animate-backdrop"
-            onClick={closeImageViewer}
-          />
-          <div
-            className="relative max-w-4xl max-h-[90vh] animate-content"
-            onClick={(e) => e.stopPropagation()}
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 bg-slate-950/95 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="absolute inset-0 cursor-zoom-out" onClick={closeImageViewer} />
+          
+          {/* Navigation Buttons */}
+          <button
+            onClick={() => navigateImage(-1)}
+            className="absolute left-4 z-50 p-3 text-white/50 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300 hidden md:block"
           >
+            <ChevronLeft className="w-12 h-12" />
+          </button>
+          <button
+            onClick={() => navigateImage(1)}
+            className="absolute right-4 z-50 p-3 text-white/50 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300 hidden md:block"
+          >
+            <ChevronRight className="w-12 h-12" />
+          </button>
+
+          <div className="relative w-full max-w-6xl max-h-[95vh] flex items-center justify-center animate-in zoom-in-95 duration-300" onClick={(e) => e.stopPropagation()}>
             <img
               src={selectedImage?.preview_url}
               alt={`Event photo ${selectedImage.public_id}`}
-              className="object-contain w-full h-full rounded-lg shadow-2xl"
+              className="max-w-full max-h-[90vh] w-auto h-auto object-contain shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-lg select-none"
             />
             <button
               onClick={closeImageViewer}
-              className="absolute top-4 right-4 text-white bg-black/50 rounded-full p-2 hover:bg-black/75 transition-all duration-200"
+              className="absolute -top-4 -right-4 md:top-2 md:right-2 text-white bg-slate-900/50 hover:bg-slate-900 rounded-full p-3 transition-all duration-300 shadow-xl group border border-white/10"
             >
-              <X className="h-6 w-6" />
+              <X className="h-6 w-6 group-hover:scale-110 transition-transform" />
             </button>
+
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white/10 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/10 shadow-2xl">
+                <p className="text-white/70 text-xs font-medium mr-4 hidden sm:block">
+                  #{selectedImage.id}
+                </p>
+                <button
+                   className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-black rounded-xl transition-all shadow-lg shadow-blue-900/20 active:scale-95"
+                   onClick={(e) => handleAddToCart(e, selectedImage)}
+                >
+                  Add to Cart
+                </button>
+            </div>
           </div>
         </div>
       )}
-
-      {/* --- Dialog Login --- */}
       <DialogLogin isOpen={showLogin} onClose={() => setShowLogin(false)} />
     </>
   );

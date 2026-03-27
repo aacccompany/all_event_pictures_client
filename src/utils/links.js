@@ -1,6 +1,7 @@
 export const publicLinks = [
   { name: "Home", path: "/" },
   { name: "Events", path: "/events" },
+  { name: "References", path: "/references" },
 ];
 
 export const publicUserLinks = [
@@ -35,4 +36,3 @@ export const privateUserLinks = [
   { href: "/user/detailed-sales", label: "Detailed Sales" },
   { href: "/", label: "Logout" },
 ];
-

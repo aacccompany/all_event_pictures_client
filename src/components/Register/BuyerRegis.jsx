@@ -39,13 +39,17 @@ const BuyerRegis = () => {
                 return toast.warning("Please fill in all required fields");
             if (form.password !== form.confirmPassword)
                 return toast.warning("Passwords do not match");
+            if (form.password.length < 8)
+                return toast.warning("Password must be at least 8 characters long");
 
-            const payload = { ...form, image: "https://placehold.co/600x400" };
-            await authRegisterUserPublic(payload);
+            const { confirmPassword, ...registerData } = form;
+            await authRegisterUserPublic(registerData);
             toast.success("Welcome! Registration successful");
             handleRedirect();
         } catch (error) {
-            toast.error("Registration failed. Please try again.");
+            console.log(error);
+            const msg = error.response?.data?.detail || "Registration failed. Please try again.";
+            toast.error(msg);
         }
     };
 
@@ -55,13 +59,13 @@ const BuyerRegis = () => {
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-b from-blue-50/50 to-transparent pointer-events-none z-0" />
 
             <div className="max-w-4xl mx-auto relative z-10">
-                
+
                 {/* === Top Content Section === */}
                 <div className="text-center mb-12 space-y-6">
                     <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight">
                         Create Your Account
                     </h1>
-                    
+
                     <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
                         Join <span className="text-blue-600 font-bold">AllEventPictures</span> to find, purchase, and cherish your high-quality memories from every special event.
                     </p>
