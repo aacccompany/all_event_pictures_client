@@ -54,6 +54,7 @@ const Nav = () => {
 
   const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
+  
   const actionLogout = useAuthStore((state) => state.actionLogout);
   const cartCount = useCartStore((state) => state.cartCount);
   const setCartCount = useCartStore((state) => state.setCartCount);
@@ -145,7 +146,7 @@ const Nav = () => {
                         <UserIcon className="w-4 h-4" />
                       </div>
                       <span className="text-sm font-bold text-gray-700">
-                        {key.user}
+                        {user.first_name}
                       </span>
                     </Button>
                   </DropdownMenuTrigger>

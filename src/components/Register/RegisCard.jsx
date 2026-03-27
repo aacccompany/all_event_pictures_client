@@ -92,6 +92,19 @@ const RegisCard = ({
                 </div>
               </div>
 
+              {/* PDPA Checkbox */}
+              <div className="flex items-start gap-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="pdpa-photographer"
+                  required
+                  className="mt-1 w-4 h-4 text-blue-600 bg-slate-50 border-slate-200 rounded focus:ring-blue-500 cursor-pointer"
+                />
+                <label htmlFor="pdpa-photographer" className="text-sm text-slate-500 cursor-pointer select-none">
+                  I agree to the <a href="#" className="text-blue-600 font-medium hover:underline">Terms of Service</a> and <a href="#" className="text-blue-600 font-medium hover:underline">Privacy Policy (PDPA)</a>.
+                </label>
+              </div>
+
               {/* Submit Button */}
               <div className="pt-4">
                 <button

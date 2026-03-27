@@ -61,7 +61,6 @@ const RegisterContainer = () => {
     } catch (error) {
       const msgError = error.response?.data?.detail || "Register Fail!";
       toast.warning(msgError);
-      console.log(error);
     }
   };
 

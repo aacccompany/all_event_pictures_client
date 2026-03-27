@@ -146,7 +146,6 @@ const DashBoardContainer = () => {
                   <TableHead>Event</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Earnings</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -161,9 +160,6 @@ const DashBoardContainer = () => {
                       >
                         {event.status}
                       </Badge>
-                    </TableCell>
-                    <TableCell className="text-right font-medium text-green-600">
-                      ฿{(event.earnings || 0).toFixed(2)}
                     </TableCell>
                   </TableRow>
                 ))}

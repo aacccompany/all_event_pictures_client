@@ -46,7 +46,7 @@ const CartDownload = () => {
       toast.error("Failed to remove image");
     }
   };
-
+  
   const handleDownload = async () => {
     try {
       setLoading(true);
@@ -66,7 +66,17 @@ const CartDownload = () => {
       setLoading(false);
     }
   };
-
+  const handleCheckout = async () => {
+    try {
+      const successUrl = `${window.location.origin}/user-public/download?payment_success=true&session_id={CHECKOUT_SESSION_ID}`; // Redirect to download page on success
+      const cancelUrl = `${window.location.origin}/user-public/cart`; // Redirect back to cart on cancel
+      const res = await create_stripe_checkout_session(token, successUrl, cancelUrl);
+      window.location.href = res.data.checkout_url;
+    } catch (error) {
+      console.error("Error creating Stripe checkout session:", error);
+      toast.error("Failed to initiate checkout. Please try again.");
+    }
+  };
   const isCartEmpty = !data?.cart_images || data.cart_images.length === 0;
 
   return (

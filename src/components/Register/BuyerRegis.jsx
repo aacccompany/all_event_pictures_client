@@ -45,7 +45,6 @@ const BuyerRegis = () => {
             toast.success("Welcome! Registration successful");
             handleRedirect();
         } catch (error) {
-            console.log(error);
             toast.error("Registration failed. Please try again.");
         }
     };
@@ -106,6 +105,19 @@ const BuyerRegis = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <InputGroup label="Password" id="password" name="password" type="password" placeholder="••••••••" onChange={handleOnChange} />
                                 <InputGroup label="Confirm Password" id="confirmPassword" name="confirmPassword" type="password" placeholder="••••••••" onChange={handleOnChange} />
+                            </div>
+
+                            {/* PDPA Checkbox */}
+                            <div className="flex items-start gap-2 pt-2">
+                                <input
+                                    type="checkbox"
+                                    id="pdpa-buyer"
+                                    required
+                                    className="mt-1 w-4 h-4 text-blue-600 bg-slate-50 border-slate-200 rounded focus:ring-blue-500 cursor-pointer"
+                                />
+                                <label htmlFor="pdpa-buyer" className="text-sm text-slate-500 cursor-pointer select-none">
+                                    I agree to the <a href="#" className="text-blue-600 font-medium hover:underline">Terms of Service</a> and <a href="#" className="text-blue-600 font-medium hover:underline">Privacy Policy (PDPA)</a>.
+                                </label>
                             </div>
 
                             <div className="pt-6">
