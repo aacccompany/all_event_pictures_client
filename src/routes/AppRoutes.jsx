@@ -29,6 +29,7 @@ import ManageEventImages from "@/pages/ManageEventImages";
 import ManageAllImages from "@/pages/ManageAllImages";
 import DetailedSales from "@/pages/DetailedSales";
 import MyEventsDetail from "@/pages/MyEventsDetail";
+import RefPage from "@/components/Ref/RefPage";
 
 const AppRoutes = () => {
   return (
@@ -38,6 +39,7 @@ const AppRoutes = () => {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/events" element={<Event />} />
+          <Route path="/references" element={<RefPage />} />
           {/* <Route path="/download" element={<Download />} /> */}
           <Route path="/register/photographer" element={<Register />} />
           <Route path="/register/user" element={<BuyerRegis />} />

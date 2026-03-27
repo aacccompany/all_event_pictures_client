@@ -95,9 +95,9 @@ const Nav = () => {
               {/* <div className="bg-blue-700 p-2 rounded-xl shadow-lg shadow-blue-200">
                 <Camera className="w-6 h-6 text-white" />
               </div> */}
-              <div className="bg-blue-700 p-1.5 rounded-xl shadow-lg shadow-blue-200 flex items-center justify-center overflow-hidden">
+              <div className="">
                 <img
-                  src="/public/Allevent.png" // เปลี่ยนเป็นที่อยู่ไฟล์ PNG ของคุณ
+                  src="/public/vite.svg" // เปลี่ยนเป็นที่อยู่ไฟล์ PNG ของคุณ
                   alt="Logo"
                   className="w-12 h-12 object-contain" // ปรับขนาด w- และ h- ตามความเหมาะสม
                 />
@@ -145,7 +145,7 @@ const Nav = () => {
                         <UserIcon className="w-4 h-4" />
                       </div>
                       <span className="text-sm font-bold text-gray-700">
-                        {key.user}
+                        {user.first_name}
                       </span>
                     </Button>
                   </DropdownMenuTrigger>

@@ -39,14 +39,17 @@ const BuyerRegis = () => {
                 return toast.warning("Please fill in all required fields");
             if (form.password !== form.confirmPassword)
                 return toast.warning("Passwords do not match");
+            if (form.password.length < 8)
+                return toast.warning("Password must be at least 8 characters long");
 
-            const payload = { ...form, image: "https://placehold.co/600x400" };
-            await authRegisterUserPublic(payload);
+            const { confirmPassword, ...registerData } = form;
+            await authRegisterUserPublic(registerData);
             toast.success("Welcome! Registration successful");
             handleRedirect();
         } catch (error) {
             console.log(error);
-            toast.error("Registration failed. Please try again.");
+            const msg = error.response?.data?.detail || "Registration failed. Please try again.";
+            toast.error(msg);
         }
     };
 

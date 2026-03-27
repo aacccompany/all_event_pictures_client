@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, Facebook, Instagram, Twitter, Mail, MapPin, Phone } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Mail, MapPin, Phone } from 'lucide-react';
 import { Link } from 'react-router';
 
 const Footer = () => {
@@ -7,12 +7,12 @@ const Footer = () => {
     <footer className="bg-blue-700 text-white mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          
+
           {/* Brand Section */}
           <div className="space-y-6">
             <Link to="/" className="flex items-center gap-3">
               <div className="bg-white p-2 rounded-xl">
-                <Camera className="w-6 h-6 text-blue-700" />
+                <img src="/vite.svg" alt="Vite Logo" className="w-6 h-6" />
               </div>
               <span className="font-bold text-xl tracking-tight uppercase">
                 All-Event-Pictures
