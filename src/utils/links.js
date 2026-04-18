@@ -7,6 +7,7 @@ export const publicLinks = [
 export const publicUserLinks = [
   { href: "/user-public/cart", label: "My Cart" },
   { href: "/user-public/download-history", label: "Download History" },
+  { href: "/user-public/helpdesk", label: "Helpdesk" },
   { href: "/", label: "Logout" },
 ];
 
@@ -16,6 +17,7 @@ export const privateSuperAdminLinks = [
   { href: "/super-admin/users", label: "User Management" },
   { href: "/super-admin/withdrawals", label: "Withdrawal Management" },
   { href: "/super-admin/detailed-sales", label: "Detailed Sales" },
+  { href: "/super-admin/helpdesk", label: "Manage Helpdesk" },
   { href: "/", label: "Logout" },
 ];
 
@@ -34,5 +36,6 @@ export const privateUserLinks = [
   { href: "/user/event-lists", label: "Event Lists" },
   { href: "/user/my-register", label: "My Register" },
   { href: "/user/detailed-sales", label: "Detailed Sales" },
+  { href: "/user/helpdesk", label: "Helpdesk" },
   { href: "/", label: "Logout" },
 ];

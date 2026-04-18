@@ -215,7 +215,7 @@ const ManageImages = ({ eventId, refreshTrigger }) => {
                                 onClick={() => toggleImageSelection(img.id)}
                             >
                                 <img
-                                    src={img.secure_url}
+                                    src={img.optimized_url || img.secure_url}
                                     alt={`manage-${img.id}`}
                                     loading="lazy"
                                     className="w-full aspect-square object-cover"

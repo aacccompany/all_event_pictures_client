@@ -2,7 +2,7 @@ import { currentAdmin, currentUserPublic } from "@/api/auth";
 import Notfound from "@/pages/Notfound";
 import useAuthStore from "@/stores/auth-store";
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router";
+import { Navigate, Link } from "react-router";
 
 const ProtectRouteUserPublic = ({ element }) => {
   const token = useAuthStore((state) => state.token);

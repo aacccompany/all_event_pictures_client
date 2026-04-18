@@ -30,6 +30,8 @@ import ManageAllImages from "@/pages/ManageAllImages";
 import DetailedSales from "@/pages/DetailedSales";
 import MyEventsDetail from "@/pages/MyEventsDetail";
 import RefPage from "@/components/Ref/RefPage";
+import UserHelpdesk from "@/pages/Helpdesk/UserHelpdesk";
+import AdminHelpdesk from "@/pages/Helpdesk/AdminHelpdesk";
 
 const AppRoutes = () => {
   return (
@@ -53,6 +55,7 @@ const AppRoutes = () => {
           <Route path="download" element={<Download />} />
           <Route path="download-history" element={<DownloadHistory />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="helpdesk" element={<UserHelpdesk />} />
         </Route>
 
         {/* Private User */}
@@ -65,6 +68,7 @@ const AppRoutes = () => {
           <Route path="profile" element={<Profile />} />
           <Route path="all-images" element={<ManageAllImages />} />
           <Route path="detailed-sales" element={<DetailedSales />} />
+          <Route path="helpdesk" element={<UserHelpdesk />} />
         </Route>
 
         {/* Private Admin */}
@@ -90,6 +94,7 @@ const AppRoutes = () => {
           <Route path="all-images" element={<ManageAllImages />} />
           <Route path="detailed-sales" element={<DetailedSales />} />
           <Route path="my-events" element={<MyEventsDetail />} />
+          <Route path="helpdesk" element={<AdminHelpdesk />} />
         </Route>
         <Route path="*" element={<Notfound />} />
       </Routes>

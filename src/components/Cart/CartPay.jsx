@@ -128,7 +128,7 @@ const CartDownload = () => {
                     >
                       <div className="aspect-[3/4] overflow-hidden">
                         <img
-                          src={item.image.preview_url}
+                          src={item.image.optimized_url || item.image.preview_url}
                           alt="Event Photo"
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
@@ -147,7 +147,7 @@ const CartDownload = () => {
 
                       <div className="p-3 bg-white">
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">
-                          {item.image.public_id.split('/').pop()}
+                          Photo #{item.image.id}
                         </p>
                       </div>
                     </div>

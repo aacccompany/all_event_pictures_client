@@ -189,12 +189,12 @@ const DownloadHistory = () => {
           <DialogHeader>
             <DialogTitle>Details: {selectedCart?.event_name}</DialogTitle>
           </DialogHeader>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 py-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 py-4">
             {selectedCart?.images.map((img) => (
               <div key={img.id} className="relative aspect-square rounded-lg overflow-hidden border bg-gray-100 group">
                 <img
-                  src={img.secure_url}
-                  alt={img.public_id}
+                  src={img.optimized_url || img.secure_url}
+                  alt={`Photo #${img.id}`}
                   className="object-cover w-full h-full"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
