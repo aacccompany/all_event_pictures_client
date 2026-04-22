@@ -112,7 +112,7 @@ const DialogLogin = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            {/* PDPA Checkbox */}
+            {/* PDPA Checkbox
             <div className="flex items-start gap-2 pt-1">
               <input
                 type="checkbox"
@@ -123,7 +123,7 @@ const DialogLogin = ({ isOpen, onClose }) => {
               <label htmlFor="pdpa-login" className="text-xs text-slate-500 cursor-pointer select-none leading-tight">
                 I agree to the <a href="#" className="text-blue-600 hover:underline font-medium">Terms of Service</a> & <br/><a href="#" className="text-blue-600 hover:underline font-medium">Privacy Policy (PDPA)</a>
               </label>
-            </div>
+            </div> */}
 
             {/* Login Button - ปรับ py ให้กระชับขึ้น */}
             <button

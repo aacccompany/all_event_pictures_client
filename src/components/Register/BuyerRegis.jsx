@@ -111,7 +111,7 @@ const BuyerRegis = () => {
                                 <InputGroup label="Confirm Password" id="confirmPassword" name="confirmPassword" type="password" placeholder="••••••••" onChange={handleOnChange} />
                             </div>
 
-                            {/* PDPA Checkbox */}
+                            {/* PDPA Checkbox
                             <div className="flex items-start gap-2 pt-2">
                                 <input
                                     type="checkbox"
@@ -122,7 +122,7 @@ const BuyerRegis = () => {
                                 <label htmlFor="pdpa-buyer" className="text-sm text-slate-500 cursor-pointer select-none">
                                     I agree to the <a href="#" className="text-blue-600 font-medium hover:underline">Terms of Service</a> and <a href="#" className="text-blue-600 font-medium hover:underline">Privacy Policy (PDPA)</a>.
                                 </label>
-                            </div>
+                            </div> */}
 
                             <div className="pt-6">
                                 <button

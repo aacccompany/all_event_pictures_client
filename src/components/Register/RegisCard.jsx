@@ -92,7 +92,7 @@ const RegisCard = ({
                 </div>
               </div>
 
-              {/* PDPA Checkbox */}
+              {/* PDPA Checkbox
               <div className="flex items-start gap-2 pt-2">
                 <input
                   type="checkbox"
@@ -103,7 +103,7 @@ const RegisCard = ({
                 <label htmlFor="pdpa-photographer" className="text-sm text-slate-500 cursor-pointer select-none">
                   I agree to the <a href="#" className="text-blue-600 font-medium hover:underline">Terms of Service</a> and <a href="#" className="text-blue-600 font-medium hover:underline">Privacy Policy (PDPA)</a>.
                 </label>
-              </div>
+              </div> */}
 
               {/* Submit Button */}
               <div className="pt-4">
