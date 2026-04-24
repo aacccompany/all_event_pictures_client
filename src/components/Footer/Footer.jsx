@@ -35,18 +35,18 @@ const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div>
-            <h4 className="text-lg font-bold mb-6 border-b border-blue-600 pb-2 inline-block">Quick Links</h4>
+          {/* <div>
+            <h4 h4 className="text-lg font-bold mb-6 border-b border-blue-600 pb-2 inline-block">Quick Links</h4>
             <ul className="space-y-4 text-blue-100/70 text-sm">
               <li className="hover:text-white transition-colors cursor-pointer">Browse Events</li>
               <li className="hover:text-white transition-colors cursor-pointer">Search by Face</li>
-              {/* <li className="hover:text-white transition-colors cursor-pointer">Pricing</li>
-              <li className="hover:text-white transition-colors cursor-pointer">About Us</li> */}
+              <li className="hover:text-white transition-colors cursor-pointer">Pricing</li>
+              <li className="hover:text-white transition-colors cursor-pointer">About Us</li>
             </ul>
-          </div>
+          </div> */}
 
           {/* Support */}
-          <div>
+          {/* <div>
             <h4 className="text-lg font-bold mb-6 border-b border-blue-600 pb-2 inline-block">Support</h4>
             <ul className="space-y-4 text-blue-100/70 text-sm">
               <li className="hover:text-white transition-colors cursor-pointer">Terms of Service</li>
@@ -54,7 +54,7 @@ const Footer = () => {
               <li className="hover:text-white transition-colors cursor-pointer">Help Center</li>
               <li className="hover:text-white transition-colors cursor-pointer">FAQ</li>
             </ul>
-          </div>
+          </div> */}
 
           {/* Contact Info */}
           <div>
@@ -62,15 +62,15 @@ const Footer = () => {
             <div className="space-y-4 text-blue-100/80 text-sm">
               <div className="flex items-start gap-3">
                 <MapPin size={18} className="shrink-0 text-blue-300" />
-                <span>99/99 Example Tower, Sukhumvit Rd, Bangkok, Thailand</span>
+                <span>777/86 ถ.เจนจบทิศ หมู่บ้านยลภา เมืองเก่า Mueang Khon Kaen District, Khon Kaen 40000</span>
               </div>
-              <div className="flex items-center gap-3">
+              {/* <div className="flex items-center gap-3">
                 <Phone size={18} className="shrink-0 text-blue-300" />
                 <span>+66 2 123 4567</span>
-              </div>
+              </div> */}
               <div className="flex items-center gap-3">
                 <Mail size={18} className="shrink-0 text-blue-300" />
-                <span>support@alleventpics.com</span>
+                <span>contact@aacc-ai.com</span>
               </div>
             </div>
           </div>
