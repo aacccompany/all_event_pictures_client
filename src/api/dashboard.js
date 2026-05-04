@@ -228,12 +228,12 @@ export const getSuperAdminRecentActivities = async (token) => {
 export const getRecentSales = async (limit = 5, token = null) => {
     let res;
     if (token) {
-        res = await axios.get(`${API_BASE_URL}/api/v1/recent-sales/my-sales`, {
+        res = await axios.get(`${API_BASE_URL}/recent-sales/my-sales`, {
             params: { limit },
             headers: { Authorization: `Bearer ${token}` }
         });
     } else {
-        res = await axios.get(`${API_BASE_URL}/api/v1/recent-sales`, { params: { limit } });
+        res = await axios.get(`${API_BASE_URL}/recent-sales`, { params: { limit } });
     }
     
     // map ให้อยู่รูปแบบที่หน้า Dashboard ใช้งานง่าย
@@ -249,7 +249,7 @@ export const getRecentSales = async (limit = 5, token = null) => {
 
 export const getAdminRecentSales = async (limit = 5, token) => {
     try {
-        const res = await axios.get(`${API_BASE_URL}/api/v1/recent-sales/from-my-events`, {
+        const res = await axios.get(`${API_BASE_URL}/recent-sales/from-my-events`, {
             params: { limit },
             headers: { Authorization: `Bearer ${token}` }
         });
@@ -270,18 +270,18 @@ export const getRecentSalesByRole = async (role, token, limit = 50) => {
   try {
     let res;
     if (role === 'admin') {
-      res = await axios.get(`${API_BASE_URL}/api/v1/recent-sales/from-my-events`, {
+      res = await axios.get(`${API_BASE_URL}/recent-sales/from-my-events`, {
         params: { limit },
         headers: { Authorization: `Bearer ${token}` },
       });
     } else if (role === 'super-admin') {
-      res = await axios.get(`${API_BASE_URL}/api/v1/recent-sales`, {
+      res = await axios.get(`${API_BASE_URL}/recent-sales`, {
         params: { limit },
         headers: { Authorization: `Bearer ${token}` },
       });
     } else {
       // standard user / photographer
-      res = await axios.get(`${API_BASE_URL}/api/v1/recent-sales/my-sales`, {
+      res = await axios.get(`${API_BASE_URL}/recent-sales/my-sales`, {
         params: { limit },
         headers: { Authorization: `Bearer ${token}` },
       });

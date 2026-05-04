@@ -9,11 +9,27 @@ import { API_BASE_URL } from "@/api/config";
 
 const EventPhoto = ({ event, matchedPhotos, onClearSearch }) => {
   const [liveImages, setLiveImages] = useState([]);
+  const user = useAuthStore((state) => state.user);
 
   useEffect(() => {
-    const imagesToDisplay = matchedPhotos && matchedPhotos.length > 0 ? matchedPhotos : event?.images ?? [];
+    let imagesToDisplay;
+
+    if (matchedPhotos && matchedPhotos.length > 0) {
+      // Show matched photos from search
+      imagesToDisplay = matchedPhotos;
+    } else {
+      // Filter to show only user's own photos by default
+      const allImages = event?.images ?? [];
+      imagesToDisplay = allImages.filter(image => {
+        // Show photos where user's face was detected OR photos uploaded by user
+        const hasUserFace = image?.face_boxes && image?.face_boxes.length > 0;
+        const uploadedByUser = user && image?.created_by?.id === user?.id;
+        return hasUserFace || uploadedByUser;
+      });
+    }
+
     setLiveImages(imagesToDisplay);
-  }, [matchedPhotos, event?.images]);
+  }, [matchedPhotos, event?.images, user]);
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
@@ -24,7 +40,8 @@ const EventPhoto = ({ event, matchedPhotos, onClearSearch }) => {
 
   useEffect(() => {
     if (!event?.id) return;
-    const wsUrl = API_BASE_URL.replace("http", "ws") + `/api/v1/ws/${event.id}`;
+    // Fix: API_BASE_URL already includes /api/v1, so just replace protocol and add ws endpoint
+    const wsUrl = API_BASE_URL.replace("http", "ws").replace("/api/v1", "") + `/api/v1/ws/${event.id}`;
     const ws = new WebSocket(wsUrl);
 
     ws.onmessage = (wsEvent) => {
@@ -114,18 +131,25 @@ const EventPhoto = ({ event, matchedPhotos, onClearSearch }) => {
     <>
       <section className="mt-8">
         <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-200">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <h2 className="text-xl font-semibold text-gray-800">
-              {matchedPhotos && matchedPhotos.length > 0 ? "Matched Photos" : "All Event Photos"}
+              {matchedPhotos && matchedPhotos.length > 0
+                ? "Matched Photos"
+                : "Your Photos"}
             </h2>
             <span className="px-2.5 py-0.5 bg-indigo-100 text-indigo-700 text-sm font-semibold rounded-full">
               {liveImages.length} photos
             </span>
+            {!matchedPhotos && event?.images && event.images.length > liveImages.length && (
+              <span className="text-sm text-gray-500">
+                ({event.images.length - liveImages.length} more photos in event)
+              </span>
+            )}
           </div>
           {matchedPhotos && matchedPhotos.length > 0 && (
             <button
               onClick={onClearSearch}
-              className="ml-4 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-300"
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-300"
             >
               Clear Search
             </button>

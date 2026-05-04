@@ -3,7 +3,7 @@ import { API_BASE_URL } from "./config";
 
 export const getMyNotifications = async (token) => {
     const response = await axios.get(
-        `${API_BASE_URL}/api/v1/notifications`,
+        `${API_BASE_URL}/notifications`,
         {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -15,7 +15,7 @@ export const getMyNotifications = async (token) => {
 
 export const getUnreadCount = async (token) => {
     const response = await axios.get(
-        `${API_BASE_URL}/api/v1/notifications/unread-count`,
+        `${API_BASE_URL}/notifications/unread-count`,
         {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -27,7 +27,7 @@ export const getUnreadCount = async (token) => {
 
 export const markAsRead = async (token, id) => {
     const response = await axios.patch(
-        `${API_BASE_URL}/api/v1/notifications/${id}/read`,
+        `${API_BASE_URL}/notifications/${id}/read`,
         {},
         {
             headers: {

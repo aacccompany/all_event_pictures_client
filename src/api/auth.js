@@ -2,7 +2,7 @@ import axios from "axios";
 import { API_BASE_URL } from "./config";
 
 export const authRegister = async (data) => {
-  return await axios.post(`${API_BASE_URL}/api/v1/register`, data, {
+  return await axios.post(`${API_BASE_URL}/register`, data, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -11,15 +11,15 @@ export const authRegister = async (data) => {
 };
 
 export const authRegisterUserPublic = async (data) => {
-  return await axios.post(`${API_BASE_URL}/api/v1/register/user_public`, data);
+  return await axios.post(`${API_BASE_URL}/register/user_public`, data);
 };
 
 export const authLogin = async (data) => {
-  return await axios.post(`${API_BASE_URL}/api/v1/login`,data);
+  return await axios.post(`${API_BASE_URL}/login`,data);
 };
 
 export const currentUserPublic = async (token) => {
-    return await axios.post(`${API_BASE_URL}/api/v1/current-user-public`, {}, {
+    return await axios.post(`${API_BASE_URL}/current-user-public`, {}, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -27,7 +27,7 @@ export const currentUserPublic = async (token) => {
 }
 
 export const currentUser = async (token) => {
-    return await axios.post(`${API_BASE_URL}/api/v1/current-user`, {}, {
+    return await axios.post(`${API_BASE_URL}/current-user`, {}, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -35,7 +35,7 @@ export const currentUser = async (token) => {
 }
 
 export const currentAdmin = async (token) => {
-    return await axios.post(`${API_BASE_URL}/api/v1/current-admin`, {}, {
+    return await axios.post(`${API_BASE_URL}/current-admin`, {}, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -43,7 +43,7 @@ export const currentAdmin = async (token) => {
 }
 
 export const currentSuperAdmin = async (token) => {
-    return await axios.post(`${API_BASE_URL}/api/v1/current-superAdmin`, {}, {
+    return await axios.post(`${API_BASE_URL}/current-superAdmin`, {}, {
         headers: {
             Authorization: `Bearer ${token}`
         }

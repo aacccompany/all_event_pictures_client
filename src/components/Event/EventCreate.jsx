@@ -27,6 +27,10 @@ import { upload_image_cover } from "@/api/uploadimage";
 import { Loader2 } from "lucide-react";
 import useEventStore from "@/stores/event-store";
 
+// TODO: Google Maps integration - Uncomment when needed
+// const DEFAULT_CENTER = { lat: 13.7563, lng: 100.5018 };
+// const loadGoogleMapsScript = () => { ... };
+
 const EventCreate = () => {
   const token = useAuthStore((state) => state.token);
   const actionGetEvents = useEventStore((state) => state.actionsGetEvents);
@@ -36,12 +40,103 @@ const EventCreate = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // TODO: Google Maps integration - Uncomment when needed
+  // const [showMapPicker, setShowMapPicker] = useState(false);
+  // const [mapLoaded, setMapLoaded] = useState(false);
+  // const mapRef = useRef(null);
+  // const markerRef = useRef(null);
+
   const handleOnChange = (e) => {
     setData({
       ...data,
       [e.target.name]: e.target.value,
     });
   };
+
+  // TODO: Google Maps integration - Uncomment when map functionality is needed
+  /*
+  const initializeMap = () => {
+    if (mapRef.current) return;
+
+    const map = new window.google.maps.Map(document.getElementById("google-map"), {
+      center: DEFAULT_CENTER,
+      zoom: 13,
+      streetViewControl: false,
+      mapTypeControl: false,
+      fullscreenControl: false,
+    });
+
+    mapRef.current = map;
+
+    // Add click listener to place marker
+    map.addListener("click", (e) => {
+      const lat = e.latLng.lat();
+      const lng = e.latLng.lng();
+
+      // Remove existing marker
+      if (markerRef.current) {
+        markerRef.current.setMap(null);
+      }
+
+      // Add new marker
+      const marker = new window.google.maps.Marker({
+        position: { lat, lng },
+        map: map,
+        draggable: true,
+      });
+
+      markerRef.current = marker;
+
+      // Reverse geocode to get address
+      const geocoder = new window.google.maps.Geocoder();
+      geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+        if (status === "OK" && results[0]) {
+          const address = results[0].formatted_address;
+          setData({ ...data, location: address, latitude: lat, longitude: lng });
+        }
+      });
+    });
+  };
+
+  const openMapPicker = async () => {
+    setShowMapPicker(true);
+    if (!mapLoaded) {
+      try {
+        await loadGoogleMapsScript();
+        setMapLoaded(true);
+        // Small delay to ensure Google Maps is ready
+        setTimeout(initializeMap, 500);
+      } catch (error) {
+        console.error("Failed to load Google Maps:", error);
+        // Fallback: use Leaflet or simple coordinate input
+      }
+    } else {
+      setTimeout(initializeMap, 100);
+    }
+  };
+
+  const handleMapSelect = () => {
+    if (markerRef.current) {
+      const position = markerRef.current.getPosition();
+      const lat = position.lat();
+      const lng = position.lng();
+
+      const geocoder = new window.google.maps.Geocoder();
+      geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+        if (status === "OK" && results[0]) {
+          const address = results[0].formatted_address;
+          setData({
+            ...data,
+            location: address,
+            latitude: lat,
+            longitude: lng
+          });
+          setShowMapPicker(false);
+        }
+      });
+    }
+  };
+  */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -104,16 +199,48 @@ const EventCreate = () => {
               />
             </div>
 
-            {/* Location */}
+            {/* Location - Simple text field for now */}
             <div className="space-y-2">
               <Label htmlFor="location">Location</Label>
               <Input
                 id="location"
                 name="location"
                 type="text"
-                placeholder="Location"
+                placeholder="e.g., Bangkok, Khon Kaen, Phuket"
+                value={data.location || ""}
                 onChange={handleOnChange}
               />
+              <p className="text-xs text-gray-500">Enter the event location name</p>
+
+              {/* TODO: Google Maps integration - Uncomment to enable map picker
+              <div className="flex gap-2">
+                <div className="flex-1 relative">
+                  <Input
+                    id="location"
+                    name="location"
+                    type="text"
+                    placeholder="Click map to select location"
+                    value={data.location || ""}
+                    onChange={handleOnChange}
+                    readOnly
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={openMapPicker}
+                  className="flex items-center gap-2"
+                >
+                  <MapPin className="w-4 h-4" />
+                  Select on Map
+                </Button>
+              </div>
+              {data.latitude && data.longitude && (
+                <p className="text-xs text-gray-500">
+                  📍 Coordinates: {data.latitude.toFixed(6)}, {data.longitude.toFixed(6)}
+                </p>
+              )}
+              */}
             </div>
 
             {/* Date */}
@@ -182,25 +309,60 @@ const EventCreate = () => {
               </div>
             )}
 
-            {/* Image Price (THB) */}
+            {/* Image Price Option */}
             <div className="md:col-span-2 space-y-2">
-              <Label htmlFor="image_price_thb">Image Price (THB)</Label>
-              <Input
-                id="image_price_thb"
-                name="image_price_thb"
-                type="number"
-                step="0.01"
-                placeholder="20.00"
-                onChange={(e) => {
-                  const thb = parseFloat(e.target.value || "0");
-                  const satang = Math.round(thb * 100);
+              <Label htmlFor="price_type">Download Type</Label>
+              <Select
+                name="price_type"
+                value={data.image_price === 0 ? "free" : "paid"}
+                onValueChange={(value) => {
+                  const isFree = value === "free";
                   setData({
                     ...data,
-                    image_price: satang,
+                    image_price: isFree ? 0 : 2000, // Default to 20 THB if paid
                   });
                 }}
-              />
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select download type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="free"> Free Download</SelectItem>
+                  <SelectItem value="paid"> Paid Download</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+
+            {/* Image Price (THB) - Only show when paid */}
+            {data.image_price > 0 && (
+              <div className="md:col-span-2 space-y-2">
+                <Label htmlFor="image_price_thb">Price per Image (THB)</Label>
+                <Input
+                  id="image_price_thb"
+                  name="image_price_thb"
+                  type="number"
+                  step="1"
+                  min="1"
+                  placeholder="20.00"
+                  value={typeof data.image_price === "number" ? (data.image_price / 100).toFixed(2) : "20.00"}
+                  onChange={(e) => {
+                    const thb = parseFloat(e.target.value || "0");
+                    const satang = Math.round(thb * 100);
+                    setData({
+                      ...data,
+                      image_price: satang,
+                    });
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Free Download Notice */}
+            {data.image_price === 0 && (
+              <div className="md:col-span-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-sm text-green-700"> Users will be able to download images for free!</p>
+              </div>
+            )}
 
             {/* location */}
             <div className="md:col-span-2 space-y-2">
@@ -238,6 +400,52 @@ const EventCreate = () => {
           </DialogFooter>
         </form>
       </DialogContent>
+
+      {/* TODO: Google Map Picker Dialog - Uncomment when map functionality is needed
+      <Dialog open={showMapPicker} onOpenChange={setShowMapPicker}>
+        <DialogContent className="sm:max-w-[800px] max-h-[90vh]">
+          <DialogHeader>
+            <DialogTitle>Select Event Location</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div id="google-map" style={{ height: '400px', width: '100%', borderRadius: '8px' }}></div>
+
+            {data.latitude && data.longitude && (
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-sm font-medium text-blue-900">
+                  Selected: {data.location}
+                </p>
+                <p className="text-xs text-blue-700 mt-1">
+                  Coordinates: {data.latitude.toFixed(6)}, {data.longitude.toFixed(6)}
+                </p>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+              <p>💡 Click anywhere on the map to select the exact event location</p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowMapPicker(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              onClick={handleMapSelect}
+              disabled={!markerRef.current}
+            >
+              Confirm Location
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      */}
     </Dialog>
   );
 };

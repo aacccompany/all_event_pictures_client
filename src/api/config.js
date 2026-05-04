@@ -4,7 +4,7 @@ export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:80
 
 export const API_ENDPOINTS = {
   baseUrl: API_BASE_URL,
-  v1: `${API_BASE_URL}/api/v1`,
+  v1: API_BASE_URL,
 };
 
 export default API_BASE_URL;

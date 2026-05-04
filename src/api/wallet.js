@@ -3,7 +3,7 @@ import { API_BASE_URL } from "./config";
 
 export const getMyBalance = async (token) => {
     const response = await axios.get(
-        `${API_BASE_URL}/api/v1/wallet/my-balance`,
+        `${API_BASE_URL}/wallet/my-balance`,
         {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -15,7 +15,7 @@ export const getMyBalance = async (token) => {
 
 export const getMyHistory = async (token) => {
     const response = await axios.get(
-        `${API_BASE_URL}/api/v1/wallet/my-history`,
+        `${API_BASE_URL}/wallet/my-history`,
         {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -27,7 +27,7 @@ export const getMyHistory = async (token) => {
 
 export const requestWithdraw = async (token, amount) => {
     const response = await axios.post(
-        `${API_BASE_URL}/api/v1/wallet/withdraw`,
+        `${API_BASE_URL}/wallet/withdraw`,
         { amount },
         {
             headers: {
@@ -40,7 +40,7 @@ export const requestWithdraw = async (token, amount) => {
 
 export const verifyPayment = async (token, sessionId) => {
     const response = await axios.post(
-        `${API_BASE_URL}/api/v1/wallet/verify-payment`,
+        `${API_BASE_URL}/wallet/verify-payment`,
         { session_id: sessionId },
         {
             headers: {
@@ -53,7 +53,7 @@ export const verifyPayment = async (token, sessionId) => {
 
 export const adminDeductBalance = async (token, userId, amount) => {
     const response = await axios.post(
-        `${API_BASE_URL}/api/v1/wallet/admin/deduct`,
+        `${API_BASE_URL}/wallet/admin/deduct`,
         null,
         {
             params: {

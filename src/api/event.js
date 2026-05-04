@@ -9,7 +9,7 @@ export const get_events = async (start_date = null, limit = null) => {
     if (limit) {
         params.limit = limit;
     }
-    return await axios.get(`${API_BASE_URL}/api/v1/events`, { params });
+    return await axios.get(`${API_BASE_URL}/events`, { params });
 }
 
 export const get_my_events = async (token, start_date = null, limit = null) => {
@@ -20,7 +20,7 @@ export const get_my_events = async (token, start_date = null, limit = null) => {
     if (limit) {
         params.limit = limit;
     }
-    return await axios.get(`${API_BASE_URL}/api/v1/events/my-events`, {
+    return await axios.get(`${API_BASE_URL}/events/my-events`, {
         params,
         headers: {
             Authorization: `Bearer ${token}`
@@ -36,7 +36,7 @@ export const get_my_created_events = async (token, start_date = null, limit = nu
     if (limit) {
         params.limit = limit;
     }
-    return await axios.get(`${API_BASE_URL}/api/v1/events/my-created-events`, {
+    return await axios.get(`${API_BASE_URL}/events/my-created-events`, {
         params,
         headers: {
             Authorization: `Bearer ${token}`
@@ -48,26 +48,26 @@ export const get_all_events_with_stats = async (token, start_date = null, limit 
     const params = {};
     if (start_date) params.start_date = start_date.toISOString();
     if (limit) params.limit = limit;
-    return await axios.get(`${API_BASE_URL}/api/v1/events/all-with-stats`, {
+    return await axios.get(`${API_BASE_URL}/events/all-with-stats`, {
         params,
         headers: { Authorization: `Bearer ${token}` }
     });
 }
 
 export const get_event = async (id) => {
-    return await axios.get(`${API_BASE_URL}/api/v1/event/${id}`)
+    return await axios.get(`${API_BASE_URL}/event/${id}`)
 }
 
 export const get_active_events = async() => {
-    return await axios.get(`${API_BASE_URL}/api/v1/active-events`)
+    return await axios.get(`${API_BASE_URL}/active-events`)
 }
 
 export const search_events = async(title) => {
-    return await axios.get(`${API_BASE_URL}/api/v1/search-events?title=${title}`)
+    return await axios.get(`${API_BASE_URL}/search-events?title=${title}`)
 }
 
 export const create_event = async(token,data) => {
-    return await axios.post(`${API_BASE_URL}/api/v1/event`, data, {
+    return await axios.post(`${API_BASE_URL}/event`, data, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -75,7 +75,7 @@ export const create_event = async(token,data) => {
 }
 
 export const remove_event = async(token, id) => {
-    return await axios.delete(`${API_BASE_URL}/api/v1/event/${id}`, {
+    return await axios.delete(`${API_BASE_URL}/event/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -83,7 +83,7 @@ export const remove_event = async(token, id) => {
 }
 
 export const update_event = async(token, id, data) => {
-    return await axios.patch(`${API_BASE_URL}/api/v1/event/${id}`, data, {
+    return await axios.patch(`${API_BASE_URL}/event/${id}`, data, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -94,7 +94,7 @@ export const search_faces_in_event = async (event_id, token, search_image) => {
     const formData = new FormData();
     formData.append("search_image", search_image);
 
-    return await axios.post(`${API_BASE_URL}/api/v1/search-faces/${event_id}`, formData, {
+    return await axios.post(`${API_BASE_URL}/search-faces/${event_id}`, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
