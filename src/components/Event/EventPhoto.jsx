@@ -40,8 +40,11 @@ const EventPhoto = ({ event, matchedPhotos, onClearSearch }) => {
 
   useEffect(() => {
     if (!event?.id) return;
-    // Fix: API_BASE_URL already includes /api/v1, so just replace protocol and add ws endpoint
-    const wsUrl = API_BASE_URL.replace("http", "ws").replace("/api/v1", "") + `/api/v1/ws/${event.id}`;
+    // Convert HTTP to WS or HTTPS to WSS, and build WebSocket URL
+    // Include token as query parameter for authentication
+    const wsProtocol = API_BASE_URL.startsWith("https") ? "wss" : "ws";
+    const wsBaseUrl = API_BASE_URL.replace(/^https?:\/\//, `${wsProtocol}://`).replace(/\/api\/v1$/, "");
+    const wsUrl = `${wsBaseUrl}/api/v1/ws/${event.id}?token=${token}`;
     const ws = new WebSocket(wsUrl);
 
     ws.onmessage = (wsEvent) => {
