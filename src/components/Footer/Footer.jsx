@@ -22,15 +22,20 @@ const Footer = () => {
               Capture your precious moments with our professional photography service and find them instantly.
             </p>
             <div className="flex gap-4">
-              <div className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-500 cursor-pointer transition-all">
+              <a 
+                href="https://www.facebook.com/profile.php?id=61583710952051" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-500 cursor-pointer transition-all"
+              >
                 <Facebook size={18} />
-              </div>
-              <div className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-500 cursor-pointer transition-all">
+              </a>
+              {/* <div className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-500 cursor-pointer transition-all">
                 <Instagram size={18} />
               </div>
               <div className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-500 cursor-pointer transition-all">
                 <Twitter size={18} />
-              </div>
+              </div> */}
             </div>
           </div>
 
