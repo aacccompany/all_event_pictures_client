@@ -54,8 +54,12 @@ export const get_all_events_with_stats = async (token, start_date = null, limit 
     });
 }
 
-export const get_event = async (id) => {
-    return await axios.get(`${API_BASE_URL}/event/${id}`)
+export const get_event = async (id, token = null) => {
+    const headers = {};
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
+    }
+    return await axios.get(`${API_BASE_URL}/event/${id}`, { headers })
 }
 
 export const get_active_events = async() => {
@@ -97,6 +101,14 @@ export const search_faces_in_event = async (event_id, token, search_image) => {
     return await axios.post(`${API_BASE_URL}/search-faces/${event_id}`, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
+export const get_event_images = async (event_id, token) => {
+    return await axios.get(`${API_BASE_URL}/event/${event_id}/images`, {
+        headers: {
             Authorization: `Bearer ${token}`,
         },
     });

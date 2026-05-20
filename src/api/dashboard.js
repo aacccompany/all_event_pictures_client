@@ -88,7 +88,12 @@ export const getPhotographerDashboardEventStats = async (token) => {
         };
     } catch (error) {
         console.error("Error fetching photographer dashboard event stats:", error);
-        throw error;
+        // Return default values if there's an error (e.g., no events yet)
+        return {
+            totalEvents: 0,
+            changeSinceLastMonth: 0,
+            percentageChange: 0,
+        };
     }
 };
 
@@ -125,7 +130,8 @@ export const getPhotographerRecentActivities = async (token) => {
         return recentActivities;
     } catch (error) {
         console.error("Error fetching photographer recent events:", error);
-        throw error;
+        // Return empty array if there's an error
+        return [];
     }
 };
 
@@ -226,25 +232,34 @@ export const getSuperAdminRecentActivities = async (token) => {
 
 // Placeholder for fetching recent sales (no changes here)
 export const getRecentSales = async (limit = 5, token = null) => {
-    let res;
-    if (token) {
-        res = await axios.get(`${API_BASE_URL}/recent-sales/my-sales`, {
-            params: { limit },
-            headers: { Authorization: `Bearer ${token}` }
-        });
-    } else {
-        res = await axios.get(`${API_BASE_URL}/recent-sales`, { params: { limit } });
+    try {
+        let res;
+        if (token) {
+            res = await axios.get(`${API_BASE_URL}/recent-sales/my-sales`, {
+                params: { limit },
+                headers: { Authorization: `Bearer ${token}` }
+            });
+        } else {
+            res = await axios.get(`${API_BASE_URL}/recent-sales`, { params: { limit } });
+        }
+
+        // map ให้อยู่รูปแบบที่หน้า Dashboard ใช้งานง่าย
+        return res.data.map((s, idx) => ({
+            id: s.sale_id || idx + 1,
+            event: s.event_name,
+            amount: s.photo_count, // number of photos
+            date: s.purchased_at,
+            image: s.image_url,
+            earnings: s.earnings || 0,
+        }));
+    } catch (error) {
+        console.error("Error fetching recent sales:", error);
+        // Return empty array if no sales data or error occurs
+        if (error.response?.status === 404) {
+            return [];
+        }
+        throw error; // Re-throw other errors
     }
-    
-    // map ให้อยู่รูปแบบที่หน้า Dashboard ใช้งานง่าย
-    return res.data.map((s, idx) => ({
-        id: s.sale_id || idx + 1,
-        event: s.event_name,
-        amount: s.photo_count, // number of photos
-        date: s.purchased_at,
-        image: s.image_url,
-        earnings: s.earnings || 0,
-    }));
 };
 
 export const getAdminRecentSales = async (limit = 5, token) => {
@@ -289,6 +304,10 @@ export const getRecentSalesByRole = async (role, token, limit = 50) => {
     return res.data;
   } catch (error) {
     console.error("Error fetching detailed sales by role:", error);
+    // Return empty array if no sales data or 404 error
+    if (error.response?.status === 404) {
+      return [];
+    }
     throw error;
   }
 };

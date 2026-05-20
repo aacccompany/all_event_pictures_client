@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Calendar, MapPin, Image as ImageIcon, Loader2 } from "lucide-react";
 import { useParams } from "react-router";
-import { get_event } from "@/api/event";
+import { get_event, get_event_images } from "@/api/event";
 import SearchFace from "./SearchFace";
 import EventPhoto from "./EventPhoto";
-
+import useAuthStore from "@/stores/auth-store";
 const EventDetail = () => {
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [matchedPhotos, setMatchedPhotos] = useState(null);
+  const [eventImages, setEventImages] = useState([]);
+  const [imagesLoading, setImagesLoading] = useState(true);
   const { id } = useParams();
+  const token = useAuthStore((state) => state.token);
 
   useEffect(() => {
     fetchEvent();
+    fetchEventImages();
   }, [id]);
 
   const fetchEvent = async () => {
@@ -24,6 +28,35 @@ const EventDetail = () => {
       console.error("Fetch Event Error:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchEventImages = async () => {
+    setImagesLoading(true);
+    try {
+      console.log("Fetching images for event:", id);
+      // Try with token first if available
+      if (token) {
+        try {
+          const res = await get_event_images(id, token);
+          console.log("Images API response with token:", res);
+          setEventImages(res.data || []);
+          return;
+        } catch (authError) {
+          console.log("Auth request failed, trying without auth");
+        }
+      }
+
+      // Try without token for public access
+      const res = await get_event_images(id, null);
+      console.log("Images API response without token:", res);
+      setEventImages(res.data || []);
+    } catch (error) {
+      console.error("Fetch Event Images Error:", error);
+      console.error("Error response:", error.response);
+      setEventImages([]);
+    } finally {
+      setImagesLoading(false);
     }
   };
 
@@ -112,7 +145,6 @@ const EventDetail = () => {
                     {event.title}
                   </h1>
                </div>
-               
                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 min-w-[140px] text-right">
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Event UID</p>
                   <p className="text-sm font-mono text-slate-600 font-bold">#{id}</p>
@@ -164,12 +196,23 @@ const EventDetail = () => {
         {/* --- Section 2: Search by Face --- */}
         <SearchFace onSearchComplete={handleSearchComplete} />
 
+
         {/* --- Section 3: All Event Photos --- */}
-        <EventPhoto 
-          event={event} 
-          matchedPhotos={matchedPhotos} 
-          onClearSearch={handleClearSearch} 
+        <EventPhoto
+          event={{ ...event, images: eventImages }}
+          matchedPhotos={matchedPhotos}
+          onClearSearch={handleClearSearch}
         />
+
+        {/* Debug info */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="fixed bottom-4 right-4 bg-black/80 text-white p-4 rounded-lg text-xs z-50">
+            <div>Event ID: {event?.id}</div>
+            <div>Event images count: {eventImages?.length || 0}</div>
+            <div>Matched photos: {matchedPhotos?.length || 0}</div>
+            <div>Token: {token ? 'Yes' : 'No'}</div>
+          </div>
+        )}
       </div>
     </div>
   );

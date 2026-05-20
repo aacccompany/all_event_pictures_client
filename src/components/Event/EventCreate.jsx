@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,10 +22,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useAuthStore from "@/stores/auth-store";
 import { create_event } from "@/api/event";
+import { getUsers } from "@/api/super-admin";
+import { add_photographer_to_event } from "@/api/event_user";
 import UploadImageCover from "./UploadImageCover";
 import { upload_image_cover } from "@/api/uploadimage";
-import { Loader2 } from "lucide-react";
+import { Loader2, Users, ChevronDown, ChevronUp, Check } from "lucide-react";
 import useEventStore from "@/stores/event-store";
+import { toast } from "sonner";
 
 // TODO: Google Maps integration - Uncomment when needed
 // const DEFAULT_CENTER = { lat: 13.7563, lng: 100.5018 };
@@ -39,6 +42,41 @@ const EventCreate = () => {
   const [imageFile, setImageFile] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Photographer selection states
+  const [availablePhotographers, setAvailablePhotographers] = useState([]);
+  const [selectedPhotographers, setSelectedPhotographers] = useState([]);
+  const [loadingPhotographers, setLoadingPhotographers] = useState(false);
+  const [showPhotographerSection, setShowPhotographerSection] = useState(false);
+
+  // Fetch available photographers when dialog opens
+  useEffect(() => {
+    if (openDialog) {
+      fetchPhotographers();
+    }
+  }, [openDialog]);
+
+  const fetchPhotographers = async () => {
+    try {
+      setLoadingPhotographers(true);
+      const res = await getUsers(token, 1, 100, false, 'user');
+      const users = res.data?.users || res.data || [];
+      setAvailablePhotographers(users);
+    } catch (error) {
+      console.error("Error fetching photographers:", error);
+      toast.error("Failed to load photographers");
+    } finally {
+      setLoadingPhotographers(false);
+    }
+  };
+
+  const togglePhotographer = (userId) => {
+    setSelectedPhotographers(prev =>
+      prev.includes(userId)
+        ? prev.filter(id => id !== userId)
+        : [...prev, userId]
+    );
+  };
 
   // TODO: Google Maps integration - Uncomment when needed
   // const [showMapPicker, setShowMapPicker] = useState(false);
@@ -154,17 +192,36 @@ const EventCreate = () => {
         };
       }
 
-      // if (data.event_type === "Private") delete data.limit;
-
-      await create_event(token, {
+      const response = await create_event(token, {
         ...data,
         ...imageData,
       });
+
+      const newEventId = response.data.id;
+
+      // Add selected photographers to the event
+      if (selectedPhotographers.length > 0) {
+        await Promise.all(
+          selectedPhotographers.map(userId =>
+            add_photographer_to_event(newEventId, token, userId)
+          )
+        );
+        toast.success(`Event created with ${selectedPhotographers.length} photographer(s)`);
+      } else {
+        toast.success("Event created successfully");
+      }
+
       await actionGetEvents();
       await actionGetMyEvents(token);
       setOpenDialog(false);
+
+      // Reset form
+      setData({});
+      setImageFile(null);
+      setSelectedPhotographers([]);
     } catch (error) {
       console.log(error);
+      toast.error(error.response?.data?.detail || "Failed to create event");
     } finally {
       setIsSubmitting(false);
     }
@@ -374,6 +431,83 @@ const EventCreate = () => {
                 placeholder="lorem ipsum"
                 onChange={handleOnChange}
               />
+            </div>
+
+            {/* Photographers Selection */}
+            <div className="md:col-span-2 space-y-3">
+              <div className="flex items-center justify-between">
+                <Label className="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  Event Photographers
+                  {selectedPhotographers.length > 0 && (
+                    <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-full">
+                      {selectedPhotographers.length} selected
+                    </span>
+                  )}
+                </Label>
+                <button
+                  type="button"
+                  onClick={() => setShowPhotographerSection(!showPhotographerSection)}
+                  className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1"
+                >
+                  {showPhotographerSection ? (
+                    <>Hide <ChevronUp className="w-4 h-4" /></>
+                  ) : (
+                    <>Show <ChevronDown className="w-4 h-4" /></>
+                  )}
+                </button>
+              </div>
+
+              {showPhotographerSection && (
+                <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 max-h-60 overflow-y-auto">
+                  {loadingPhotographers ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                    </div>
+                  ) : availablePhotographers.length === 0 ? (
+                    <p className="text-center text-gray-500 py-4">No photographers available</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {availablePhotographers.map((photographer) => {
+                        const isSelected = selectedPhotographers.includes(photographer.id);
+                        return (
+                          <label
+                            key={photographer.id}
+                            className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 cursor-pointer transition-colors"
+                          >
+                            <div className="relative">
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() => togglePhotographer(photographer.id)}
+                                className="sr-only"
+                              />
+                              <div className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-colors ${
+                                isSelected
+                                  ? 'bg-indigo-600 border-indigo-600'
+                                  : 'border-gray-300 hover:border-indigo-400'
+                              }`}>
+                                {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
+                              </div>
+                            </div>
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm">
+                              {photographer.email?.charAt(0).toUpperCase() || 'U'}
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium text-gray-800">
+                                {photographer.first_name && photographer.last_name
+                                  ? `${photographer.first_name} ${photographer.last_name}`
+                                  : photographer.email?.split('@')[0] || 'User'}
+                              </p>
+                              <p className="text-xs text-gray-500">{photographer.email}</p>
+                            </div>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Cover Image */}

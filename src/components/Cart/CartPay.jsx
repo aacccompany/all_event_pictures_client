@@ -162,12 +162,24 @@ const CartDownload = () => {
                       key={item.id}
                       className="group relative bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 transition-all hover:shadow-xl hover:-translate-y-1"
                     >
-                      <div className="aspect-[3/4] overflow-hidden">
+                      <div className="aspect-[3/4] overflow-hidden relative">
                         <img
                           src={item.image.optimized_url || item.image.preview_url}
                           alt="Event Photo"
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
+                        {/* Watermark Overlay - 4 Watermarks */}
+                        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                          <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-2 p-2">
+                            {[0, 1, 2, 3].map((i) => (
+                              <div key={i} className="flex items-center justify-center">
+                                <div className="transform -rotate-45 text-white/40 font-bold text-[10px] md:text-xs px-1 py-0.5   ">
+                                  AllEventPictures
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       </div>
 
                       {/* Overlay & Trash Button */}

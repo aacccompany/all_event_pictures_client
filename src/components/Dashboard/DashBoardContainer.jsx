@@ -69,11 +69,17 @@ const DashBoardContainer = () => {
           earnings: a.earnings,
         }))
       );
-      const sales = await getRecentSales(5, token);
-      setRecentSales(sales);
+
+      try {
+        const sales = await getRecentSales(5, token);
+        setRecentSales(sales);
+      } catch (salesError) {
+        console.warn("Could not load recent sales:", salesError);
+        setRecentSales([]);
+      }
     } catch (e) {
       setError("Failed to load dashboard data");
-      console.error(e);
+      console.error("Dashboard error:", e);
     } finally {
       setLoading(false);
     }

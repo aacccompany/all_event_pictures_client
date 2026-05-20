@@ -25,7 +25,11 @@ const DetailedSales = () => {
             setSales(res);
         } catch (error) {
             console.error("Failed to fetch detailed sales:", error);
-            toast.error("Failed to load detailed sales.");
+            // Don't show error toast for empty responses - it could just mean no sales yet
+            if (error.response?.status !== 404) {
+                toast.error("Failed to load detailed sales. Please try again later.");
+            }
+            setSales([]); // Set empty array on error
         } finally {
             setLoading(false);
         }

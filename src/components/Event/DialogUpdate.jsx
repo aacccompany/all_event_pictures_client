@@ -38,8 +38,28 @@ const DialogUpdate = ({ id }) => {
   const token = useAuthStore((state) => state.token);
   const actionsGetEvents = useEventStore((state) => state.actionsGetEvents);
   const actionGetMyEvents = useEventStore((state) => state.actionGetMyEvents);
-  const [data, setData] = useState({});
-  const [originalData, setOriginalData] = useState({});
+
+  // Initialize with default values to avoid uncontrolled input warning
+  const [data, setData] = useState({
+    title: "",
+    location: "",
+    date: "",
+    event_type: "Public",
+    active: true,
+    limit: "",
+    image_price: 0,
+    description: "",
+  });
+  const [originalData, setOriginalData] = useState({
+    title: "",
+    location: "",
+    date: "",
+    event_type: "Public",
+    active: true,
+    limit: "",
+    image_price: 0,
+    description: "",
+  });
   const [imageFile, setImageFile] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -146,6 +166,18 @@ const DialogUpdate = ({ id }) => {
       setInvitedEmails([]);
     }
     setOpenDialog(open);
+  };
+
+  // Default values for reset
+  const defaultData = {
+    title: "",
+    location: "",
+    date: "",
+    event_type: "Public",
+    active: true,
+    limit: "",
+    image_price: 0,
+    description: "",
   };
 
   // TODO: Google Maps integration - Uncomment when needed
@@ -265,6 +297,9 @@ const DialogUpdate = ({ id }) => {
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl">Edit Event</DialogTitle>
+          <DialogDescription>
+            Update the event details, location, date, and other settings.
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit}>
